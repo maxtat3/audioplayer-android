@@ -56,19 +56,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mEjectButton.setOnClickListener(this);
 	}
 
-	public void onClick(View target) {
+	@Override
+	public void onClick(View view) {
 		// Send the correct intent to the MusicService, according to the button that was clicked
-		if (target == mPlayButton)
+		if (view == mPlayButton)
 			startService(new Intent(MusicService.ACTION_PLAY));
-		else if (target == mPauseButton)
+		else if (view == mPauseButton)
 			startService(new Intent(MusicService.ACTION_PAUSE));
-		else if (target == mSkipButton)
+		else if (view == mSkipButton)
 			startService(new Intent(MusicService.ACTION_SKIP));
-		else if (target == mRewindButton)
+		else if (view == mRewindButton)
 			startService(new Intent(MusicService.ACTION_REWIND));
-		else if (target == mStopButton)
+		else if (view == mStopButton)
 			startService(new Intent(MusicService.ACTION_STOP));
-		else if (target == mEjectButton) {
+		else if (view == mEjectButton) {
 			showUrlDialog();
 		}
 	}

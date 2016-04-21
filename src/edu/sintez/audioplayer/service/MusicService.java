@@ -42,7 +42,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
 
     // The tag we put on debug messages
-    private static final String LOG = "RandomMusicPlayer";
+    private static final String LOG = MusicService.class.getName();
 
     // These are the Intent actions that we are prepared to handle. Notice that the fact these
     // constants exist in our class is a mere convenience: what really defines the actions our
@@ -163,7 +163,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onCreate() {
-        Log.i(LOG, "debug: Creating service");
+        Log.d(LOG, "Creating service");
 
         // Create the Wifi lock (this does not acquire the lock, this just creates it)
         mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))

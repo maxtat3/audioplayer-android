@@ -58,8 +58,13 @@ public class MusicRetriever {
 
         // Perform a query on the content resolver. The URI we're passing specifies that we
         // want to query for all audio media on external storage (e.g. SD card)
-        Cursor cur = mContentResolver.query(uri, null,
-                MediaStore.Audio.Media.IS_MUSIC + " = 1", null, null);
+        Cursor cur = mContentResolver.query(
+		        uri,
+		        null,
+                MediaStore.Audio.Media.IS_MUSIC + " = 1",
+		        null,
+		        null
+        );
         Log.i(LOG, "Query finished. " + (cur == null ? "Returned NULL." : "Returned a cursor."));
 
         if (cur == null) {
@@ -93,7 +98,8 @@ public class MusicRetriever {
                     cur.getString(artistColumn),
                     cur.getString(titleColumn),
                     cur.getString(albumColumn),
-                    cur.getLong(durationColumn)));
+                    cur.getLong(durationColumn)
+            ));
         } while (cur.moveToNext());
 
         Log.d(LOG, "mus items size = " + mItems.size());
@@ -112,6 +118,7 @@ public class MusicRetriever {
         Log.d(LOG, "number = " + number);
         return mItems.get(number);
     }
+
 
     public static class Item {
         long id;

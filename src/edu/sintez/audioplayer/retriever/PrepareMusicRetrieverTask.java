@@ -28,8 +28,7 @@ public class PrepareMusicRetrieverTask extends AsyncTask<Void, Void, Void> {
     MusicRetriever mRetriever;
     MusicRetrieverPreparedListener mListener;
 
-    public PrepareMusicRetrieverTask(MusicRetriever retriever,
-            MusicRetrieverPreparedListener listener) {
+    public PrepareMusicRetrieverTask(MusicRetriever retriever, MusicRetrieverPreparedListener listener) {
         mRetriever = retriever;
         mListener = listener;
     }
