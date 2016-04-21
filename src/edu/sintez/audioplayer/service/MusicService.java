@@ -1,19 +1,3 @@
-/*   
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package edu.sintez.audioplayer.service;
 
 import android.app.Notification;
@@ -43,7 +27,6 @@ import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.audiofocus.AudioFocusHelper;
 import edu.sintez.audioplayer.audiofocus.MusicFocusable;
-import edu.sintez.audioplayer.receiver.MusicIntentReceiver;
 
 import java.io.IOException;
 
@@ -148,10 +131,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     // Dummy album art we will pass to the remote control (if the APIs are available).
     Bitmap mDummyAlbumArt;
 
-    // The component name of MusicIntentReceiver, for use with media button and remote control
-    // APIs
-    ComponentName mMediaButtonReceiverComponent;
-
     AudioManager mAudioManager;
     NotificationManager mNotificationManager;
 
@@ -205,7 +184,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
         mDummyAlbumArt = BitmapFactory.decodeResource(getResources(), R.drawable.dummy_album_art);
 
-        mMediaButtonReceiverComponent = new ComponentName(this, MusicIntentReceiver.class);
     }
 
     /**
@@ -259,12 +237,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             setUpAsForeground(mSongTitle + " (playing)");
             configAndStartMediaPlayer();
         }
-
-        // Tell any remote controls that our playback state is 'playing'.
-//        if (mRemoteControlClientCompat != null) {
-//            mRemoteControlClientCompat
-//                    .setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
-//        }
     }
 
     void processPauseRequest() {
@@ -282,12 +254,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             relaxResources(false); // while paused, we always retain the MediaPlayer
             // do not give up audio focus
         }
-
-        // Tell any remote controls that our playback state is 'paused'.
-//        if (mRemoteControlClientCompat != null) {
-//            mRemoteControlClientCompat
-//                    .setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-//        }
     }
 
     void processRewindRequest() {
@@ -313,12 +279,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             // let go of all resources...
             relaxResources(true);
             giveUpAudioFocus();
-
-            // Tell any remote controls that our playback state is 'paused'.
-//            if (mRemoteControlClientCompat != null) {
-//                mRemoteControlClientCompat
-//                        .setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
-//            }
 
             // service is no longer necessary. Will be started again if needed.
             stopSelf();
@@ -442,48 +402,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
             mState = State.Preparing;
             setUpAsForeground(mSongTitle + " (loading)");
-
-            // Use the media button APIs (if available) to register ourselves for media button
-            // events
-
-
-//            MediaButtonHelper.registerMediaButtonEventReceiverCompat(
-//                    mAudioManager, mMediaButtonReceiverComponent);
-
-
-            // Use the remote control APIs (if available) to set the playback state
-
-//            if (mRemoteControlClientCompat == null) {
-//                Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-//                intent.setComponent(mMediaButtonReceiverComponent);
-//                mRemoteControlClientCompat = new RemoteControlClientCompat(
-//                        PendingIntent.getBroadcast(this /*context*/,
-//                                0 /*requestCode, ignored*/, intent /*intent*/, 0 /*flags*/));
-////                RemoteControlHelper.registerRemoteControlClient(mAudioManager,
-////                        mRemoteControlClientCompat);
-//            }
-//
-//            mRemoteControlClientCompat.setPlaybackState(
-//                    RemoteControlClient.PLAYSTATE_PLAYING);
-//
-//            mRemoteControlClientCompat.setTransportControlFlags(
-//                    RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
-//                    RemoteControlClient.FLAG_KEY_MEDIA_PAUSE |
-//                    RemoteControlClient.FLAG_KEY_MEDIA_NEXT |
-//                    RemoteControlClient.FLAG_KEY_MEDIA_STOP);
-//
-//            // Update the remote controls
-//            mRemoteControlClientCompat.editMetadata(true)
-//                    .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, playingItem.getArtist())
-//                    .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, playingItem.getAlbum())
-//                    .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, playingItem.getTitle())
-//                    .putLong(MediaMetadataRetriever.METADATA_KEY_DURATION,
-//                            playingItem.getDuration())
-//                    // TODO: fetch real item artwork
-//                    .putBitmap(
-//                            RemoteControlClientCompat.MetadataEditorCompat.METADATA_KEY_ARTWORK,
-//                            mDummyAlbumArt)
-//                    .apply();
 
             // starts preparing the media player in the background. When it's done, it will call
             // our OnPreparedListener (that is, the onPrepared() method on this class, since we set
