@@ -30,6 +30,8 @@ import edu.sintez.audioplayer.service.MusicService;
  * declaring it in a &lt;receiver&gt; tag in AndroidManifest.xml.
  */
 public class MusicIntentReceiver extends BroadcastReceiver {
+    public static final String LOG = MusicIntentReceiver.class.getName();
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {

@@ -24,6 +24,7 @@ import android.os.AsyncTask;
  * run. Upon finishing, it notifies the indicated {@MusicRetrieverPreparedListener}.
  */
 public class PrepareMusicRetrieverTask extends AsyncTask<Void, Void, Void> {
+    private static final String LOG = PrepareMusicRetrieverTask.class.getName();
     MusicRetriever mRetriever;
     MusicRetrieverPreparedListener mListener;
 

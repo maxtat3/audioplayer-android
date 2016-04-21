@@ -59,7 +59,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
 
     // The tag we put on debug messages
-    final static String TAG = "RandomMusicPlayer";
+    private static final String LOG = "RandomMusicPlayer";
 
     // These are the Intent actions that we are prepared to handle. Notice that the fact these
     // constants exist in our class is a mere convenience: what really defines the actions our
@@ -184,7 +184,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "debug: Creating service");
+        Log.i(LOG, "debug: Creating service");
 
         // Create the Wifi lock (this does not acquire the lock, this just creates it)
         mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
@@ -386,7 +386,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             mStartPlayingAfterRetrieve = true;
         }
         else if (mState == State.Playing || mState == State.Paused || mState == State.Stopped) {
-            Log.i(TAG, "Playing from URL/path: " + intent.getData().toString());
+            Log.i(LOG, "Playing from URL/path: " + intent.getData().toString());
             tryToGetAudioFocus();
             playNextSong(intent.getData().toString());
         }
@@ -563,7 +563,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(getApplicationContext(), "Media player error! Resetting.",
             Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "Error: what=" + String.valueOf(what) + ", extra=" + String.valueOf(extra));
+        Log.e(LOG, "Error: what=" + String.valueOf(what) + ", extra=" + String.valueOf(extra));
 
         mState = State.Stopped;
         relaxResources(true);

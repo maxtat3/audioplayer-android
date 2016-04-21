@@ -29,6 +29,7 @@ import edu.sintez.audioplayer.service.MusicService;
  * available on previous SDK's.
  */
 public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener {
+    private static final String LOG = AudioFocusHelper.class.getName();
     AudioManager mAM;
     MusicFocusable mFocusable;
 
