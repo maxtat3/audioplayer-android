@@ -89,14 +89,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     // start playing when we are ready. If null, we should play a random song from the device
     Uri mWhatToPlayAfterRetrieve = null;
 
-    enum PauseReason {
-        UserRequest,  // paused by user request
-        FocusLoss,    // paused because of audio focus loss
-    };
-
-    // why did we pause? (only relevant if mState == State.Paused)
-    PauseReason mPauseReason = PauseReason.UserRequest;
-
     // do we have audio focus?
     enum AudioFocus {
         NoFocusNoDuck,    // we don't have audio focus, and can't duck
