@@ -59,7 +59,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     // The volume we set the media player to when we lose audio focus, but are allowed to reduce
     // the volume instead of stopping playback.
-    public static final float DUCK_VOLUME = 0.1f;
+    public static final float DUCK_VOLUME = 0.3f;
 
     // our media player
     MediaPlayer mPlayer = null;
