@@ -205,6 +205,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     }
 
     void processPlayRequest() {
+        if (isDebug) Log.d(LOG, "processPlayRequest");
         if (state == State.Retrieving) {
             // If we are still retrieving media, just set the flag to start playing when we're
             // ready
@@ -230,6 +231,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     }
 
     void processPauseRequest() {
+        if (isDebug) Log.d(LOG, "processPauseRequest");
         if (state == State.Retrieving) {
             // If we are still retrieving media, clear the flag that indicates we should start
             // playing when we're ready
@@ -250,6 +252,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * Previous song
      */
     void processRewindRequest() {
+        if (isDebug) Log.d(LOG, "processRewindRequest");
         if (state == State.Playing || state == State.Paused)
             mp.seekTo(0);
     }
@@ -258,6 +261,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * Next song
      */
     void processSkipRequest() {
+        if (isDebug) Log.d(LOG, "processSkipRequest");
         if (state == State.Playing || state == State.Paused) {
             tryToGetAudioFocus();
             playNextSong(null);
@@ -272,6 +276,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     }
 
     void processStopRequest(boolean force) {
+        if (isDebug) Log.d(LOG, "processStopRequest, force = " + force);
         if (state == State.Playing || state == State.Paused || force) {
             state = State.Stopped;
 
@@ -291,6 +296,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * @param releaseMediaPlayer Indicates whether the Media Player should also be released or not
      */
     void relaxResources(boolean releaseMediaPlayer) {
+        Log.d(LOG, "relaxResources");
         // stop being a foreground service
         stopForeground(true);
 
@@ -309,6 +315,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * Отдаем аудио фокус системе
      */
     void giveUpAudioFocus() {
+        if (isDebug) Log.d(LOG, "giveUpAudioFocus");
         if (audioFocus == AudioFocus.Focused && mAudioFocusHelper != null
                                 && mAudioFocusHelper.abandonFocus())
             audioFocus = AudioFocus.NoFocusNoDuck;
@@ -323,6 +330,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * you have to do so from a context where you are sure this is the case.
      */
     void configAndStartMediaPlayer() {
+        if (isDebug) Log.d(LOG, "configAndStartMediaPlayer");
         if (audioFocus == AudioFocus.NoFocusNoDuck) {
             // If we don't have audio focus and can't duck, we have to pause, even if state
             // is State.Playing. But we stay in the Playing state so that we know we have to resume
@@ -339,6 +347,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     }
 
     void processAddRequest(Intent intent) {
+        if (isDebug) Log.d(LOG, "processAddRequest - request play from URL");
         // user wants to play a song directly by URL or path. The URL or path comes in the "data"
         // part of the Intent. This Intent is sent by {@link MainActivity} after the user
         // specifies the URL/path via an alert box.
@@ -355,6 +364,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     }
 
     void tryToGetAudioFocus() {
+        if (isDebug) Log.d(LOG, "tryToGetAudioFocus");
         if (audioFocus != AudioFocus.Focused && mAudioFocusHelper != null
                         && mAudioFocusHelper.requestFocus())
             audioFocus = AudioFocus.Focused;
@@ -367,6 +377,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * next.
      */
     void playNextSong(String manualUrl) {
+        if (isDebug) Log.d(LOG, "playNextSong");
         state = State.Stopped;
         relaxResources(false); // release everything except MediaPlayer
 
@@ -429,6 +440,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     /** Called when media player is done playing current song. */
     @Override
     public void onCompletion(MediaPlayer player) {
+        if (isDebug) Log.d(LOG, "onCompletion");
         // The media player finished playing the current song, so we go ahead and start the next.
         playNextSong(null);
     }
@@ -436,6 +448,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     /** Called when media player is done preparing. */
     @Override
     public void onPrepared(MediaPlayer player) {
+        if (isDebug) Log.d(LOG, "onPrepared");
         // The media player is done preparing. That means we can start playing!
         state = State.Playing;
         updateNotification(songTitle + " (playing)");
@@ -460,6 +473,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      * user as a notification. That's why we create the notification here.
      */
     void setUpAsForeground(String text) {
+        if (isDebug) Log.d(LOG, "setUpAsForeground");
         PendingIntent pi = PendingIntent.getActivity(
                 getApplicationContext(),
 		        0,
@@ -487,7 +501,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(getApplicationContext(), "Media player error! Resetting.", Toast.LENGTH_SHORT).show();
-        Log.e(LOG, "Error: what=" + String.valueOf(what) + ", extra=" + String.valueOf(extra));
+        if (isDebug) Log.e(LOG, "Error: what=" + String.valueOf(what) + ", extra=" + String.valueOf(extra));
 
         state = State.Stopped;
         relaxResources(true);
@@ -497,6 +511,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onGainedAudioFocus() {
+        if (isDebug) Log.d(LOG, "onGainedAudioFocus");
         Toast.makeText(getApplicationContext(), "gained audio focus.", Toast.LENGTH_SHORT).show();
         audioFocus = AudioFocus.Focused;
 
@@ -507,6 +522,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onLostAudioFocus(boolean canDuck) {
+        if (isDebug) Log.d(LOG, "onLostAudioFocus");
         Toast.makeText(
 		        getApplicationContext(),
 		        "lost audio focus." + (canDuck ? "can duck" : "no duck"), Toast.LENGTH_SHORT
@@ -520,6 +536,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onMusicRetrieverPrepared() {
+        if (isDebug) Log.d(LOG, "onMusicRetrieverPrepared ");
         // Done retrieving!
         state = State.Stopped;
 
