@@ -399,6 +399,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
                 isStreaming = false; // playing a locally available song
 
                 playingItem = retriever.getRandomItem();
+                if (isDebug) Log.d(LOG, playingItem == null ? "playingItem is null ! " : "playingItem is not null." );
                 if (playingItem == null) {
                     Toast.makeText(
 		                    this,
