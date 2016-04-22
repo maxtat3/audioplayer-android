@@ -42,6 +42,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     // The tag we put on debug messages
     private static final String LOG = MusicService.class.getName();
+    private boolean isDebug = true;
 
     // These are the Intent actions that we are prepared to handle. Notice that the fact these
     // constants exist in our class is a mere convenience: what really defines the actions our
@@ -130,6 +131,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      */
     void createMediaPlayerIfNeeded() {
         if (mp == null) {
+            Log.d(LOG, "media player is null !");
             mp = new MediaPlayer();
 
             // Make sure the media player will acquire a wake-lock while playing. If we don't do
@@ -244,11 +246,17 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         }
     }
 
+	/**
+     * Previous song
+     */
     void processRewindRequest() {
         if (state == State.Playing || state == State.Paused)
             mp.seekTo(0);
     }
 
+	/**
+     * Next song
+     */
     void processSkipRequest() {
         if (state == State.Playing || state == State.Paused) {
             tryToGetAudioFocus();
@@ -256,6 +264,9 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         }
     }
 
+	/**
+     * Stop song
+     */
     void processStopRequest() {
         processStopRequest(false);
     }
