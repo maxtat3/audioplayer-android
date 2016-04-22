@@ -35,6 +35,7 @@ import java.util.Random;
  */
 public class MusicRetriever {
     private static final String LOG = MusicRetriever.class.getName();
+    private boolean isDebug = false;
 
     ContentResolver mContentResolver;
 
@@ -42,6 +43,7 @@ public class MusicRetriever {
     List<Item> mItems = new ArrayList<Item>();
 
     Random mRandom = new Random();
+
 
     public MusicRetriever(ContentResolver cr) {
         mContentResolver = cr;
@@ -53,8 +55,8 @@ public class MusicRetriever {
      */
     public void prepare() {
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Log.i(LOG, "Querying media...");
-        Log.i(LOG, "URI: " + uri.toString());
+        if (isDebug) Log.d(LOG, "Querying media...");
+        if (isDebug) Log.d(LOG, "URI: " + uri.toString());
 
         // Perform a query on the content resolver. The URI we're passing specifies that we
         // want to query for all audio media on external storage (e.g. SD card)
@@ -65,20 +67,20 @@ public class MusicRetriever {
 		        null,
 		        null
         );
-        Log.i(LOG, "Query finished. " + (cur == null ? "Returned NULL." : "Returned a cursor."));
+        if (isDebug) Log.d(LOG, "Query finished. " + (cur == null ? "Returned NULL." : "Returned a cursor."));
 
         if (cur == null) {
             // Query failed...
-            Log.e(LOG, "Failed to retrieve music: cursor is null :-(");
+            if (isDebug) Log.d(LOG, "Failed to retrieve music: cursor is null :-(");
             return;
         }
         if (!cur.moveToFirst()) {
             // Nothing to query. There is no music on the device. How boring.
-            Log.e(LOG, "Failed to move cursor to first row (no query results).");
+            if (isDebug) Log.e(LOG, "Failed to move cursor to first row (no query results).");
             return;
         }
 
-        Log.i(LOG, "Listing...");
+        if (isDebug) Log.d(LOG, "Listing...");
 
         // retrieve the indices of the columns where the ID, title, etc. of the song are
         int artistColumn = cur.getColumnIndex(MediaStore.Audio.Media.ARTIST);
@@ -87,12 +89,12 @@ public class MusicRetriever {
         int durationColumn = cur.getColumnIndex(MediaStore.Audio.Media.DURATION);
         int idColumn = cur.getColumnIndex(MediaStore.Audio.Media._ID);
 
-        Log.i(LOG, "Title column index: " + String.valueOf(titleColumn));
-        Log.i(LOG, "ID column index: " + String.valueOf(titleColumn));
+        if (isDebug) Log.d(LOG, "Title column index: " + String.valueOf(titleColumn));
+        if (isDebug) Log.d(LOG, "ID column index: " + String.valueOf(titleColumn));
 
         // add each song to mItems
         do {
-            Log.i(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
+            if (isDebug) Log.d(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
             mItems.add(new Item(
                     cur.getLong(idColumn),
                     cur.getString(artistColumn),
@@ -102,9 +104,8 @@ public class MusicRetriever {
             ));
         } while (cur.moveToNext());
 
-        Log.d(LOG, "mus items size = " + mItems.size());
-
-        Log.i(LOG, "Done querying media. MusicRetriever is ready.");
+        if (isDebug) Log.d(LOG, "mus items list size = " + mItems.size());
+        if (isDebug) Log.d(LOG, "Done querying media. MusicRetriever is ready.");
     }
 
     public ContentResolver getContentResolver() {
