@@ -379,10 +379,12 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
                 playingItem = mRetriever.getRandomItem();
                 if (playingItem == null) {
-                    Toast.makeText(this,
+                    Toast.makeText(
+		                    this,
                             "No available music to play. Place some music on your external storage "
                             + "device (e.g. your SD card) and try again.",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG
+                    ).show();
                     processStopRequest(true); // stop everything!
                     return;
                 }
@@ -435,11 +437,13 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     /** Updates the notification. */
     void updateNotification(String text) {
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
+        PendingIntent pi = PendingIntent.getActivity(
+		        getApplicationContext(),
+		        0,
                 new Intent(getApplicationContext(), MainActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        mNotificationBuilder.setContentText(text)
-                .setContentIntent(pi);
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mNotificationBuilder.setContentText(text).setContentIntent(pi);
         mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
@@ -475,8 +479,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      */
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Toast.makeText(getApplicationContext(), "Media player error! Resetting.",
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Media player error! Resetting.", Toast.LENGTH_SHORT).show();
         Log.e(LOG, "Error: what=" + String.valueOf(what) + ", extra=" + String.valueOf(extra));
 
         state = State.Stopped;
@@ -497,8 +500,10 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     @Override
     public void onLostAudioFocus(boolean canDuck) {
-        Toast.makeText(getApplicationContext(), "lost audio focus." + (canDuck ? "can duck" :
-            "no duck"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+		        getApplicationContext(),
+		        "lost audio focus." + (canDuck ? "can duck" : "no duck"), Toast.LENGTH_SHORT
+        ).show();
         audioFocus = canDuck ? AudioFocus.NoFocusCanDuck : AudioFocus.NoFocusNoDuck;
 
         // start/restart/pause media player with new focus settings
@@ -514,8 +519,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         // If the flag indicates we should start playing after retrieving, let's do that now.
         if (mStartPlayingAfterRetrieve) {
             tryToGetAudioFocus();
-            playNextSong(mWhatToPlayAfterRetrieve == null ?
-                    null : mWhatToPlayAfterRetrieve.toString());
+            playNextSong(mWhatToPlayAfterRetrieve == null ? null : mWhatToPlayAfterRetrieve.toString());
         }
     }
 
