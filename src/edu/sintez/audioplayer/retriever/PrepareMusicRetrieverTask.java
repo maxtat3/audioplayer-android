@@ -26,11 +26,11 @@ import android.os.AsyncTask;
 public class PrepareMusicRetrieverTask extends AsyncTask<Void, Void, Void> {
     private static final String LOG = PrepareMusicRetrieverTask.class.getName();
     MusicRetriever mRetriever;
-    MusicRetrieverPreparedListener mListener;
+    MusicRetrieverPreparedListener mrpl;
 
     public PrepareMusicRetrieverTask(MusicRetriever retriever, MusicRetrieverPreparedListener listener) {
         mRetriever = retriever;
-        mListener = listener;
+        mrpl = listener;
     }
 
     @Override
@@ -41,8 +41,9 @@ public class PrepareMusicRetrieverTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        mListener.onMusicRetrieverPrepared();
+        mrpl.onMusicRetrieverPrepared();
     }
+
 
     public interface MusicRetrieverPreparedListener {
         public void onMusicRetrieverPrepared();

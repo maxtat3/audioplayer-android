@@ -66,7 +66,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     // our AudioFocusHelper object, if it's available (it's available on SDK level >= 8)
     // If not available, this will be null. Always check for null before using!
-    AudioFocusHelper mAudioFocusHelper = null;
+    AudioFocusHelper audioFocusHelper = null;
 
     // indicates the state our service:
     enum State {
@@ -77,12 +77,14 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
                     // paused in this state if we don't have audio focus. But we stay in this state
                     // so that we know we have to resume playback once we get focus back)
         Paused      // playback paused (media player ready!)
-    };
+    }
 
     State state = State.Retrieving;
 
     // if in Retrieving mode, this flag indicates whether we should start playing immediately
     // when we are ready or not.
+    // если в режиме ожидания, этот флаг указывает на то, должны ли мы сразу начать играть,
+    // когда мы готовы или нет.
     boolean mStartPlayingAfterRetrieve = false;
 
     // if mStartPlayingAfterRetrieve is true, this variable indicates the URL that we should
@@ -115,13 +117,13 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     // Our instance of our MusicRetriever, which handles scanning for media and
     // providing titles and URIs as we need.
-    MusicRetriever mRetriever;
+    MusicRetriever retriever;
 
     // Dummy album art we will pass to the remote control (if the APIs are available).
     Bitmap mDummyAlbumArt;
 
-    AudioManager mAudioManager;
-    NotificationManager mNotificationManager;
+    AudioManager audioManager;
+    NotificationManager notificationManager;
 
     Notification.Builder mNotificationBuilder = null;
 
@@ -160,16 +162,16 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                         .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         // Create the retriever and start an asynchronous task that will prepare it.
-        mRetriever = new MusicRetriever(getContentResolver());
-        (new PrepareMusicRetrieverTask(mRetriever,this)).execute();
+        retriever = new MusicRetriever(getContentResolver());
+        (new PrepareMusicRetrieverTask(retriever, this)).execute();
 
         // create the Audio Focus Helper, if the Audio Focus feature is available (SDK 8 or above)
         if (android.os.Build.VERSION.SDK_INT >= 8)
-            mAudioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
+            audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
         else
             audioFocus = AudioFocus.Focused; // no focus feature, so we always "have" audio focus
 
@@ -317,8 +319,8 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      */
     void giveUpAudioFocus() {
         if (isDebug) Log.d(LOG, "giveUpAudioFocus");
-        if (audioFocus == AudioFocus.Focused && mAudioFocusHelper != null
-                                && mAudioFocusHelper.abandonFocus())
+        if (audioFocus == AudioFocus.Focused && audioFocusHelper != null
+                                && audioFocusHelper.abandonFocus())
             audioFocus = AudioFocus.NoFocusNoDuck;
     }
 
@@ -366,8 +368,8 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
 
     void tryToGetAudioFocus() {
         if (isDebug) Log.d(LOG, "tryToGetAudioFocus");
-        if (audioFocus != AudioFocus.Focused && mAudioFocusHelper != null
-                        && mAudioFocusHelper.requestFocus())
+        if (audioFocus != AudioFocus.Focused && audioFocusHelper != null
+                        && audioFocusHelper.requestFocus())
             audioFocus = AudioFocus.Focused;
     }
 
@@ -383,7 +385,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         relaxResources(false); // release everything except MediaPlayer
 
         try {
-            MusicRetriever.Item playingItem = null;
+            MusicRetriever.Item playingItem;
             if (manualUrl != null) {
                 // set the source of the media player to a manual URL or path
                 createMediaPlayerIfNeeded();
@@ -396,7 +398,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             else {
                 isStreaming = false; // playing a locally available song
 
-                playingItem = mRetriever.getRandomItem();
+                playingItem = retriever.getRandomItem();
                 if (playingItem == null) {
                     Toast.makeText(
 		                    this,
@@ -465,7 +467,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         mNotificationBuilder.setContentText(text).setContentIntent(pi);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+        notificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
     /**
