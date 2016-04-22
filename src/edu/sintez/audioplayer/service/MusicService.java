@@ -116,10 +116,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     // providing titles and URIs as we need.
     MusicRetriever mRetriever;
 
-    // our RemoteControlClient object, which will use remote control APIs available in
-    // SDK level >= 14, if they're available.
-//    RemoteControlClientCompat mRemoteControlClientCompat;
-
     // Dummy album art we will pass to the remote control (if the APIs are available).
     Bitmap mDummyAlbumArt;
 
