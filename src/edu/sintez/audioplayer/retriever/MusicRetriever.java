@@ -103,6 +103,7 @@ public class MusicRetriever {
                     cur.getLong(durationColumn)
             ));
         } while (cur.moveToNext());
+        cur.close();
 
         if (isDebug) Log.d(LOG, "mus items list size = " + mItems.size());
         if (isDebug) Log.d(LOG, "Done querying media. MusicRetriever is ready.");
