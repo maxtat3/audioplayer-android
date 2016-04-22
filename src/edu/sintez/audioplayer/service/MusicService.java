@@ -131,7 +131,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
      */
     void createMediaPlayerIfNeeded() {
         if (mp == null) {
-            Log.d(LOG, "media player is null !");
+            Log.d(LOG, "createMediaPlayerIfNeeded - mp is null !");
             mp = new MediaPlayer();
 
             // Make sure the media player will acquire a wake-lock while playing. If we don't do
@@ -148,6 +148,7 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
             mp.setOnErrorListener(this);
         }
         else
+            Log.d(LOG, "createMediaPlayerIfNeeded - mp is not null");
             mp.reset();
     }
 
