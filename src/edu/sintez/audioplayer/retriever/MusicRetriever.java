@@ -117,7 +117,7 @@ public class MusicRetriever {
     public Item getRandomItem() {
         if (mItems.size() <= 0) return null;
         int number = mRandom.nextInt(mItems.size());
-        Log.d(LOG, "number = " + number);
+        if(isDebug) Log.d(LOG, "number of returner random song = " + number);
         return mItems.get(number);
     }
 
