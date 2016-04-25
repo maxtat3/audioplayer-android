@@ -6,12 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.*;
 import edu.sintez.audioplayer.service.MusicService;
 
 /**
@@ -19,7 +17,8 @@ import edu.sintez.audioplayer.service.MusicService;
  * lets the user click them. No media handling is done here -- everything is done by passing
  * Intents to our {@link MusicService}.
  * */
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+	private static final String LOG = MainActivity.class.getName();
 	/**
 	 * The URL we suggest as default when adding by URL. This is just so that the user doesn't
 	 * have to find an URL to test this sample.
@@ -34,7 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button mEjectButton;
 	private Button openPlaylist;
 	private ListView lvPlaylist;
-	String[] data = {"item 1", "item 2", "item 3", "item 4", "item 5"};
+	String[] data = {"item 1", "item 2", "item 3", "item 4", "/mnt/sdcard/Download/music.mp3"};
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -56,6 +55,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
 		lvPlaylist.setAdapter(adapter);
+		lvPlaylist.setOnItemClickListener(this);
 
 		mPlayButton.setOnClickListener(this);
 		mPauseButton.setOnClickListener(this);
@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		else if (view == mEjectButton) {
 			showUrlDialog();
 		} else if (view == openPlaylist) {
-
+			Log.d(LOG, "Do open playlist.");
 		}
 	}
 
@@ -126,5 +126,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Log.d(LOG, "position = " + position);
 	}
 }
