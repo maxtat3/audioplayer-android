@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import edu.sintez.audioplayer.service.MusicService;
 
 /**
@@ -30,6 +32,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button mRewindButton;
 	private Button mStopButton;
 	private Button mEjectButton;
+	private Button openPlaylist;
+	private ListView lvPlaylist;
+	String[] data = {"item 1", "item 2", "item 3", "item 4", "item 5"};
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -47,6 +52,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mRewindButton = (Button) findViewById(R.id.rewindbutton);
 		mStopButton = (Button) findViewById(R.id.stopbutton);
 		mEjectButton = (Button) findViewById(R.id.ejectbutton);
+		openPlaylist = (Button) findViewById(R.id.openplaylist);
+		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+		lvPlaylist.setAdapter(adapter);
 
 		mPlayButton.setOnClickListener(this);
 		mPauseButton.setOnClickListener(this);
@@ -54,6 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mRewindButton.setOnClickListener(this);
 		mStopButton.setOnClickListener(this);
 		mEjectButton.setOnClickListener(this);
+		openPlaylist.setOnClickListener(this);
 	}
 
 	@Override
@@ -71,6 +81,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startService(new Intent(MusicService.ACTION_STOP));
 		else if (view == mEjectButton) {
 			showUrlDialog();
+		} else if (view == openPlaylist) {
+
 		}
 	}
 

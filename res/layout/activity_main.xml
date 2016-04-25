@@ -69,6 +69,19 @@
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
+		<Button android:id="@+id/openplaylist"
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				android:text="pl"
+				/>
+
 	</LinearLayout>
+
+	<ListView
+			android:id="@+id/lv_playlist"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			/>
 </LinearLayout>
 
