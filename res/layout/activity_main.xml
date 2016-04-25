@@ -3,7 +3,7 @@
 			  android:orientation="vertical"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
-			  android:gravity="center"
+			  android:gravity="top"
 			  android:background="#000040">
 
 	<TextView android:text="Audio player"
@@ -19,26 +19,34 @@
 				  android:layout_height="wrap_content"
 				  android:gravity="center"
 				  android:layout_margin="10dp">
+
 		<Button android:id="@+id/rewindbutton"
 				android:background="@drawable/btn_rew"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
 		<Button android:id="@+id/playbutton"
 				android:background="@drawable/btn_play"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
 		<Button android:id="@+id/pausebutton"
 				android:background="@drawable/btn_pause"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
 		<Button android:id="@+id/skipbutton"
 				android:background="@drawable/btn_ff"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
 	</LinearLayout>
 
 	<LinearLayout android:orientation="horizontal"
@@ -46,16 +54,20 @@
 				  android:layout_height="wrap_content"
 				  android:gravity="center"
 				  android:layout_margin="10dp">
+
 		<Button android:id="@+id/stopbutton"
 				android:background="@drawable/btn_stop"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
 		<Button android:id="@+id/ejectbutton"
 				android:background="@drawable/btn_eject"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_margin="5dp" />
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
 
 	</LinearLayout>
 </LinearLayout>

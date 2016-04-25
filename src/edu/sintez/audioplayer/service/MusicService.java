@@ -78,7 +78,6 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
                     // so that we know we have to resume playback once we get focus back)
         Paused      // playback paused (media player ready!)
     }
-
     State state = State.Retrieving;
 
     // if in Retrieving mode, this flag indicates whether we should start playing immediately
