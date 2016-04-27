@@ -20,28 +20,28 @@
 				  android:gravity="center"
 				  android:layout_margin="10dp">
 
-		<Button android:id="@+id/rewindbutton"
+		<Button android:id="@+id/btn_prev_song"
 				android:background="@drawable/btn_rew"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
-		<Button android:id="@+id/playbutton"
+		<Button android:id="@+id/btn_play"
 				android:background="@drawable/btn_play"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
-		<Button android:id="@+id/pausebutton"
+		<Button android:id="@+id/btn_pause"
 				android:background="@drawable/btn_pause"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
-		<Button android:id="@+id/skipbutton"
+		<Button android:id="@+id/btn_next_song"
 				android:background="@drawable/btn_ff"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
@@ -55,21 +55,21 @@
 				  android:gravity="center"
 				  android:layout_margin="10dp">
 
-		<Button android:id="@+id/stopbutton"
+		<Button android:id="@+id/btn_stop"
 				android:background="@drawable/btn_stop"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
-		<Button android:id="@+id/ejectbutton"
+		<Button android:id="@+id/btn_open_from_url"
 				android:background="@drawable/btn_eject"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
 				/>
 
-		<Button android:id="@+id/openplaylist"
+		<Button android:id="@+id/btn_open_playlist"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"

@@ -25,13 +25,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Adap
 	 */
 	final String SUGGESTED_URL = "http://www.vorbis.com/music/Epoq-Lepidoptera.ogg";
 
-	private Button mPlayButton;
-	private Button mPauseButton;
-	private Button mSkipButton;
-	private Button mRewindButton;
-	private Button mStopButton;
-	private Button mEjectButton;
-	private Button openPlaylist;
+	private Button btnPlay;
+	private Button btnPause;
+	private Button btnNextSong;
+	private Button btnPrevSong;
+	private Button btnStop;
+	private Button btnOpenFromURL;
+	private Button btnOpenPlaylist;
 	private ListView lvPlaylist;
 	String[] data = {"item 1", "item 2", "item 3", "item 4", "/mnt/sdcard/Download/music.mp3"};
 
@@ -45,43 +45,43 @@ public class MainActivity extends Activity implements View.OnClickListener, Adap
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mPlayButton = (Button) findViewById(R.id.playbutton);
-		mPauseButton = (Button) findViewById(R.id.pausebutton);
-		mSkipButton = (Button) findViewById(R.id.skipbutton);
-		mRewindButton = (Button) findViewById(R.id.rewindbutton);
-		mStopButton = (Button) findViewById(R.id.stopbutton);
-		mEjectButton = (Button) findViewById(R.id.ejectbutton);
-		openPlaylist = (Button) findViewById(R.id.openplaylist);
+		btnPlay = (Button) findViewById(R.id.btn_play);
+		btnPause = (Button) findViewById(R.id.btn_pause);
+		btnNextSong = (Button) findViewById(R.id.btn_next_song);
+		btnPrevSong = (Button) findViewById(R.id.btn_prev_song);
+		btnStop = (Button) findViewById(R.id.btn_stop);
+		btnOpenFromURL = (Button) findViewById(R.id.btn_open_from_url);
+		btnOpenPlaylist = (Button) findViewById(R.id.btn_open_playlist);
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
 
-		mPlayButton.setOnClickListener(this);
-		mPauseButton.setOnClickListener(this);
-		mSkipButton.setOnClickListener(this);
-		mRewindButton.setOnClickListener(this);
-		mStopButton.setOnClickListener(this);
-		mEjectButton.setOnClickListener(this);
-		openPlaylist.setOnClickListener(this);
+		btnPlay.setOnClickListener(this);
+		btnPause.setOnClickListener(this);
+		btnNextSong.setOnClickListener(this);
+		btnPrevSong.setOnClickListener(this);
+		btnStop.setOnClickListener(this);
+		btnOpenFromURL.setOnClickListener(this);
+		btnOpenPlaylist.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view) {
 		// Send the correct intent to the MusicService, according to the button that was clicked
-		if (view == mPlayButton)
+		if (view == btnPlay)
 			startService(new Intent(MusicService.ACTION_PLAY));
-		else if (view == mPauseButton)
+		else if (view == btnPause)
 			startService(new Intent(MusicService.ACTION_PAUSE));
-		else if (view == mSkipButton)
+		else if (view == btnNextSong)
 			startService(new Intent(MusicService.ACTION_SKIP));
-		else if (view == mRewindButton)
+		else if (view == btnPrevSong)
 			startService(new Intent(MusicService.ACTION_REWIND));
-		else if (view == mStopButton)
+		else if (view == btnStop)
 			startService(new Intent(MusicService.ACTION_STOP));
-		else if (view == mEjectButton) {
+		else if (view == btnOpenFromURL) {
 			showUrlDialog();
-		} else if (view == openPlaylist) {
+		} else if (view == btnOpenPlaylist) {
 			Log.d(LOG, "Do open playlist.");
 		}
 	}
