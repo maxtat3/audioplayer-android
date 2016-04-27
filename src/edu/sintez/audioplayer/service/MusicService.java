@@ -53,8 +53,8 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
     public static final String ACTION_PLAY = "com.example.android.musicplayer.action.PLAY";
     public static final String ACTION_PAUSE = "com.example.android.musicplayer.action.PAUSE";
     public static final String ACTION_STOP = "com.example.android.musicplayer.action.STOP";
-    public static final String ACTION_SKIP = "com.example.android.musicplayer.action.SKIP";
-    public static final String ACTION_REWIND = "com.example.android.musicplayer.action.REWIND";
+    public static final String ACTION_NEXT = "com.example.android.musicplayer.action.SKIP";
+    public static final String ACTION_PREV = "com.example.android.musicplayer.action.REWIND";
     public static final String ACTION_URL = "com.example.android.musicplayer.action.URL";
 
     // The volume we set the media player to when we lose audio focus, but are allowed to reduce
@@ -189,9 +189,9 @@ public class MusicService extends Service implements OnCompletionListener, OnPre
         if (action.equals(ACTION_TOGGLE_PLAYBACK)) processTogglePlaybackRequest();
         else if (action.equals(ACTION_PLAY)) processPlayRequest();
         else if (action.equals(ACTION_PAUSE)) processPauseRequest();
-        else if (action.equals(ACTION_SKIP)) processSkipRequest();
+        else if (action.equals(ACTION_NEXT)) processSkipRequest();
         else if (action.equals(ACTION_STOP)) processStopRequest();
-        else if (action.equals(ACTION_REWIND)) processRewindRequest();
+        else if (action.equals(ACTION_PREV)) processRewindRequest();
         else if (action.equals(ACTION_URL)) processAddRequest(intent);
 
         return START_NOT_STICKY; // Means we started the service, but don't want it to

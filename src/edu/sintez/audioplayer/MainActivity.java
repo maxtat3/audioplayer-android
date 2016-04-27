@@ -74,9 +74,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Adap
 		else if (view == btnPause)
 			startService(new Intent(MusicService.ACTION_PAUSE));
 		else if (view == btnNextSong)
-			startService(new Intent(MusicService.ACTION_SKIP));
+			startService(new Intent(MusicService.ACTION_NEXT));
 		else if (view == btnPrevSong)
-			startService(new Intent(MusicService.ACTION_REWIND));
+			startService(new Intent(MusicService.ACTION_PREV));
 		else if (view == btnStop)
 			startService(new Intent(MusicService.ACTION_STOP));
 		else if (view == btnOpenFromURL) {
