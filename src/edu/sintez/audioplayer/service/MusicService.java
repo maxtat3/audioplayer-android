@@ -26,6 +26,7 @@ import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.audiofocus.AudioFocusHelper;
 import edu.sintez.audioplayer.audiofocus.MusicFocusable;
+import edu.sintez.audioplayer.retriever.Track;
 
 import java.io.IOException;
 
@@ -37,8 +38,8 @@ import java.io.IOException;
  * Rewind, Skip, etc.
  */
 public class MusicService extends Service implements OnCompletionListener,
-		OnPreparedListener, OnErrorListener, MusicFocusable,
-        PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
+		OnPreparedListener, OnErrorListener, MusicFocusable
+         {
 
     // The tag we put on debug messages
     private static final String LOG = MusicService.class.getName();
@@ -132,10 +133,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 	private AudioManager audioManager;
 
-	/**
-	 * Handles for scanning for media and providing titles and URIs as we need.
-	 */
-    private MusicRetriever retriever;
+
 
 	/**
 	 * Title of the song we are currently playing using for notification
@@ -168,9 +166,6 @@ public class MusicService extends Service implements OnCompletionListener,
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
-		// Create the retriever and start an asynchronous task that will prepare it.
-		retriever = new MusicRetriever(getContentResolver());
-		(new PrepareMusicRetrieverTask(retriever, this)).execute();
 
 		// create the Audio Focus Helper, if the Audio Focus feature is available (SDK 8 or above)
 		if (android.os.Build.VERSION.SDK_INT >= 8)
@@ -373,7 +368,7 @@ public class MusicService extends Service implements OnCompletionListener,
 		relaxResources(false); // release everything except MediaPlayer
 
 		try {
-			MusicRetriever.Item playingItem;
+			Track playingItem = null;
 			if (manualUrl != null) {
 				// set the source of the media player to a manual URL or path
 				createMediaPlayerIfNeeded();
@@ -381,12 +376,13 @@ public class MusicService extends Service implements OnCompletionListener,
 				mp.setDataSource(manualUrl);
 				isStreaming = manualUrl.startsWith("http:") || manualUrl.startsWith("https:");
 
-				playingItem = new MusicRetriever.Item(0, null, manualUrl, null, 0);
+				playingItem = new Track(0, null, manualUrl, null, 0);
 			}
 			else {
 				isStreaming = false; // playing a locally available song
 
-				playingItem = retriever.getRandomItem();
+//				playingItem = retriever.getRandomItem();
+//				Track playingItem =null; //todo - mock
 				if (isDebug) Log.d(LOG, playingItem == null ? "playingItem is null ! " : "playingItem is not null." );
 				if (playingItem == null) {
 					Toast.makeText(
@@ -552,18 +548,18 @@ public class MusicService extends Service implements OnCompletionListener,
             configAndStartMediaPlayer();
     }
 
-    @Override
-    public void onMusicRetrieverPrepared() {
-        if (isDebug) Log.d(LOG, "onMusicRetrieverPrepared ");
-        // Done retrieving!
-        state = State.STOPPED;
-
-        // If the flag indicates we should start playing after retrieving, let's do that now.
-        if (isStartPlayingAfterRetrieve) {
-            tryToGetAudioFocus();
-            playNextSong(dataPlayAfterRetrieve == null ? null : dataPlayAfterRetrieve.toString());
-        }
-    }
+//    @Override
+//    public void onMusicRetrieverPrepared() {
+//        if (isDebug) Log.d(LOG, "onMusicRetrieverPrepared ");
+//        // Done retrieving!
+//        state = State.STOPPED;
+//
+//        // If the flag indicates we should start playing after retrieving, let's do that now.
+//        if (isStartPlayingAfterRetrieve) {
+//            tryToGetAudioFocus();
+//            playNextSong(dataPlayAfterRetrieve == null ? null : dataPlayAfterRetrieve.toString());
+//        }
+//    }
 
 	/**
 	 * Called when there's an error playing media. When this happens, the media player goes to

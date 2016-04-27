@@ -17,7 +17,6 @@
 package edu.sintez.audioplayer.retriever;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -40,7 +39,7 @@ public class MusicRetriever {
     ContentResolver mContentResolver;
 
     // the items (songs) we have queried
-    List<Item> mItems = new ArrayList<Item>();
+    List<Track> tracks = new ArrayList<Track>();
 
     Random mRandom = new Random();
 
@@ -92,10 +91,10 @@ public class MusicRetriever {
         if (isDebug) Log.d(LOG, "Title column index: " + String.valueOf(titleColumn));
         if (isDebug) Log.d(LOG, "ID column index: " + String.valueOf(titleColumn));
 
-        // add each song to mItems
+        // add each song to tracks
         do {
             if (isDebug) Log.d(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
-            mItems.add(new Item(
+            tracks.add(new Track(
                     cur.getLong(idColumn),
                     cur.getString(artistColumn),
                     cur.getString(titleColumn),
@@ -105,7 +104,7 @@ public class MusicRetriever {
         } while (cur.moveToNext());
         cur.close();
 
-        if (isDebug) Log.d(LOG, "mus items list size = " + mItems.size());
+        if (isDebug) Log.d(LOG, "mus items list size = " + tracks.size());
         if (isDebug) Log.d(LOG, "Done querying media. MusicRetriever is ready.");
     }
 
@@ -113,53 +112,16 @@ public class MusicRetriever {
         return mContentResolver;
     }
 
-    /** Returns a random Item. If there are no items available, returns null. */
-    public Item getRandomItem() {
-        if (mItems.size() <= 0) return null;
-        int number = mRandom.nextInt(mItems.size());
+    /** Returns a random Track. If there are no items available, returns null. */
+    public Track getRandomItem() {
+        if (tracks.size() <= 0) return null;
+        int number = mRandom.nextInt(tracks.size());
         if(isDebug) Log.d(LOG, "number of returner random song = " + number);
-        return mItems.get(number);
+        return tracks.get(number);
     }
 
-
-    public static class Item {
-        long id;
-        String artist;
-        String title;
-        String album;
-        long duration;
-
-        public Item(long id, String artist, String title, String album, long duration) {
-            this.id = id;
-            this.artist = artist;
-            this.title = title;
-            this.album = album;
-            this.duration = duration;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        public String getArtist() {
-            return artist;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getAlbum() {
-            return album;
-        }
-
-        public long getDuration() {
-            return duration;
-        }
-
-        public Uri getURI() {
-            return ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
-        }
+    public List<Track> getAllAudioTracks() {
+        return tracks;
     }
+
 }
