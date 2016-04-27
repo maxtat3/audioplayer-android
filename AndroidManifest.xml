@@ -21,7 +21,9 @@
 			</intent-filter>
 		</activity>
 
-		<service android:exported="false" android:name=".service.MusicService">
+		<service
+				android:exported="false"
+				android:name=".service.MusicService">
 			<intent-filter>
 				<action android:name="com.example.android.musicplayer.action.TOGGLE_PLAYBACK" />
 				<action android:name="com.example.android.musicplayer.action.PLAY" />
