@@ -163,7 +163,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 		// Create the Wifi lock (this does not acquire the lock, this just creates it)
 		wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-			.createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+			.createWifiLock(WifiManager.WIFI_MODE_FULL, "wifilock");
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
