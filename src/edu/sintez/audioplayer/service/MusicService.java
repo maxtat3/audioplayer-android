@@ -42,6 +42,9 @@ public class MusicService extends Service implements OnCompletionListener,
 
     // The tag we put on debug messages
     private static final String LOG = MusicService.class.getName();
+
+	// Displayed log in terminal.
+	// If true - do display log.
     private boolean isDebug = true;
 
     // These are the Intent actions that we are prepared to handle. Notice that the fact these
@@ -56,98 +59,102 @@ public class MusicService extends Service implements OnCompletionListener,
     public static final String ACTION_PREV = "com.example.android.musicplayer.action.REWIND";
     public static final String ACTION_URL = "com.example.android.musicplayer.action.URL";
 
-    //
-	/**
-	 * The volume we set the media player to when we lose audio focus,
-	 * but are allowed to reduce the volume instead of stopping playback.
-	 *
-	 * @see MediaPlayer
-	 */
-    public static final float DUCK_VOLUME = 0.3f;
-
-    private MediaPlayer mp = null;
-
-    // our AudioFocusHelper object, if it's available (it's available on SDK level >= 8)
-    // If not available, this will be null. Always check for null before using!
-	/**
-	 *
-	 */
-    private AudioFocusHelper audioFocusHelper = null;
-
-	/**
-	 * Indicates the state our service:
-	 */
-    private enum State {
-	    RETRIEVING, // the MediaRetriever is retrieving music
-	    STOPPED,    // media player is stopped and not prepared to play
-	    PREPARING,  // media player is preparing ...
-	    PLAYING,    // playback active (media player ready!). (but the media player may actually be
-                    // paused in this state if we don't have audio focus. But we stay in this state
-                    // so that we know we have to resume playback once we get focus back)
-        PAUSED      // playback paused (media player ready!)
-    }
-    private State state = State.RETRIEVING;
-
 	/**
 	 * If in Retrieving mode, this flag indicates whether we should start playing
 	 * immediately when we are ready or not.
 	 * Если в режиме ожидания, этот флаг указывает на то, должны ли мы сразу начать играть,
 	 * когда мы готовы или нет.
 	 */
-    private boolean isStartPlayingAfterRetrieve = false;
+	private boolean isStartPlayingAfterRetrieve = false;
 
 	/**
 	 * If {@link #isStartPlayingAfterRetrieve} is true, this variable indicates the URL that we should
 	 * start playing when we are ready. If null, we should play a random song from the device local storage.
 	 */
-    private Uri dataPlayAfterRetrieve = null;
+	private Uri dataPlayAfterRetrieve = null;
 
 	/**
-	 * Do we have audio focus ?
+	 * Indicates the state our service:
 	 */
-	private enum AudioFocus {
-	    NO_FOCUS_NO_DUCK,   // we don't have audio focus, and can't duck
-	    NO_FOCUS_CAN_DUCK,  // we don't have focus, but can play at a low volume ("ducking")
-        FOCUSED             // we have full audio focus
-    }
-    private AudioFocus audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
-
-	/**
-	 * Title of the song we are currently playing using for notification
-	 */
-    private String songTitle = "";
+	private enum State {
+		RETRIEVING,     // the MediaRetriever is retrieving music
+		STOPPED,        // media player is stopped and not prepared to play
+		PREPARING,      // media player is preparing ...
+		PLAYING,        // playback active (media player ready!). (but the media player may actually be
+						// paused in this state if we don't have audio focus. But we stay in this state
+						// so that we know we have to resume playback once we get focus back)
+		PAUSED          // playback paused (media player ready!)
+	}
+	private State state = State.RETRIEVING;
 
 	/**
 	 * Whether the song we are playing is streaming from the network
 	 * true - play from local storage, otherwise from URL
 	 */
-    private boolean isStreaming = false;
+	private boolean isStreaming = false;
+
+	/**
+	 * Do we have audio focus ?
+	 */
+	private enum AudioFocus {
+		NO_FOCUS_NO_DUCK,   // we don't have audio focus, and can't duck
+		NO_FOCUS_CAN_DUCK,  // we don't have focus, but can play at a low volume ("ducking")
+		FOCUSED             // we have full audio focus
+	}
+	private AudioFocus audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
+
+	/**
+	 * Class to deal with audio focus.
+	 * May be used on sdk level 8 and above.
+	 * If not available, this will be null. Always check for null before using!
+	 */
+	private AudioFocusHelper audioFocusHelper = null;
+
+	/**
+	 * The volume we set the media player to when we lose audio focus,
+	 * but are allowed to reduce the volume instead of stopping playback.
+	 *
+	 * @see MediaPlayer
+	 */
+
+    public static final float DUCK_VOLUME = 0.3f;
 
 	/**
 	 * Wifi lock that we hold when streaming files from the internet,
 	 * in order to prevent the device from shutting off the Wifi radio
 	 */
-    private WifiLock wifiLock;
+	private WifiLock wifiLock;
 
 	/**
-	 * The ID we use for the notification
+	 * Main audio player object.
 	 */
-    private final int NOTIFICATION_ID = 1;
+	private MediaPlayer mp = null;
+
+	private AudioManager audioManager;
 
 	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
     private MusicRetriever retriever;
 
-    private Bitmap mDummyAlbumArt;
+	/**
+	 * Title of the song we are currently playing using for notification
+	 */
+	private String songTitle = "";
 
-    private AudioManager audioManager;
+	/**
+	 * The ID we use for the notification
+	 */
+	private final int NOTIFICATION_ID = 1;
 
 	/**
 	 * For displayed notifications
 	 */
     private NotificationManager notificationManager;
+
     private Notification.Builder mNotificationBuilder = null;
+
+	private Bitmap mDummyAlbumArt;
 
 
 	@Override
