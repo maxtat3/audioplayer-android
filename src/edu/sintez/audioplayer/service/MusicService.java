@@ -167,10 +167,10 @@ public class MusicService extends Service implements OnCompletionListener,
             mp.setOnPreparedListener(this); // ready playback
             mp.setOnCompletionListener(this); // end playback listener
             mp.setOnErrorListener(this);
+        } else {
+	        Log.d(LOG, "createMediaPlayerIfNeeded - mp is not null");
+	        mp.reset();
         }
-        else
-            Log.d(LOG, "createMediaPlayerIfNeeded - mp is not null");
-            mp.reset();
     }
 
     @Override
@@ -206,28 +206,28 @@ public class MusicService extends Service implements OnCompletionListener,
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        if (action.equals(ACTION_TOGGLE_PLAYBACK)) processTogglePlaybackRequest();
-        else if (action.equals(ACTION_PLAY)) processPlayRequest();
-        else if (action.equals(ACTION_PAUSE)) processPauseRequest();
-        else if (action.equals(ACTION_NEXT)) processSkipRequest();
-        else if (action.equals(ACTION_STOP)) processStopRequest();
-        else if (action.equals(ACTION_PREV)) processRewindRequest();
-        else if (action.equals(ACTION_URL)) processAddRequest(intent);
+        if (action.equals(ACTION_TOGGLE_PLAYBACK)) togglePlaybackRequest();
+        else if (action.equals(ACTION_PLAY)) playRequest();
+        else if (action.equals(ACTION_PAUSE)) pauseRequest();
+        else if (action.equals(ACTION_NEXT)) nextSongRequest();
+        else if (action.equals(ACTION_STOP)) stopRequest();
+        else if (action.equals(ACTION_PREV)) previousSongRequest();
+        else if (action.equals(ACTION_URL)) playFromURLRequest(intent);
 
         return START_NOT_STICKY; // Means we started the service, but don't want it to
                                  // restart in case it's killed.
     }
 
-    void processTogglePlaybackRequest() {
+    void togglePlaybackRequest() {
         if (state == State.PAUSED || state == State.STOPPED) {
-            processPlayRequest();
+            playRequest();
         } else {
-            processPauseRequest();
+            pauseRequest();
         }
     }
 
-    void processPlayRequest() {
-        if (isDebug) Log.d(LOG, "processPlayRequest");
+    void playRequest() {
+        if (isDebug) Log.d(LOG, "playRequest");
         if (state == State.RETRIEVING) {
             // If we are still retrieving media, just set the flag to start playing when we're
             // ready
@@ -252,8 +252,8 @@ public class MusicService extends Service implements OnCompletionListener,
         }
     }
 
-    void processPauseRequest() {
-        if (isDebug) Log.d(LOG, "processPauseRequest");
+    void pauseRequest() {
+        if (isDebug) Log.d(LOG, "pauseRequest");
         if (state == State.RETRIEVING) {
             // If we are still retrieving media, clear the flag that indicates we should start
             // playing when we're ready
@@ -273,8 +273,8 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Previous song
      */
-    void processRewindRequest() {
-        if (isDebug) Log.d(LOG, "processRewindRequest");
+    void previousSongRequest() {
+        if (isDebug) Log.d(LOG, "previousSongRequest");
         if (state == State.PLAYING || state == State.PAUSED)
             mp.seekTo(0);
     }
@@ -282,8 +282,8 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Next song
      */
-    void processSkipRequest() {
-        if (isDebug) Log.d(LOG, "processSkipRequest");
+    void nextSongRequest() {
+        if (isDebug) Log.d(LOG, "nextSongRequest");
         if (state == State.PLAYING || state == State.PAUSED) {
             tryToGetAudioFocus();
             playNextSong(null);
@@ -293,12 +293,12 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Stop song
      */
-    void processStopRequest() {
-        processStopRequest(false);
+    void stopRequest() {
+        stopRequest(false);
     }
 
-    void processStopRequest(boolean force) {
-        if (isDebug) Log.d(LOG, "processStopRequest, force = " + force);
+    void stopRequest(boolean force) {
+        if (isDebug) Log.d(LOG, "stopRequest, force = " + force);
         if (state == State.PLAYING || state == State.PAUSED || force) {
             state = State.STOPPED;
 
@@ -338,9 +338,8 @@ public class MusicService extends Service implements OnCompletionListener,
      */
     void giveUpAudioFocus() {
         if (isDebug) Log.d(LOG, "giveUpAudioFocus");
-        if (audioFocus == AudioFocus.FOCUSED && audioFocusHelper != null
-                                && audioFocusHelper.abandonFocus())
-            audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
+        if (audioFocus == AudioFocus.FOCUSED && audioFocusHelper != null && audioFocusHelper.abandonFocus())
+	        audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
     }
 
     /**
@@ -368,8 +367,8 @@ public class MusicService extends Service implements OnCompletionListener,
         if (!mp.isPlaying()) mp.start();
     }
 
-    void processAddRequest(Intent intent) {
-        if (isDebug) Log.d(LOG, "processAddRequest - request play from URL");
+    void playFromURLRequest(Intent intent) {
+        if (isDebug) Log.d(LOG, "playFromURLRequest - request play from URL");
         // user wants to play a song directly by URL or path. The URL or path comes in the "data"
         // part of the Intent. This Intent is sent by {@link MainActivity} after the user
         // specifies the URL/path via an alert box.
@@ -426,7 +425,7 @@ public class MusicService extends Service implements OnCompletionListener,
                             + "device (e.g. your SD card) and try again.",
                             Toast.LENGTH_LONG
                     ).show();
-                    processStopRequest(true); // stop everything!
+                    stopRequest(true); // stop everything!
                     return;
                 }
 
