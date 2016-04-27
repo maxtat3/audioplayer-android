@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
+import edu.sintez.audioplayer.adapter.PlaylistAdapter;
 import edu.sintez.audioplayer.retriever.MusicRetriever;
 import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
+import edu.sintez.audioplayer.retriever.Track;
 import edu.sintez.audioplayer.service.MusicService;
 
 import java.util.ArrayList;
@@ -23,8 +25,10 @@ import java.util.List;
  * lets the user click them. No media handling is done here -- everything is done by passing
  * Intents to our {@link MusicService}.
  * */
-public class MainActivity extends Activity implements View.OnClickListener,
-	AdapterView.OnItemClickListener, PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
+public class MainActivity extends Activity implements
+	View.OnClickListener,
+	AdapterView.OnItemClickListener,
+	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
 
 	private static final String LOG = MainActivity.class.getName();
 
@@ -47,9 +51,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	private Button btnOpenFromURL;
 	private Button btnOpenPlaylist;
 	private Button btnGetAllMusFromDevice;
+
 	private ListView lvPlaylist;
-	ArrayAdapter<String> adapter;
-	private List<String> data = new ArrayList<String>(Arrays.asList("item 1", "item 2", "item 3", "item 4", "/mnt/sdcard/Download/music.mp3"));
+	private ArrayAdapter<Track> adapter;
+	private List<Track> data = new ArrayList<Track>();
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -80,7 +85,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		btnGetAllMusFromDevice.setOnClickListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, data);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
 	}
@@ -104,7 +109,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		else if (view == btnGetAllMusFromDevice) {
 			retriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(retriever, this)).execute();
-
 		}
 	}
 
@@ -157,7 +161,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	@Override
 	public void onMusicRetrieverPrepared() {
-		adapter.addAll(retriever.getAllAudioTracks().get(0).getTitle());
+		data = retriever.getAllAudioTracks();
+		adapter.addAll(data);
 		adapter.notifyDataSetChanged();
 	}
 }
