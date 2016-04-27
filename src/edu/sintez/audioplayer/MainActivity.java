@@ -23,7 +23,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Adap
 	 * The URL we suggest as default when adding by URL. This is just so that the user doesn't
 	 * have to find an URL to test this sample.
 	 */
-	final String SUGGESTED_URL = "http://www.vorbis.com/music/Epoq-Lepidoptera.ogg";
+	private static final String SUGGESTED_URL = "http://www.vorbis.com/music/Epoq-Lepidoptera.ogg";
 
 	private Button btnPlay;
 	private Button btnPause;
@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Adap
 	private Button btnOpenFromURL;
 	private Button btnOpenPlaylist;
 	private ListView lvPlaylist;
-	String[] data = {"item 1", "item 2", "item 3", "item 4", "/mnt/sdcard/Download/music.mp3"};
+	private String[] data = {"item 1", "item 2", "item 3", "item 4", "/mnt/sdcard/Download/music.mp3"};
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and

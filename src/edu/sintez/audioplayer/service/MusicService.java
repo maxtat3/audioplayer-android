@@ -65,16 +65,19 @@ public class MusicService extends Service implements OnCompletionListener,
 	 */
     public static final float DUCK_VOLUME = 0.3f;
 
-    MediaPlayer mp = null;
+    private MediaPlayer mp = null;
 
     // our AudioFocusHelper object, if it's available (it's available on SDK level >= 8)
     // If not available, this will be null. Always check for null before using!
-    AudioFocusHelper audioFocusHelper = null;
+	/**
+	 *
+	 */
+    private AudioFocusHelper audioFocusHelper = null;
 
 	/**
 	 * Indicates the state our service:
 	 */
-    enum State {
+    private enum State {
 	    RETRIEVING, // the MediaRetriever is retrieving music
 	    STOPPED,    // media player is stopped and not prepared to play
 	    PREPARING,  // media player is preparing ...
@@ -83,7 +86,7 @@ public class MusicService extends Service implements OnCompletionListener,
                     // so that we know we have to resume playback once we get focus back)
         PAUSED      // playback paused (media player ready!)
     }
-    State state = State.RETRIEVING;
+    private State state = State.RETRIEVING;
 
 	/**
 	 * If in Retrieving mode, this flag indicates whether we should start playing
@@ -91,60 +94,60 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * Если в режиме ожидания, этот флаг указывает на то, должны ли мы сразу начать играть,
 	 * когда мы готовы или нет.
 	 */
-    boolean isStartPlayingAfterRetrieve = false;
+    private boolean isStartPlayingAfterRetrieve = false;
 
 	/**
 	 * If {@link #isStartPlayingAfterRetrieve} is true, this variable indicates the URL that we should
 	 * start playing when we are ready. If null, we should play a random song from the device local storage.
 	 */
-    Uri dataPlayAfterRetrieve = null;
+    private Uri dataPlayAfterRetrieve = null;
 
 	/**
 	 * Do we have audio focus ?
 	 */
-	enum AudioFocus {
+	private enum AudioFocus {
 	    NO_FOCUS_NO_DUCK,   // we don't have audio focus, and can't duck
 	    NO_FOCUS_CAN_DUCK,  // we don't have focus, but can play at a low volume ("ducking")
         FOCUSED             // we have full audio focus
     }
-    AudioFocus audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
+    private AudioFocus audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
 
 	/**
 	 * Title of the song we are currently playing using for notification
 	 */
-    String songTitle = "";
+    private String songTitle = "";
 
 	/**
 	 * Whether the song we are playing is streaming from the network
 	 * true - play from local storage, otherwise from URL
 	 */
-    boolean isStreaming = false;
+    private boolean isStreaming = false;
 
 	/**
 	 * Wifi lock that we hold when streaming files from the internet,
 	 * in order to prevent the device from shutting off the Wifi radio
 	 */
-    WifiLock wifiLock;
+    private WifiLock wifiLock;
 
 	/**
 	 * The ID we use for the notification
 	 */
-    final int NOTIFICATION_ID = 1;
+    private final int NOTIFICATION_ID = 1;
 
 	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
-    MusicRetriever retriever;
+    private MusicRetriever retriever;
 
-    Bitmap mDummyAlbumArt;
+    private Bitmap mDummyAlbumArt;
 
-    AudioManager audioManager;
+    private AudioManager audioManager;
 
 	/**
 	 * For displayed notifications
 	 */
-    NotificationManager notificationManager;
-    Notification.Builder mNotificationBuilder = null;
+    private NotificationManager notificationManager;
+    private Notification.Builder mNotificationBuilder = null;
 
 
 	@Override
@@ -192,7 +195,7 @@ public class MusicService extends Service implements OnCompletionListener,
 		// restart in case it's killed.
 	}
 
-    void togglePlaybackRequest() {
+    private void togglePlaybackRequest() {
         if (state == State.PAUSED || state == State.STOPPED) {
             playRequest();
         } else {
@@ -200,7 +203,7 @@ public class MusicService extends Service implements OnCompletionListener,
         }
     }
 
-    void playRequest() {
+    private void playRequest() {
         if (isDebug) Log.d(LOG, "playRequest");
         if (state == State.RETRIEVING) {
             // If we are still retrieving media, just set the flag to start playing when we're
@@ -226,7 +229,7 @@ public class MusicService extends Service implements OnCompletionListener,
         }
     }
 
-    void pauseRequest() {
+    private void pauseRequest() {
         if (isDebug) Log.d(LOG, "pauseRequest");
         if (state == State.RETRIEVING) {
             // If we are still retrieving media, clear the flag that indicates we should start
@@ -247,7 +250,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Previous song
      */
-    void previousSongRequest() {
+    private void previousSongRequest() {
         if (isDebug) Log.d(LOG, "previousSongRequest");
         if (state == State.PLAYING || state == State.PAUSED)
             mp.seekTo(0);
@@ -256,7 +259,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Next song
      */
-    void nextSongRequest() {
+    private void nextSongRequest() {
         if (isDebug) Log.d(LOG, "nextSongRequest");
         if (state == State.PLAYING || state == State.PAUSED) {
             tryToGetAudioFocus();
@@ -267,11 +270,11 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
      * Stop song
      */
-    void stopRequest() {
+    private void stopRequest() {
         stopRequest(false);
     }
 
-    void stopRequest(boolean force) {
+    private void stopRequest(boolean force) {
         if (isDebug) Log.d(LOG, "stopRequest, force = " + force);
         if (state == State.PLAYING || state == State.PAUSED || force) {
             state = State.STOPPED;
@@ -285,7 +288,7 @@ public class MusicService extends Service implements OnCompletionListener,
         }
     }
 
-	void playFromURLRequest(Intent intent) {
+	private void playFromURLRequest(Intent intent) {
 		if (isDebug) Log.d(LOG, "playFromURLRequest - request play from URL");
 		// user wants to play a song directly by URL or path. The URL or path comes in the "data"
 		// part of the Intent. This Intent is sent by {@link MainActivity} after the user
@@ -306,7 +309,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * Makes sure the media player exists and has been reset. This will create the media player
 	 * if needed, or reset the existing media player if one already exists.
 	 */
-	void createMediaPlayerIfNeeded() {
+	private void createMediaPlayerIfNeeded() {
 		if (mp == null) {
 			Log.d(LOG, "createMediaPlayerIfNeeded - mp is null !");
 			mp = new MediaPlayer();
@@ -335,7 +338,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 *
 	 * @param releaseMediaPlayer Indicates whether the Media Player should also be released or not
 	 */
-	void relaxResources(boolean releaseMediaPlayer) {
+	private void relaxResources(boolean releaseMediaPlayer) {
 		Log.d(LOG, "relaxResources");
 		// stop being a foreground service
 		stopForeground(true);
@@ -357,7 +360,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * manualUrl is non-null, then it specifies the URL or path to the song that will be played
 	 * next.
 	 */
-	void playNextSong(String manualUrl) {
+	private void playNextSong(String manualUrl) {
 		if (isDebug) Log.d(LOG, "playNextSong");
 		state = State.STOPPED;
 		relaxResources(false); // release everything except MediaPlayer
@@ -427,7 +430,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * current focus settings. This method assumes mp != null, so if you are calling it,
 	 * you have to do so from a context where you are sure this is the case.
 	 */
-	void configAndStartMediaPlayer() {
+	private void configAndStartMediaPlayer() {
 		if (isDebug) Log.d(LOG, "configAndStartMediaPlayer");
 		if (audioFocus == AudioFocus.NO_FOCUS_NO_DUCK) {
 			// If we don't have audio focus and can't duck, we have to pause, even if state
@@ -449,7 +452,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * something the user is actively aware of (such as playing music), and must appear to the
 	 * user as a notification. That's why we create the notification here.
 	 */
-	void setUpAsForeground(String text) {
+	private void setUpAsForeground(String text) {
 		if (isDebug) Log.d(LOG, "setUpAsForeground");
 		PendingIntent pi = PendingIntent.getActivity(
 			getApplicationContext(),
@@ -472,7 +475,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	}
 
 	/** Updates the notification. */
-	void updateNotification(String text) {
+	private void updateNotification(String text) {
 		PendingIntent pi = PendingIntent.getActivity(
 			getApplicationContext(),
 			0,
@@ -504,13 +507,13 @@ public class MusicService extends Service implements OnCompletionListener,
 	/**
 	 * Отдаем аудио фокус системе
 	 */
-	void giveUpAudioFocus() {
+	private void giveUpAudioFocus() {
 		if (isDebug) Log.d(LOG, "giveUpAudioFocus");
 		if (audioFocus == AudioFocus.FOCUSED && audioFocusHelper != null && audioFocusHelper.abandonFocus())
 			audioFocus = AudioFocus.NO_FOCUS_NO_DUCK;
 	}
 
-	void tryToGetAudioFocus() {
+	private void tryToGetAudioFocus() {
 		if (isDebug) Log.d(LOG, "tryToGetAudioFocus");
 		if (audioFocus != AudioFocus.FOCUSED && audioFocusHelper != null
 			&& audioFocusHelper.requestFocus())
