@@ -18,7 +18,6 @@ import edu.sintez.audioplayer.service.MusicService;
 import edu.sintez.audioplayer.utils.FileChooser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -106,7 +105,6 @@ public class MainActivity extends Activity implements
 		else if (view == btnOpenFromURL)
 			showUrlDialog();
 		else if (view == btnOpenPlaylist) {
-			Log.d(LOG, "Do open playlist.");
 			startActivityForResult(new Intent(this, FileChooser.class), 15);
 		} else if (view == btnGetAllMusFromDevice) {
 			retriever = new MusicRetriever(getContentResolver());
@@ -169,9 +167,9 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (data == null) return;
-		ArrayList<String> selFilesPaths = data.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if (intent == null) return;
+		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
 		for (String selFileURI : selFilesPaths) {
 			this.data.add(new Track(1, null, selFileURI, null, 0));
 		}
