@@ -17,6 +17,7 @@
 package edu.sintez.audioplayer.retriever;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -95,11 +96,11 @@ public class MusicRetriever {
         do {
             if (isDebug) Log.d(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
             tracks.add(new Track(
-                    cur.getLong(idColumn),
-                    cur.getString(artistColumn),
-                    cur.getString(titleColumn),
-                    cur.getString(albumColumn),
-                    cur.getLong(durationColumn)
+                ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
+                cur.getString(artistColumn),
+                cur.getString(titleColumn),
+                cur.getString(albumColumn),
+                cur.getLong(durationColumn)
             ));
         } while (cur.moveToNext());
         cur.close();

@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements
 		if (intent == null) return;
 		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
 		for (String selFileURI : selFilesPaths) {
-			this.data.add(new Track(1, null, selFileURI, null, 0));
+			this.data.add(new Track(Uri.parse(selFileURI), null, "title", null, 0));
 		}
 		adapter.addAll(this.data);
 		adapter.notifyDataSetChanged();

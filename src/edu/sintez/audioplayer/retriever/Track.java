@@ -1,29 +1,23 @@
 package edu.sintez.audioplayer.retriever;
 
-import android.content.ContentUris;
 import android.net.Uri;
-import android.provider.MediaStore;
 
 /**
  * Represents music track.
  */
 public class Track {
-	private long id;
+	private Uri uri;
 	private String artist;
 	private String title;
 	private String album;
 	private long duration;
 
-	public Track(long id, String artist, String title, String album, long duration) {
-		this.id = id;
+	public Track(Uri uri, String artist, String title, String album, long duration) {
+		this.uri = uri;
 		this.artist = artist;
 		this.title = title;
 		this.album = album;
 		this.duration = duration;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public String getArtist() {
@@ -43,7 +37,6 @@ public class Track {
 	}
 
 	public Uri getURI() {
-		return ContentUris.withAppendedId(
-			MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
+		return uri;
 	}
 }
