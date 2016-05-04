@@ -38,8 +38,7 @@ import java.io.IOException;
  * Rewind, Skip, etc.
  */
 public class MusicService extends Service implements OnCompletionListener,
-		OnPreparedListener, OnErrorListener, MusicFocusable
-         {
+		OnPreparedListener, OnErrorListener, MusicFocusable {
 
     // The tag we put on debug messages
     private static final String LOG = MusicService.class.getName();
