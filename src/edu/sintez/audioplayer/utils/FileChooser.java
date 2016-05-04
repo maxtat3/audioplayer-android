@@ -1,0 +1,142 @@
+package edu.sintez.audioplayer.utils;
+
+import android.app.ListActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.Toast;
+import edu.sintez.audioplayer.R;
+import edu.sintez.audioplayer.adapter.FileArrayAdapter;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
+public class FileChooser extends ListActivity {
+
+	private static final String LOG = FileChooser.class.getName();
+	public static final String SELECTED_FILES_KEY = FileChooser.class.getName() + "." + "selected_files_key";
+	public static final String PARENT_DIR_NAME = "Parent Directory";
+	public static final String FOLDER_NAME = "Folder";
+	private File currDir;
+	private FileArrayAdapter adapter;
+
+	private File[] filesAndDirs;
+	private List<FileItem> dirs = new ArrayList<FileItem>();
+	private List<FileItem> files = new ArrayList<FileItem>();
+
+	private ItemSelectListener itemSelectListener = new ItemSelectListener();
+	private ArrayList<String> selFiles = new ArrayList<String>();
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		currDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+		fill(currDir);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_files_sel, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.mi_ok:
+//				for (String selFile : selFiles) {
+//					Log.d(LOG, "selFile = " + selFile);
+//				}
+				setResult(RESULT_OK, new Intent().putStringArrayListExtra(SELECTED_FILES_KEY, selFiles));
+				finish();
+				break;
+			case R.id.mi_cancel:
+				Log.d(LOG, "m i cancel");
+				finish();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void fill(File f) {
+		setTitle("Current Dir: " + f.getName());
+
+		if (filesAndDirs != null && filesAndDirs.length > 0) {
+			filesAndDirs = null;
+		}
+		if (dirs != null && !dirs.isEmpty()) {
+			dirs.clear();
+		}
+		if (files != null && !files.isEmpty()) {
+			files.clear();
+		}
+		if (selFiles != null && !selFiles.isEmpty()) {
+			selFiles.clear();
+		}
+
+		filesAndDirs = f.listFiles();
+		dirs = new ArrayList<FileItem>();
+		files = new ArrayList<FileItem>();
+		try {
+			for (File ff : filesAndDirs) {
+				if (ff.isDirectory())
+					dirs.add(new FileItem(ff.getName(), FOLDER_NAME, ff.getAbsolutePath()));
+				else
+					files.add(new FileItem(ff.getName(), "File Size: " + ff.length(), ff.getAbsolutePath()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Collections.sort(dirs);
+		Collections.sort(files);
+		dirs.addAll(files);
+		if (!f.getName().equalsIgnoreCase("sdcard"))
+			dirs.add(0, new FileItem("...", PARENT_DIR_NAME, f.getParent()));
+		adapter = new FileArrayAdapter(this, R.layout.pattern_file_or_dir_item, dirs, itemSelectListener);
+		setListAdapter(adapter);
+	}
+
+	@Override
+	protected void onListItemClick(ListView lv, View v, int pos, long id) {
+		super.onListItemClick(lv, v, pos, id);
+		FileItem item = adapter.getItem(pos);
+		if (item.getData().equalsIgnoreCase(FOLDER_NAME) || item.getData().equalsIgnoreCase(PARENT_DIR_NAME)) {
+			currDir = new File(item.getPath());
+			fill(currDir);
+		} else {
+			onFileClick(item);
+		}
+	}
+
+
+	private class ItemSelectListener implements View.OnClickListener {
+		@Override
+		public void onClick(View view) {
+			CheckBox chbItem = (CheckBox) view;
+			FileItem item = (FileItem) chbItem.getTag();
+
+			if (chbItem.isChecked()) {
+				selFiles.add(item.getPath());
+
+			} else if (selFiles.contains(item.getPath())) {
+				selFiles.remove(item.getPath());
+			}
+
+		}
+	}
+
+	private void onFileClick(FileItem item) {
+		Toast.makeText(this, "File Clicked: " + item.getName(), Toast.LENGTH_SHORT).show();
+		Log.d(LOG, "path to file = " + item.getPath());
+	}
+}

@@ -15,6 +15,7 @@ import edu.sintez.audioplayer.retriever.MusicRetriever;
 import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.retriever.Track;
 import edu.sintez.audioplayer.service.MusicService;
+import edu.sintez.audioplayer.utils.FileChooser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,9 +105,10 @@ public class MainActivity extends Activity implements
 			startService(new Intent(MusicService.ACTION_STOP));
 		else if (view == btnOpenFromURL)
 			showUrlDialog();
-		else if (view == btnOpenPlaylist)
+		else if (view == btnOpenPlaylist) {
 			Log.d(LOG, "Do open playlist.");
-		else if (view == btnGetAllMusFromDevice) {
+			startActivityForResult(new Intent(this, FileChooser.class), 15);
+		} else if (view == btnGetAllMusFromDevice) {
 			retriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(retriever, this)).execute();
 		}
@@ -163,6 +165,17 @@ public class MainActivity extends Activity implements
 	public void onMusicRetrieverPrepared() {
 		data = retriever.getAllAudioTracks();
 		adapter.addAll(data);
+		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data == null) return;
+		ArrayList<String> selFilesPaths = data.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
+		for (String selFileURI : selFilesPaths) {
+			this.data.add(new Track(1, null, selFileURI, null, 0));
+		}
+		adapter.addAll(this.data);
 		adapter.notifyDataSetChanged();
 	}
 }
