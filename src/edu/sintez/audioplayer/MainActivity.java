@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +42,12 @@ public class MainActivity extends Activity implements
 	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
-	private MusicRetriever retriever;
+	private MusicRetriever musRetriever;
+
+	/**
+	 * Handles for eject meta information of media tracks.
+	 */
+	private MediaMetadataRetriever metaRetriever;
 
 	private Button btnPlay;
 	private Button btnPause;
@@ -88,6 +94,8 @@ public class MainActivity extends Activity implements
 		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, data);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
+
+		metaRetriever = new MediaMetadataRetriever();
 	}
 
 	@Override
@@ -107,8 +115,8 @@ public class MainActivity extends Activity implements
 		else if (view == btnOpenPlaylist) {
 			startActivityForResult(new Intent(this, FileChooser.class), 15);
 		} else if (view == btnGetAllMusFromDevice) {
-			retriever = new MusicRetriever(getContentResolver());
-			(new PrepareMusicRetrieverTask(retriever, this)).execute();
+			musRetriever = new MusicRetriever(getContentResolver());
+			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
 		}
 	}
 
@@ -161,7 +169,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onMusicRetrieverPrepared() {
-		data = retriever.getAllAudioTracks();
+		data = musRetriever.getAllAudioTracks();
 		adapter.addAll(data);
 		adapter.notifyDataSetChanged();
 	}
@@ -171,9 +179,14 @@ public class MainActivity extends Activity implements
 		if (intent == null) return;
 		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
 		for (String selFileURI : selFilesPaths) {
-			data.add(new Track(Uri.parse(selFileURI), null, "title", null, 0));
+			metaRetriever.setDataSource(selFileURI);
+			adapter.add(new Track(
+				Uri.parse(selFileURI),
+				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
+				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
+				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
+				Long.parseLong(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
+			));
 		}
-		adapter.addAll(data);
-		adapter.notifyDataSetChanged();
 	}
 }
