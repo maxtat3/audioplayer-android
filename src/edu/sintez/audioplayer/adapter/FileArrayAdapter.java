@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.utils.FileItem;
@@ -43,6 +44,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 			viewHolder.chb_item = (CheckBox) convertView.findViewById(R.id.chb_item);
 			viewHolder.name = (TextView) convertView.findViewById(R.id.tv_name);
 			viewHolder.description = (TextView) convertView.findViewById(R.id.tv_description);
+			viewHolder.ivFileFormat = (ImageView) convertView.findViewById(R.id.iv_file_format);
 
 			viewHolder.chb_item.setOnClickListener(itemSelectListener);
 
@@ -54,6 +56,14 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		viewHolder.chb_item.setTag(item);
 		viewHolder.name.setText(item.getName());
 		viewHolder.description.setText(item.getData());
+		switch (item.getFormat()) {
+			case MP3:
+				viewHolder.ivFileFormat.setImageResource(R.drawable.ic_mp3);
+				break;
+			case FLAC:
+				viewHolder.ivFileFormat.setImageResource(R.drawable.ic_flac);
+				break;
+		}
 
 		return convertView;
 	}
@@ -62,6 +72,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		public CheckBox chb_item;
 		public TextView name;
 		public TextView description;
+		public ImageView ivFileFormat;
 	}
 
 }

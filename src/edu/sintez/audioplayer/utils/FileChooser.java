@@ -89,10 +89,19 @@ public class FileChooser extends ListActivity {
 		files = new ArrayList<FileItem>();
 		try {
 			for (File ff : filesAndDirs) {
-				if (ff.isDirectory())
+				if (ff.isDirectory()) {
 					dirs.add(new FileItem(ff.getName(), FOLDER_NAME, ff.getAbsolutePath()));
-				else
-					files.add(new FileItem(ff.getName(), "File Size: " + ff.length(), ff.getAbsolutePath()));
+				} else {
+					SupportedAudioFormat detectedFormat = checkFileFormat(ff.getName());
+					if (detectedFormat != SupportedAudioFormat.NOT_DEFINED) {
+						files.add(new FileItem(
+							ff.getName(),
+							"File Size: " + ff.length(),
+							ff.getAbsolutePath(),
+							detectedFormat
+						));
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,6 +113,26 @@ public class FileChooser extends ListActivity {
 			dirs.add(0, new FileItem("...", PARENT_DIR_NAME, f.getParent()));
 		adapter = new FileArrayAdapter(this, R.layout.pattern_file_or_dir_item, dirs, itemSelectListener);
 		setListAdapter(adapter);
+	}
+
+	/**
+	 * Find audio files only. Other files is ignored.
+	 * If audio format is supporting - returned this file format enum item.
+	 *
+	 * @param fileName full file name with extension
+	 * @return file format enum item if this file included in group supporting audio formats, otherwise
+	 *          returned {@link SupportedAudioFormat#NOT_DEFINED}.
+	 * @see SupportedAudioFormat
+	 */
+	private SupportedAudioFormat checkFileFormat(String fileName) {
+		String[] nameParts = fileName.split("\\.");
+		String ext = nameParts[nameParts.length - 1];
+		for (SupportedAudioFormat supportedFormats : SupportedAudioFormat.class.getEnumConstants()) {
+			if (ext.equalsIgnoreCase(supportedFormats.getExt())) {
+				return supportedFormats;
+			}
+		}
+		return SupportedAudioFormat.NOT_DEFINED;
 	}
 
 	@Override
