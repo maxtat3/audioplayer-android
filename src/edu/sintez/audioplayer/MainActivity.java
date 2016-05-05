@@ -169,9 +169,8 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onMusicRetrieverPrepared() {
-		data = musRetriever.getAllAudioTracks();
-		adapter.addAll(data);
-		adapter.notifyDataSetChanged();
+		adapter.addAll(musRetriever.getAllAudioTracks());
+		// after add items to adapter in data collection size equal to this added item elements
 	}
 
 	@Override
