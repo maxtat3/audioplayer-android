@@ -54,14 +54,10 @@ public class FileChooser extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.mi_ok:
-//				for (String selFile : selFiles) {
-//					Log.d(LOG, "selFile = " + selFile);
-//				}
 				setResult(RESULT_OK, new Intent().putStringArrayListExtra(SELECTED_FILES_KEY, selFiles));
 				finish();
 				break;
 			case R.id.mi_cancel:
-				Log.d(LOG, "m i cancel");
 				finish();
 				break;
 		}
