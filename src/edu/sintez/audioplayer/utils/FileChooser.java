@@ -68,6 +68,13 @@ public class FileChooser extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Filled file chooser list view for user navigates in folders
+	 * and selected music files.
+	 *
+	 * @param f root directory for navigates. Files and directories
+	 *          which are located them displayed in file chooser list view.
+	 */
 	private void fill(File f) {
 		setTitle("Current Dir: " + f.getName());
 
@@ -137,6 +144,7 @@ public class FileChooser extends ListActivity {
 
 	/**
 	 * Rounding double number of error rounding machine to 2 sings after decimal point.
+	 *
 	 * @param dig number
 	 * @return rounded number
 	 */
@@ -164,6 +172,10 @@ public class FileChooser extends ListActivity {
 	}
 
 
+	/**
+	 * Listener handled checkbox file click.
+	 * When file checked he add in selected files storage.
+	 */
 	private class ItemSelectListener implements View.OnClickListener {
 		@Override
 		public void onClick(View view) {
@@ -180,6 +192,11 @@ public class FileChooser extends ListActivity {
 		}
 	}
 
+	/**
+	 * Handel file click action.
+	 *
+	 * @param item clicked file item
+	 */
 	private void onFileClick(FileItem item) {
 		Toast.makeText(this, "File Clicked: " + item.getName(), Toast.LENGTH_SHORT).show();
 		Log.d(LOG, "path to file = " + item.getPath());
