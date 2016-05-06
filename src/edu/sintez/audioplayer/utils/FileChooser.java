@@ -96,7 +96,7 @@ public class FileChooser extends ListActivity {
 					if (detectedFormat != SupportedAudioFormat.NOT_DEFINED) {
 						files.add(new FileItem(
 							ff.getName(),
-							"File Size: " + ff.length(),
+							"File Size: " + roundDouble(ff.length()/1024.0/1024.0) + " MB",
 							ff.getAbsolutePath(),
 							detectedFormat
 						));
@@ -133,6 +133,22 @@ public class FileChooser extends ListActivity {
 			}
 		}
 		return SupportedAudioFormat.NOT_DEFINED;
+	}
+
+	/**
+	 * Rounding double number of error rounding machine to 2 sings after decimal point.
+	 * @param dig number
+	 * @return rounded number
+	 */
+	private double roundDouble(double dig) {
+		final int SINGS = 100; //if this num = 1000 -> rounded num = x.xxx
+		int iVal = (int) ( dig * SINGS );
+		double dVal = dig * SINGS;
+		if ( dVal - iVal >= 0.5 ) {
+			iVal += 1;
+		}
+		dVal = (double) iVal;
+		return dVal/SINGS;
 	}
 
 	@Override
