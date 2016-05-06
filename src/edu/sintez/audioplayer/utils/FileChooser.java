@@ -24,8 +24,8 @@ public class FileChooser extends ListActivity {
 
 	private static final String LOG = FileChooser.class.getName();
 	public static final String SELECTED_FILES_KEY = FileChooser.class.getName() + "." + "selected_files_key";
-	public static final String PARENT_DIR_NAME = "Parent Directory";
-	public static final String FOLDER_NAME = "Folder";
+	public static final String PARENT_DIR_TXT = "Parent Directory";
+	public static final String FOLDER_TXT = "Folder";
 	private File currDir;
 	private FileArrayAdapter adapter;
 
@@ -90,7 +90,7 @@ public class FileChooser extends ListActivity {
 		try {
 			for (File ff : filesAndDirs) {
 				if (ff.isDirectory()) {
-					dirs.add(new FileItem(ff.getName(), FOLDER_NAME, ff.getAbsolutePath()));
+					dirs.add(new FileItem(ff.getName(), FOLDER_TXT, ff.getAbsolutePath()));
 				} else {
 					SupportedAudioFormat detectedFormat = checkFileFormat(ff.getName());
 					if (detectedFormat != SupportedAudioFormat.NOT_DEFINED) {
@@ -110,7 +110,7 @@ public class FileChooser extends ListActivity {
 		Collections.sort(files);
 		dirs.addAll(files);
 		if (!f.getName().equalsIgnoreCase("sdcard"))
-			dirs.add(0, new FileItem("...", PARENT_DIR_NAME, f.getParent()));
+			dirs.add(0, new FileItem("...", PARENT_DIR_TXT, f.getParent()));
 		adapter = new FileArrayAdapter(this, R.layout.pattern_file_or_dir_item, dirs, itemSelectListener);
 		setListAdapter(adapter);
 	}
@@ -139,7 +139,7 @@ public class FileChooser extends ListActivity {
 	protected void onListItemClick(ListView lv, View v, int pos, long id) {
 		super.onListItemClick(lv, v, pos, id);
 		FileItem item = adapter.getItem(pos);
-		if (item.getData().equalsIgnoreCase(FOLDER_NAME) || item.getData().equalsIgnoreCase(PARENT_DIR_NAME)) {
+		if (item.getData().equalsIgnoreCase(FOLDER_TXT) || item.getData().equalsIgnoreCase(PARENT_DIR_TXT)) {
 			currDir = new File(item.getPath());
 			fill(currDir);
 		} else {

@@ -1,7 +1,6 @@
 package edu.sintez.audioplayer.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,11 +60,11 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		viewHolder.description.setText(item.getData());
 
 		if (position == 0
-			&& (item.getData().equalsIgnoreCase(FileChooser.FOLDER_NAME)
-			|| item.getData().equalsIgnoreCase(FileChooser.PARENT_DIR_NAME))) {
+			&& (item.getData().equalsIgnoreCase(FileChooser.FOLDER_TXT)
+			|| item.getData().equalsIgnoreCase(FileChooser.PARENT_DIR_TXT))) {
 			viewHolder.ivFileFormat.setImageResource(R.drawable.ic_back);
 
-		} else if (item.getData().equalsIgnoreCase(FileChooser.FOLDER_NAME)) {
+		} else if (item.getData().equalsIgnoreCase(FileChooser.FOLDER_TXT)) {
 			viewHolder.ivFileFormat.setImageResource(R.drawable.ic_folder_white_24dp);
 
 		} else {
