@@ -177,10 +177,10 @@ public class MainActivity extends Activity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (intent == null) return;
 		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
-		for (String selFileURI : selFilesPaths) {
-			metaRetriever.setDataSource(selFileURI);
+		for (String selFilePath : selFilesPaths) {
+			metaRetriever.setDataSource(selFilePath);
 			adapter.add(new Track(
-				Uri.parse(selFileURI),
+				Uri.parse(selFilePath),
 				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
 				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
 				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
