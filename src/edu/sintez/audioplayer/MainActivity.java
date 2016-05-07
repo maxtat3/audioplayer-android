@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
 import edu.sintez.audioplayer.adapter.PlaylistAdapter;
+import edu.sintez.audioplayer.retriever.MetaDataRetriever;
 import edu.sintez.audioplayer.retriever.MusicRetriever;
 import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.retriever.Track;
@@ -43,11 +43,6 @@ public class MainActivity extends Activity implements
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
 	private MusicRetriever musRetriever;
-
-	/**
-	 * Handles for eject meta information of media tracks.
-	 */
-	private MediaMetadataRetriever metaRetriever;
 
 	private Button btnPlay;
 	private Button btnPause;
@@ -94,8 +89,6 @@ public class MainActivity extends Activity implements
 		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, data);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
-
-		metaRetriever = new MediaMetadataRetriever();
 	}
 
 	@Override
@@ -177,15 +170,12 @@ public class MainActivity extends Activity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (intent == null) return;
 		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
+		MetaDataRetriever mdr = new MetaDataRetriever();
 		for (String selFilePath : selFilesPaths) {
-			metaRetriever.setDataSource(selFilePath);
-			adapter.add(new Track(
-				Uri.parse(selFilePath),
-				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
-				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
-				metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
-				Long.parseLong(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
-			));
+			Track track = new Track();
+			track.setUri(Uri.parse(selFilePath));
+			mdr.setsMetaData(track);
+			adapter.add(track);
 		}
 	}
 }

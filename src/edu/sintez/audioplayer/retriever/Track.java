@@ -12,12 +12,19 @@ public class Track {
 	private String album;
 	private long duration;
 
+	public Track() {
+	}
+
 	public Track(Uri uri, String artist, String title, String album, long duration) {
 		this.uri = uri;
 		this.artist = artist;
 		this.title = title;
 		this.album = album;
 		this.duration = duration;
+	}
+
+	public Uri getURI() {
+		return uri;
 	}
 
 	public String getArtist() {
@@ -36,7 +43,23 @@ public class Track {
 		return duration;
 	}
 
-	public Uri getURI() {
-		return uri;
+	public void setUri(Uri uri) {
+		this.uri = uri;
+	}
+
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setAlbum(String album) {
+		this.album = album;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 }

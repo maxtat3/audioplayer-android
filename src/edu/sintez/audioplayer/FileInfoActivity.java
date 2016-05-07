@@ -9,6 +9,8 @@ import android.text.Html;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.sintez.audioplayer.retriever.MetaDataRetriever;
+import edu.sintez.audioplayer.retriever.Track;
 import edu.sintez.audioplayer.utils.FileChooser;
 
 /**
@@ -38,30 +40,33 @@ public class FileInfoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_file_info);
 
-		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
-		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
-		ImageView thumbnail = (ImageView) findViewById(R.id.iv_thumbnail);
-
+		Track track = null;
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
-			MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
-			metaRetriever.setDataSource(bundle.getString(FileChooser.SEL_FILE_PATH_KEY));
-
-			tvFullFileName.setText(
-				Html.fromHtml("<b>Name: </b> " + bundle.get(FileChooser.SEL_FILE_NAME_KEY))
+			MetaDataRetriever mdr = new MetaDataRetriever();
+			track = mdr.setsMetaData(
+				bundle.getString(FileChooser.SEL_FILE_PATH_KEY),
+				bundle.getString(FileChooser.SEL_FILE_NAME_KEY)
 			);
-
-			tvInfoTitle.setText(
-				Html.fromHtml("<b>Title: </b>" +
-					checkMetaData(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)))
-			);
-
-			Bitmap bitmap = getAlbumThumbnail(bundle.getString(FileChooser.SEL_FILE_PATH_KEY));
-			thumbnail.setImageBitmap(bitmap);
-			thumbnail.setAdjustViewBounds(true);
-			thumbnail.setLayoutParams(new LinearLayout.LayoutParams(THB_IMAGE_WIDTH, THB_IMAGE_HEIGHT));
-
 		}
+
+		ImageView thumbnail = (ImageView) findViewById(R.id.iv_thumbnail);
+		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
+		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
+
+		if (track != null) {
+			Bitmap bitmap = getAlbumThumbnail(bundle.getString(FileChooser.SEL_FILE_PATH_KEY));
+			if (bitmap != null) {
+				thumbnail.setImageBitmap(bitmap);
+				thumbnail.setAdjustViewBounds(true);
+				thumbnail.setLayoutParams(new LinearLayout.LayoutParams(THB_IMAGE_WIDTH, THB_IMAGE_HEIGHT));
+			}
+
+			tvFullFileName.setText(Html.fromHtml("<b>Name: </b> " + "nameee"));
+
+			tvInfoTitle.setText(Html.fromHtml("<b>Title: </b>" + checkMetaData(track.getTitle())));
+		}
+
 
 	}
 
