@@ -21,6 +21,10 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".utils.FileChooser"/>
+		<activity
+			android:name=".FileInfoActivity"
+			android:theme="@android:style/Theme.Holo.Dialog"
+			/>
 
 		<service
 				android:exported="false"

@@ -176,7 +176,7 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (intent == null) return;
-		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_KEY);
+		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
 		for (String selFileURI : selFilesPaths) {
 			metaRetriever.setDataSource(selFileURI);
 			adapter.add(new Track(

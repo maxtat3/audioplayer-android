@@ -4,13 +4,12 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
+import edu.sintez.audioplayer.FileInfoActivity;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.adapter.FileArrayAdapter;
 
@@ -23,7 +22,9 @@ import java.util.List;
 public class FileChooser extends ListActivity {
 
 	private static final String LOG = FileChooser.class.getName();
-	public static final String SELECTED_FILES_KEY = FileChooser.class.getName() + "." + "selected_files_key";
+	public static final String SELECTED_FILES_LIST_KEY = FileChooser.class.getName() + "." + "selected_files_list_key";
+	public static final String SEL_FILE_PATH_KEY = FileChooser.class.getName() + "." + "selected_file_path";
+	public static final String SEL_FILE_NAME_KEY = FileChooser.class.getName() + "." + "selected_file_name";
 	public static final String PARENT_DIR_TXT = "Parent Directory";
 	public static final String FOLDER_TXT = "Folder";
 	private File currDir;
@@ -54,7 +55,7 @@ public class FileChooser extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.mi_ok:
-				setResult(RESULT_OK, new Intent().putStringArrayListExtra(SELECTED_FILES_KEY, selFiles));
+				setResult(RESULT_OK, new Intent().putStringArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
 				finish();
 				break;
 			case R.id.mi_cancel:
@@ -189,12 +190,14 @@ public class FileChooser extends ListActivity {
 	}
 
 	/**
-	 * Handel file click action.
+	 * Handel when file click action.
 	 *
 	 * @param item clicked file item
 	 */
 	private void onFileClick(FileItem item) {
-		Toast.makeText(this, "File Clicked: " + item.getName(), Toast.LENGTH_SHORT).show();
-		Log.d(LOG, "path to file = " + item.getPath());
+		Intent infoIntent = new Intent(this, FileInfoActivity.class);
+		infoIntent.putExtra(SEL_FILE_PATH_KEY, item.getPath());
+		infoIntent.putExtra(SEL_FILE_NAME_KEY, item.getName());
+		startActivity(infoIntent);
 	}
 }
