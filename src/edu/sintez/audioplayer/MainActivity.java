@@ -60,7 +60,11 @@ public class MainActivity extends Activity implements
 
 	private ListView lvPlaylist;
 	private ArrayAdapter<Track> adapter;
-	private List<Track> data = new ArrayList<Track>();
+
+	/**
+	 * Tracks storage displaying in playlist
+	 */
+	private List<Track> tracks = new ArrayList<Track>();
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -91,7 +95,7 @@ public class MainActivity extends Activity implements
 		btnGetAllMusFromDevice.setOnClickListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
-		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, data);
+		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
 	}
@@ -168,7 +172,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onMusicRetrieverPrepared() {
 		adapter.addAll(musRetriever.getAllAudioTracks());
-		// after add items to adapter in data collection size equal to this added item elements
+		// after add items to adapter in tracks collection size equal to this added item elements
 	}
 
 	@Override
