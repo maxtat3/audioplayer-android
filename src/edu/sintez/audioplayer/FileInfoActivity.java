@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,11 +44,9 @@ public class FileInfoActivity extends Activity {
 		Track track = null;
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
+			track = bundle.getParcelable(FileChooser.SEL_FILE_KEY);
 			MetaDataRetriever mdr = new MetaDataRetriever();
-			track = mdr.setsMetaData(
-				bundle.getString(FileChooser.SEL_FILE_PATH_KEY),
-				bundle.getString(FileChooser.SEL_FILE_NAME_KEY)
-			);
+			mdr.setsMetaData(track);
 		}
 
 		ImageView thumbnail = (ImageView) findViewById(R.id.iv_thumbnail);
@@ -55,7 +54,7 @@ public class FileInfoActivity extends Activity {
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
 
 		if (track != null) {
-			Bitmap bitmap = getAlbumThumbnail(bundle.getString(FileChooser.SEL_FILE_PATH_KEY));
+			Bitmap bitmap = getAlbumThumbnail(track.getURI().toString());
 			if (bitmap != null) {
 				thumbnail.setImageBitmap(bitmap);
 				thumbnail.setAdjustViewBounds(true);

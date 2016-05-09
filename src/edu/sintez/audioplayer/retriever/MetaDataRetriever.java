@@ -33,14 +33,4 @@ public class MetaDataRetriever {
 
 	}
 
-	// from File chooser
-	public Track setsMetaData(String path, String name) {
-		Track track = new Track();
-		metaRetriever.setDataSource(path);
-		track.setArtist(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-		track.setTitle(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-		track.setAlbum(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
-		track.setDuration(Long.parseLong(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)));
-		return track;
-	}
 }

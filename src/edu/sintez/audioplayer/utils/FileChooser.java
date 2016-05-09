@@ -2,6 +2,7 @@ package edu.sintez.audioplayer.utils;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import edu.sintez.audioplayer.FileInfoActivity;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.adapter.FileArrayAdapter;
+import edu.sintez.audioplayer.retriever.Track;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,8 +25,7 @@ public class FileChooser extends ListActivity {
 
 	private static final String LOG = FileChooser.class.getName();
 	public static final String SELECTED_FILES_LIST_KEY = FileChooser.class.getName() + "." + "selected_files_list_key";
-	public static final String SEL_FILE_PATH_KEY = FileChooser.class.getName() + "." + "selected_file_path";
-	public static final String SEL_FILE_NAME_KEY = FileChooser.class.getName() + "." + "selected_file_name";
+	public static final String SEL_FILE_KEY = FileChooser.class.getName() + "." + "selected_file";
 	public static final String PARENT_DIR_TXT = "Parent Directory";
 	public static final String FOLDER_TXT = "Folder";
 	private File currDir;
@@ -195,9 +196,12 @@ public class FileChooser extends ListActivity {
 	 * @param item clicked file item
 	 */
 	private void onFileClick(FileItem item) {
+		Track track = new Track();
+		track.setUri(Uri.parse(item.getPath()));
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(SEL_FILE_KEY, track);
 		Intent infoIntent = new Intent(this, FileInfoActivity.class);
-		infoIntent.putExtra(SEL_FILE_PATH_KEY, item.getPath());
-		infoIntent.putExtra(SEL_FILE_NAME_KEY, item.getName());
+		infoIntent.putExtras(bundle);
 		startActivity(infoIntent);
 	}
 }

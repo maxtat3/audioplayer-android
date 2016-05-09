@@ -1,11 +1,13 @@
 package edu.sintez.audioplayer.retriever;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Represents music track.
  */
-public class Track {
+public class Track implements Parcelable{
 	private Uri uri;
 	private String artist;
 	private String title;
@@ -21,6 +23,14 @@ public class Track {
 		this.title = title;
 		this.album = album;
 		this.duration = duration;
+	}
+
+	public Track(Parcel p) {
+		uri = Uri.parse(p.readString());
+		artist = p.readString();
+		title = p.readString();
+		album = p.readString();
+		duration = p.readLong();
 	}
 
 	public Uri getURI() {
@@ -61,5 +71,32 @@ public class Track {
 
 	public void setDuration(long duration) {
 		this.duration = duration;
+	}
+
+
+	public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+		@Override
+		public Track createFromParcel(Parcel source) {
+			return new Track(source);
+		}
+
+		@Override
+		public Track[] newArray(int size) {
+			return new Track[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel p, int flags) {
+		p.writeString(uri.toString());
+		p.writeString(artist);
+		p.writeString(title);
+		p.writeString(album);
+		p.writeLong(duration);
 	}
 }
