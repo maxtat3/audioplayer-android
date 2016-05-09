@@ -34,6 +34,11 @@ public class MainActivity extends Activity implements
 	private static final String LOG = MainActivity.class.getName();
 
 	/**
+	 * Request code for file chooser
+	 */
+	public static final int RQ_FILE_CHOOSER = 1;
+
+	/**
 	 * The URL we suggest as default when adding by URL. This is just so that the user doesn't
 	 * have to find an URL to test this sample.
 	 */
@@ -106,7 +111,7 @@ public class MainActivity extends Activity implements
 		else if (view == btnOpenFromURL)
 			showUrlDialog();
 		else if (view == btnOpenPlaylist) {
-			startActivityForResult(new Intent(this, FileChooser.class), 15);
+			startActivityForResult(new Intent(this, FileChooser.class), RQ_FILE_CHOOSER);
 		} else if (view == btnGetAllMusFromDevice) {
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
@@ -169,13 +174,16 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (intent == null) return;
-		ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
-		MetaDataRetriever mdr = new MetaDataRetriever();
-		for (String selFilePath : selFilesPaths) {
-			Track track = new Track();
-			track.setUri(Uri.parse(selFilePath));
-			mdr.setsMetaData(track);
-			adapter.add(track);
+
+		if (requestCode == RQ_FILE_CHOOSER) {
+			ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
+			MetaDataRetriever mdr = new MetaDataRetriever();
+			for (String selFilePath : selFilesPaths) {
+				Track track = new Track();
+				track.setUri(Uri.parse(selFilePath));
+				mdr.setsMetaData(track);
+				adapter.add(track);
+			}
 		}
 	}
 }
