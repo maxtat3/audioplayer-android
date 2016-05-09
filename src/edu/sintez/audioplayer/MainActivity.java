@@ -17,6 +17,7 @@ import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.retriever.Track;
 import edu.sintez.audioplayer.service.MusicService;
 import edu.sintez.audioplayer.utils.FileChooser;
+import edu.sintez.audioplayer.utils.FileItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,11 +181,11 @@ public class MainActivity extends Activity implements
 		if (intent == null) return;
 
 		if (requestCode == RQ_FILE_CHOOSER) {
-			ArrayList<String> selFilesPaths = intent.getStringArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
+			ArrayList<FileItem> selFilesPaths = intent.getParcelableArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
 			MetaDataRetriever mdr = new MetaDataRetriever();
-			for (String selFilePath : selFilesPaths) {
+			for (FileItem selFile : selFilesPaths) {
 				Track track = new Track();
-				track.setUri(Uri.parse(selFilePath));
+				track.setUri(Uri.parse(selFile.getPath()));
 				mdr.setsMetaData(track);
 				adapter.add(track);
 			}

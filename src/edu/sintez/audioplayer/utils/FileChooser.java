@@ -35,7 +35,7 @@ public class FileChooser extends ListActivity {
 	private List<FileItem> files = new ArrayList<FileItem>();
 
 	private ItemSelectListener itemSelectListener = new ItemSelectListener();
-	private ArrayList<String> selFiles = new ArrayList<String>();
+	private ArrayList<FileItem> selFiles = new ArrayList<FileItem>();
 
 
 	@Override
@@ -55,7 +55,7 @@ public class FileChooser extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.mi_ok:
-				setResult(RESULT_OK, new Intent().putStringArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
+				setResult(RESULT_OK, new Intent().putParcelableArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
 				finish();
 				break;
 			case R.id.mi_cancel:
@@ -180,10 +180,10 @@ public class FileChooser extends ListActivity {
 			FileItem item = (FileItem) chbItem.getTag();
 
 			if (chbItem.isChecked()) {
-				selFiles.add(item.getPath());
+				selFiles.add(item);
 
-			} else if (selFiles.contains(item.getPath())) {
-				selFiles.remove(item.getPath());
+			} else if (selFiles.contains(item)) {
+				selFiles.remove(item);
 			}
 
 		}

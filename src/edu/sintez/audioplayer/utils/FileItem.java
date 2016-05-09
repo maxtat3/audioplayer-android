@@ -1,6 +1,9 @@
 package edu.sintez.audioplayer.utils;
 
-public class FileItem implements Comparable<FileItem> {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class FileItem implements Comparable<FileItem>, Parcelable {
 	private String name;
 	private String data;
 	private String path;
@@ -18,6 +21,13 @@ public class FileItem implements Comparable<FileItem> {
 		this.data = data;
 		this.path = path;
 		this.format = format;
+	}
+
+	public FileItem(Parcel p) {
+		name = p.readString();
+		data = p.readString();
+		path = p.readString();
+		format = p.readParcelable(SupportedAudioFormat.class.getClassLoader());
 	}
 
 	public String getName() {
@@ -42,5 +52,30 @@ public class FileItem implements Comparable<FileItem> {
 			return this.name.toLowerCase().compareTo(item.getName().toLowerCase());
 		else
 			throw new IllegalArgumentException();
+	}
+
+	public static final Parcelable.Creator<FileItem> CREATOR = new Parcelable.Creator<FileItem>() {
+		@Override
+		public FileItem createFromParcel(Parcel source) {
+			return new FileItem(source);
+		}
+
+		@Override
+		public FileItem[] newArray(int size) {
+			return new FileItem[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel p, int flags) {
+		p.writeString(name);
+		p.writeString(data);
+		p.writeString(path);
+		p.writeParcelable(format, PARCELABLE_WRITE_RETURN_VALUE);
 	}
 }
