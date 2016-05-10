@@ -83,7 +83,8 @@ public class MusicRetriever {
         if (isDebug) Log.d(LOG, "Listing...");
 
         // retrieve the indices of the columns where the ID, title, etc. of the song are
-        int artistColumn = cur.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+	    int filNameColumn = cur.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+	    int artistColumn = cur.getColumnIndex(MediaStore.Audio.Media.ARTIST);
         int titleColumn = cur.getColumnIndex(MediaStore.Audio.Media.TITLE);
         int albumColumn = cur.getColumnIndex(MediaStore.Audio.Media.ALBUM);
         int durationColumn = cur.getColumnIndex(MediaStore.Audio.Media.DURATION);
@@ -95,13 +96,14 @@ public class MusicRetriever {
         // add each song to tracks
         do {
             if (isDebug) Log.d(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
-            tracks.add(new Track(
-                ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
-                cur.getString(artistColumn),
-                cur.getString(titleColumn),
-                cur.getString(albumColumn),
-                cur.getLong(durationColumn)
-            ));
+	        tracks.add(new Track(
+		        ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
+		        cur.getString(filNameColumn),
+		        cur.getString(artistColumn),
+		        cur.getString(titleColumn),
+		        cur.getString(albumColumn),
+		        cur.getLong(durationColumn)
+	        ));
         } while (cur.moveToNext());
         cur.close();
 

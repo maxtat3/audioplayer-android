@@ -9,6 +9,7 @@ import android.os.Parcelable;
  */
 public class Track implements Parcelable{
 	private Uri uri;
+	private String fileName;
 	private String artist;
 	private String title;
 	private String album;
@@ -17,8 +18,9 @@ public class Track implements Parcelable{
 	public Track() {
 	}
 
-	public Track(Uri uri, String artist, String title, String album, long duration) {
+	public Track(Uri uri, String fileName, String artist, String title, String album, long duration) {
 		this.uri = uri;
+		this.fileName = fileName;
 		this.artist = artist;
 		this.title = title;
 		this.album = album;
@@ -27,6 +29,7 @@ public class Track implements Parcelable{
 
 	public Track(Parcel p) {
 		uri = Uri.parse(p.readString());
+		fileName = p.readString();
 		artist = p.readString();
 		title = p.readString();
 		album = p.readString();
@@ -35,6 +38,14 @@ public class Track implements Parcelable{
 
 	public Uri getURI() {
 		return uri;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public String getArtist() {
@@ -94,6 +105,7 @@ public class Track implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel p, int flags) {
 		p.writeString(uri.toString());
+		p.writeString(fileName);
 		p.writeString(artist);
 		p.writeString(title);
 		p.writeString(album);

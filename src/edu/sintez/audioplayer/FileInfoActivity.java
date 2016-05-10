@@ -61,7 +61,7 @@ public class FileInfoActivity extends Activity {
 				thumbnail.setLayoutParams(new LinearLayout.LayoutParams(THB_IMAGE_WIDTH, THB_IMAGE_HEIGHT));
 			}
 
-			tvFullFileName.setText(Html.fromHtml("<b>Name: </b> " + "nameee"));
+			tvFullFileName.setText(Html.fromHtml("<b>Name: </b> " + track.getFileName()));
 
 			tvInfoTitle.setText(Html.fromHtml("<b>Title: </b>" + checkMetaData(track.getTitle())));
 		}

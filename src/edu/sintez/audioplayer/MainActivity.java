@@ -186,6 +186,7 @@ public class MainActivity extends Activity implements
 			for (FileItem selFile : selFilesPaths) {
 				Track track = new Track();
 				track.setUri(Uri.parse(selFile.getPath()));
+				track.setFileName(selFile.getName());
 				mdr.setsMetaData(track);
 				adapter.add(track);
 			}

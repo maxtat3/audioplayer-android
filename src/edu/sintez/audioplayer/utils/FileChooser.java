@@ -198,6 +198,7 @@ public class FileChooser extends ListActivity {
 	private void onFileClick(FileItem item) {
 		Track track = new Track();
 		track.setUri(Uri.parse(item.getPath()));
+		track.setFileName(item.getName());
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(SEL_FILE_KEY, track);
 		Intent infoIntent = new Intent(this, FileInfoActivity.class);
