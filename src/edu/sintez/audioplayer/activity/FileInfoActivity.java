@@ -61,7 +61,7 @@ public class FileInfoActivity extends Activity {
 		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
 		TextView tvArtist = (TextView) findViewById(R.id.tv_info_artist);
-		TextView tvFileSize = (TextView) findViewById(R.id.tv_file_size);
+		TextView tvFileSize = (TextView) findViewById(R.id.tv_info_file_size);
 		TextView tvDuration = (TextView) findViewById(R.id.tv_info_duration);
 
 		if (track != null) {
