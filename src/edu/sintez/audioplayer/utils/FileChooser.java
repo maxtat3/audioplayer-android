@@ -28,7 +28,15 @@ public class FileChooser extends ListActivity {
 
 	private static final String LOG = FileChooser.class.getName();
 	public static final String SELECTED_FILES_LIST_KEY = FileChooser.class.getName() + "." + "selected_files_list_key";
-	public static final String SEL_FILE_KEY = FileChooser.class.getName() + "." + "selected_file";
+	/**
+	 * Key which FileInfoActivity receive audio track. In this audio track
+	 * filled fields: uri, name and size only. So track do not contained audio
+	 * meta information and must be received her.
+	 *
+	 * @see FileInfoActivity
+	 * @see Track
+	 */
+	public static final String FILE_CHOOSER_INFO_FILE_KEY = FileChooser.class.getName() + "." + "file_info";
 
 	private File currDir;
 	private FileArrayAdapter adapter;
@@ -205,8 +213,9 @@ public class FileChooser extends ListActivity {
 		Track track = new Track();
 		track.setUri(Uri.parse(item.getPath()));
 		track.setFileName(item.getName());
+		track.setFileSize(item.getSize());
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(SEL_FILE_KEY, track);
+		bundle.putParcelable(FILE_CHOOSER_INFO_FILE_KEY, track);
 		Intent infoIntent = new Intent(this, FileInfoActivity.class);
 		infoIntent.putExtras(bundle);
 		startActivity(infoIntent);

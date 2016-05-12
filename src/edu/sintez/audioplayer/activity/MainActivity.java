@@ -31,6 +31,7 @@ import java.util.List;
 public class MainActivity extends Activity implements
 	View.OnClickListener,
 	AdapterView.OnItemClickListener,
+	AdapterView.OnItemLongClickListener,
 	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
 
 	private static final String LOG = MainActivity.class.getName();
@@ -45,6 +46,15 @@ public class MainActivity extends Activity implements
 	 * have to find an URL to test this sample.
 	 */
 	private static final String SUGGESTED_URL = "http://www.vorbis.com/music/Epoq-Lepidoptera.ogg";
+
+	/**
+	 * Key which FileInfoActivity receive audio track. In this audio track
+	 * all fields filled. So track contained full file and meta information.
+	 *
+	 * @see FileInfoActivity
+	 * @see Track
+	 */
+	public static final String PLAYLIST_INFO_FILE_KEY = MainActivity.class.getName() + "." + "file_info";
 
 	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
@@ -100,6 +110,7 @@ public class MainActivity extends Activity implements
 		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
+		lvPlaylist.setOnItemLongClickListener(this);
 	}
 
 	@Override
@@ -172,6 +183,16 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(PLAYLIST_INFO_FILE_KEY, tracks.get(position));
+		Intent infoIntent = new Intent(this, FileInfoActivity.class);
+		infoIntent.putExtras(bundle);
+		startActivity(infoIntent);
+		return true;
+	}
+
+	@Override
 	public void onMusicRetrieverPrepared() {
 		adapter.addAll(musRetriever.getAllAudioTracks());
 		// after add items to adapter in tracks collection size equal to this added item elements
@@ -188,6 +209,7 @@ public class MainActivity extends Activity implements
 				Track track = new Track();
 				track.setUri(Uri.parse(selFile.getPath()));
 				track.setFileName(selFile.getName());
+				track.setFileSize(selFile.getSize());
 				mdr.setsMetaData(track);
 				adapter.add(track);
 			}

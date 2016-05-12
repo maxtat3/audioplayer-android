@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.sintez.audioplayer.R;
-import edu.sintez.audioplayer.retriever.MetaDataRetriever;
 import edu.sintez.audioplayer.model.Track;
+import edu.sintez.audioplayer.retriever.MetaDataRetriever;
 import edu.sintez.audioplayer.utils.FileChooser;
 
 /**
@@ -44,14 +44,20 @@ public class FileInfoActivity extends Activity {
 		Track track = null;
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
-			track = bundle.getParcelable(FileChooser.SEL_FILE_KEY);
-			MetaDataRetriever mdr = new MetaDataRetriever();
-			mdr.setsMetaData(track);
+			if (bundle.containsKey(FileChooser.FILE_CHOOSER_INFO_FILE_KEY)) {
+				track = bundle.getParcelable(FileChooser.FILE_CHOOSER_INFO_FILE_KEY);
+				MetaDataRetriever mdr = new MetaDataRetriever();
+				mdr.setsMetaData(track);
+			} else if (bundle.containsKey(MainActivity.PLAYLIST_INFO_FILE_KEY)) {
+				track = bundle.getParcelable(MainActivity.PLAYLIST_INFO_FILE_KEY);
+			}
 		}
 
 		ImageView thumbnail = (ImageView) findViewById(R.id.iv_thumbnail);
 		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
+		TextView tvArtist = (TextView) findViewById(R.id.tv_info_artist);
+		TextView tvFileSize = (TextView) findViewById(R.id.tv_file_size);
 
 		if (track != null) {
 			Bitmap bitmap = getAlbumThumbnail(track.getURI().toString());
@@ -64,6 +70,10 @@ public class FileInfoActivity extends Activity {
 			tvFullFileName.setText(Html.fromHtml("<b>Name: </b> " + track.getFileName()));
 
 			tvInfoTitle.setText(Html.fromHtml("<b>Title: </b>" + checkMetaData(track.getTitle())));
+
+			tvArtist.setText(Html.fromHtml("<b>Artist: </b>" + checkMetaData(track.getArtist())));
+
+			tvFileSize.setText(Html.fromHtml("<b>Size: </b>" + track.getFileSize() + " MB"));
 		}
 
 
