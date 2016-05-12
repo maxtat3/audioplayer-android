@@ -1,10 +1,14 @@
 package edu.sintez.audioplayer.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +64,12 @@ public class FileInfoActivity extends Activity {
 		TextView tvFileSize = (TextView) findViewById(R.id.tv_file_size);
 
 		if (track != null) {
-			Bitmap bitmap = getAlbumThumbnail(track.getURI().toString());
+			Bitmap bitmap;
+			if (track.getURI().toString().toLowerCase().matches(".*\\bcontent://\\b.*"))
+				bitmap = getAlbumThumbnail(getAbsPathFromURI(this, track.getURI())); //from content resolver
+			else
+				bitmap = getAlbumThumbnail(track.getURI().toString());   //from playlist
+
 			if (bitmap != null) {
 				thumbnail.setImageBitmap(bitmap);
 				thumbnail.setAdjustViewBounds(true);
@@ -103,5 +112,26 @@ public class FileInfoActivity extends Activity {
 		byte [] data = mmr.getEmbeddedPicture();
 		if(data != null) return BitmapFactory.decodeByteArray(data, 0, data.length);
 		return null;
+	}
+
+	/**
+	 * Converted Uri path from ContentResolver format to absolute Uri path.
+	 *
+	 * @param context application context
+	 * @param contentUri returned ContentResolver Uri
+	 * @return absolute path uri to file
+	 * @see android.content.ContentResolver
+	 */
+	public String getAbsPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] projection = {MediaStore.Images.Media.DATA};
+			cursor = context.getContentResolver().query(contentUri, projection, null, null, null);
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 }
