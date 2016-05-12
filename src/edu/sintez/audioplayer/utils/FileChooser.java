@@ -160,7 +160,7 @@ public class FileChooser extends ListActivity {
 	 * @param dig number
 	 * @return rounded number
 	 */
-	private double roundDouble(double dig) {
+	public static double roundDouble(double dig) {
 		final int SINGS = 100; //if this num = 1000 -> rounded num = x.xxx
 		int iVal = (int) ( dig * SINGS );
 		double dVal = dig * SINGS;
