@@ -9,8 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.sintez.audioplayer.R;
-import edu.sintez.audioplayer.utils.FileChooser;
 import edu.sintez.audioplayer.utils.FileItem;
+import edu.sintez.audioplayer.utils.FileType;
 
 import java.util.List;
 
@@ -57,14 +57,21 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		FileItem item = items.get(position);
 		viewHolder.chb_item.setTag(item);
 		viewHolder.name.setText(item.getName());
-		viewHolder.description.setText(item.getData());
+
+		if (item.getType() == FileType.PARENT_DIR) {
+			viewHolder.description.setText(FileType.PARENT_DIR.getDesc());
+		} else if (item.getType() == FileType.DIR) {
+			viewHolder.description.setText(FileType.DIR.getDesc());
+		} else if (item.getType() == FileType.FILE) {
+			viewHolder.description.setText("File size " + String.valueOf(item.getSize()) + " MB");
+		}
 
 		if (position == 0
-			&& (item.getData().equalsIgnoreCase(FileChooser.FOLDER_TXT)
-			|| item.getData().equalsIgnoreCase(FileChooser.PARENT_DIR_TXT))) {
+			&& (item.getType() == FileType.DIR
+			|| item.getType() == FileType.PARENT_DIR)) {
 			viewHolder.ivFileFormat.setImageResource(R.drawable.ic_back);
 
-		} else if (item.getData().equalsIgnoreCase(FileChooser.FOLDER_TXT)) {
+		} else if (item.getType() == FileType.DIR) {
 			viewHolder.ivFileFormat.setImageResource(R.drawable.ic_folder_white_24dp);
 
 		} else {

@@ -26,8 +26,7 @@ public class FileChooser extends ListActivity {
 	private static final String LOG = FileChooser.class.getName();
 	public static final String SELECTED_FILES_LIST_KEY = FileChooser.class.getName() + "." + "selected_files_list_key";
 	public static final String SEL_FILE_KEY = FileChooser.class.getName() + "." + "selected_file";
-	public static final String PARENT_DIR_TXT = "Parent Directory";
-	public static final String FOLDER_TXT = "Folder";
+
 	private File currDir;
 	private FileArrayAdapter adapter;
 
@@ -95,14 +94,19 @@ public class FileChooser extends ListActivity {
 		try {
 			for (File ff : filesAndDirs) {
 				if (ff.isDirectory()) {
-					dirs.add(new FileItem(ff.getName(), FOLDER_TXT, ff.getAbsolutePath()));
+					dirs.add(new FileItem(
+						FileType.DIR,
+						ff.getName(),
+						ff.getAbsolutePath()
+					));
 				} else {
 					SupportedAudioFormat detectedFormat = checkFileFormat(ff.getName());
 					if (detectedFormat != SupportedAudioFormat.NOT_DEFINED) {
 						files.add(new FileItem(
+							FileType.FILE,
 							ff.getName(),
-							"File Size: " + roundDouble(ff.length()/1024.0/1024.0) + " MB",
 							ff.getAbsolutePath(),
+							roundDouble(ff.length()/1024.0/1024.0),
 							detectedFormat
 						));
 					}
@@ -114,8 +118,7 @@ public class FileChooser extends ListActivity {
 		Collections.sort(dirs);
 		Collections.sort(files);
 		dirs.addAll(files);
-		if (!f.getName().equalsIgnoreCase("sdcard"))
-			dirs.add(0, new FileItem("...", PARENT_DIR_TXT, f.getParent()));
+		dirs.add(0, new FileItem(FileType.PARENT_DIR, "...", f.getParent()));
 		adapter = new FileArrayAdapter(this, R.layout.pattern_file_or_dir_item, dirs, itemSelectListener);
 		setListAdapter(adapter);
 	}
@@ -161,7 +164,7 @@ public class FileChooser extends ListActivity {
 	protected void onListItemClick(ListView lv, View v, int pos, long id) {
 		super.onListItemClick(lv, v, pos, id);
 		FileItem item = adapter.getItem(pos);
-		if (item.getData().equalsIgnoreCase(FOLDER_TXT) || item.getData().equalsIgnoreCase(PARENT_DIR_TXT)) {
+		if (item.getType() == FileType.DIR || item.getType() == FileType.PARENT_DIR) {
 			currDir = new File(item.getPath());
 			fill(currDir);
 		} else {

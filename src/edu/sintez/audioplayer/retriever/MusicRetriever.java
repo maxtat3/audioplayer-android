@@ -84,6 +84,7 @@ public class MusicRetriever {
 
         // retrieve the indices of the columns where the ID, title, etc. of the song are
 	    int filNameColumn = cur.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+	    int fileSizeColumn = cur.getColumnIndex(MediaStore.MediaColumns.SIZE);
 	    int artistColumn = cur.getColumnIndex(MediaStore.Audio.Media.ARTIST);
         int titleColumn = cur.getColumnIndex(MediaStore.Audio.Media.TITLE);
         int albumColumn = cur.getColumnIndex(MediaStore.Audio.Media.ALBUM);
@@ -99,6 +100,7 @@ public class MusicRetriever {
 	        tracks.add(new Track(
 		        ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
 		        cur.getString(filNameColumn),
+		        cur.getDouble(fileSizeColumn),
 		        cur.getString(artistColumn),
 		        cur.getString(titleColumn),
 		        cur.getString(albumColumn),
