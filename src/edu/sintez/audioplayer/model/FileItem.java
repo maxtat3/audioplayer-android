@@ -1,4 +1,4 @@
-package edu.sintez.audioplayer.utils;
+package edu.sintez.audioplayer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

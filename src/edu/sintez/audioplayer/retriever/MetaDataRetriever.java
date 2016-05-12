@@ -1,7 +1,7 @@
 package edu.sintez.audioplayer.retriever;
 
 import android.media.MediaMetadataRetriever;
-import android.util.Log;
+import edu.sintez.audioplayer.model.Track;
 
 /**
  * Handles for eject meta data information from audio tracks.

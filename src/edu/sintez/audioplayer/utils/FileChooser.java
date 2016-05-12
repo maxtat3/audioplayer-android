@@ -10,10 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import edu.sintez.audioplayer.FileInfoActivity;
+import edu.sintez.audioplayer.activity.FileInfoActivity;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.adapter.FileArrayAdapter;
-import edu.sintez.audioplayer.retriever.Track;
+import edu.sintez.audioplayer.model.FileItem;
+import edu.sintez.audioplayer.model.FileType;
+import edu.sintez.audioplayer.model.SupportedAudioFormat;
+import edu.sintez.audioplayer.model.Track;
 
 import java.io.File;
 import java.util.ArrayList;

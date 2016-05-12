@@ -1,4 +1,4 @@
-package edu.sintez.audioplayer;
+package edu.sintez.audioplayer.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,14 +10,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
+import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.adapter.PlaylistAdapter;
 import edu.sintez.audioplayer.retriever.MetaDataRetriever;
 import edu.sintez.audioplayer.retriever.MusicRetriever;
 import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
-import edu.sintez.audioplayer.retriever.Track;
+import edu.sintez.audioplayer.model.Track;
 import edu.sintez.audioplayer.service.MusicService;
 import edu.sintez.audioplayer.utils.FileChooser;
-import edu.sintez.audioplayer.utils.FileItem;
+import edu.sintez.audioplayer.model.FileItem;
 
 import java.util.ArrayList;
 import java.util.List;

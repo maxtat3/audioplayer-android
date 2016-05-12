@@ -1,4 +1,4 @@
-package edu.sintez.audioplayer;
+package edu.sintez.audioplayer.activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -6,12 +6,12 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.retriever.MetaDataRetriever;
-import edu.sintez.audioplayer.retriever.Track;
+import edu.sintez.audioplayer.model.Track;
 import edu.sintez.audioplayer.utils.FileChooser;
 
 /**

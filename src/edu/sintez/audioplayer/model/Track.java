@@ -1,4 +1,4 @@
-package edu.sintez.audioplayer.retriever;
+package edu.sintez.audioplayer.model;
 
 import android.net.Uri;
 import android.os.Parcel;

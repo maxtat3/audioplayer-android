@@ -9,8 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.sintez.audioplayer.R;
-import edu.sintez.audioplayer.utils.FileItem;
-import edu.sintez.audioplayer.utils.FileType;
+import edu.sintez.audioplayer.model.FileItem;
+import edu.sintez.audioplayer.model.FileType;
 
 import java.util.List;
 

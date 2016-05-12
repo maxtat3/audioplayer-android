@@ -20,13 +20,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
-import edu.sintez.audioplayer.MainActivity;
+import edu.sintez.audioplayer.activity.MainActivity;
 import edu.sintez.audioplayer.retriever.MusicRetriever;
-import edu.sintez.audioplayer.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.audiofocus.AudioFocusHelper;
 import edu.sintez.audioplayer.audiofocus.MusicFocusable;
-import edu.sintez.audioplayer.retriever.Track;
+import edu.sintez.audioplayer.model.Track;
 
 import java.io.IOException;
 
