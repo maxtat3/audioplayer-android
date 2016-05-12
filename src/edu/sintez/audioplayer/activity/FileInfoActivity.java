@@ -62,6 +62,7 @@ public class FileInfoActivity extends Activity {
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
 		TextView tvArtist = (TextView) findViewById(R.id.tv_info_artist);
 		TextView tvFileSize = (TextView) findViewById(R.id.tv_file_size);
+		TextView tvDuration = (TextView) findViewById(R.id.tv_info_duration);
 
 		if (track != null) {
 			Bitmap bitmap;
@@ -83,6 +84,8 @@ public class FileInfoActivity extends Activity {
 			tvArtist.setText(Html.fromHtml("<b>Artist: </b>" + checkMetaData(track.getArtist())));
 
 			tvFileSize.setText(Html.fromHtml("<b>Size: </b>" + track.getFileSize() + " MB"));
+
+			tvDuration.setText(Html.fromHtml("<b>Duration: </b>" + checkMetaData(getTimeText(track.getDuration()))));
 		}
 
 
@@ -133,5 +136,28 @@ public class FileInfoActivity extends Activity {
 		} finally {
 			if (cursor != null) cursor.close();
 		}
+	}
+
+	/**
+	 * Converted time in milliseconds to format HH:MM:SS and returned time in text representation
+	 *
+	 * @param millis time in milliseconds
+	 * @return time in text representation
+	 */
+	private String getTimeText(long millis) {
+		StringBuilder buf = new StringBuilder();
+
+		int hours = (int) (millis / (1000 * 60 * 60));
+		int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+		int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+
+		buf
+			.append(String.format("%02d", hours))
+			.append(":")
+			.append(String.format("%02d", minutes))
+			.append(":")
+			.append(String.format("%02d", seconds));
+
+		return buf.toString();
 	}
 }
