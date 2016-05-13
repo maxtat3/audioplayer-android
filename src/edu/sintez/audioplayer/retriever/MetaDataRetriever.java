@@ -1,6 +1,7 @@
 package edu.sintez.audioplayer.retriever;
 
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import edu.sintez.audioplayer.model.Track;
 
 /**
@@ -30,7 +31,7 @@ public class MetaDataRetriever {
 		track.setTitle(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
 		track.setAlbum(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
 		track.setDuration(Long.parseLong(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)));
-
+		track.setBitrate(Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)));
 	}
 
 }

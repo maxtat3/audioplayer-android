@@ -106,7 +106,8 @@ public class MusicRetriever {
 		        cur.getString(artistColumn),
 		        cur.getString(titleColumn),
 		        cur.getString(albumColumn),
-		        cur.getLong(durationColumn)
+		        cur.getLong(durationColumn),
+		        0
 	        ));
         } while (cur.moveToNext());
         cur.close();

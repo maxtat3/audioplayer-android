@@ -374,7 +374,7 @@ public class MusicService extends Service implements OnCompletionListener,
 				mp.setDataSource(manualUrl);
 				isStreaming = manualUrl.startsWith("http:") || manualUrl.startsWith("https:");
 
-				playingItem = new Track(null, null, 0.0, null, manualUrl, null, 0);
+				playingItem = new Track(null, null, 0.0, null, manualUrl, null, 0, 0);
 			}
 			else {
 				isStreaming = false; // playing a locally available song

@@ -15,11 +15,13 @@ public class Track implements Parcelable{
 	private String title;
 	private String album;
 	private long duration;
+	private int bitrate; //audio track bitrate in kbps
 
 	public Track() {
 	}
 
-	public Track(Uri uri, String fileName, double fileSize, String artist, String title, String album, long duration) {
+	public Track(Uri uri, String fileName, double fileSize, String artist, String title, String album,
+		long duration, int bitrate) {
 		this.uri = uri;
 		this.fileName = fileName;
 		this.fileSize = fileSize;
@@ -27,6 +29,7 @@ public class Track implements Parcelable{
 		this.title = title;
 		this.album = album;
 		this.duration = duration;
+		this.bitrate = bitrate;
 	}
 
 	public Track(Parcel p) {
@@ -37,6 +40,7 @@ public class Track implements Parcelable{
 		title = p.readString();
 		album = p.readString();
 		duration = p.readLong();
+		bitrate = p.readInt();
 	}
 
 	public Uri getURI() {
@@ -75,6 +79,10 @@ public class Track implements Parcelable{
 		return duration;
 	}
 
+	public int getBitrate() {
+		return bitrate;
+	}
+
 	public void setUri(Uri uri) {
 		this.uri = uri;
 	}
@@ -95,6 +103,9 @@ public class Track implements Parcelable{
 		this.duration = duration;
 	}
 
+	public void setBitrate(int bitrate) {
+		this.bitrate = bitrate;
+	}
 
 	public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
 		@Override
@@ -122,5 +133,6 @@ public class Track implements Parcelable{
 		p.writeString(title);
 		p.writeString(album);
 		p.writeLong(duration);
+		p.writeInt(bitrate);
 	}
 }
