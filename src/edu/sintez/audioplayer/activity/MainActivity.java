@@ -57,6 +57,14 @@ public class MainActivity extends Activity implements
 	public static final String PLAYLIST_INFO_FILE_KEY = MainActivity.class.getName() + "." + "file_info";
 
 	/**
+	 * Key which MusicService receive audio track and do playing them.
+	 *
+	 * @see MusicService
+	 * @see Track
+	 */
+	public static final String SERVICE_PLAYING_TRACK_KEY = MainActivity.class.getName() + "." + "service_playing_track";
+
+	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
 	private MusicRetriever musRetriever;
@@ -115,9 +123,13 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onClick(View view) {
-		if (view == btnPlay)
-			startService(new Intent(MusicService.ACTION_PLAY));
-		else if (view == btnPause)
+		if (view == btnPlay) {
+			Bundle bundle = new Bundle();
+			bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(0));
+			Intent intent = new Intent(MusicService.ACTION_PLAY);
+			intent.putExtras(bundle);
+			startService(intent);
+		} else if (view == btnPause)
 			startService(new Intent(MusicService.ACTION_PAUSE));
 		else if (view == btnNextSong)
 			startService(new Intent(MusicService.ACTION_NEXT));

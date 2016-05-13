@@ -16,6 +16,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -84,7 +85,7 @@ public class MusicService extends Service implements OnCompletionListener,
 						// so that we know we have to resume playback once we get focus back)
 		PAUSED          // playback paused (media player ready!)
 	}
-	private State state = State.RETRIEVING;
+	private State state = State.STOPPED;
 
 	/**
 	 * Whether the song we are playing is streaming from the network
@@ -175,6 +176,8 @@ public class MusicService extends Service implements OnCompletionListener,
 
 	}
 
+	private Track track;
+
 	/**
 	 * Called when we receive an Intent. When we receive an intent sent to us via startService(),
 	 * this is the method that gets called. So here we react appropriately depending on the
@@ -183,8 +186,21 @@ public class MusicService extends Service implements OnCompletionListener,
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		String action = intent.getAction();
+
 		if (action.equals(ACTION_TOGGLE_PLAYBACK)) togglePlaybackRequest();
-		else if (action.equals(ACTION_PLAY)) playRequest();
+		else if (action.equals(ACTION_PLAY)){
+			Track track = null;
+			Bundle bundle = intent.getExtras();
+			if (bundle != null)
+				if (bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY))
+					track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
+
+			if (track != null) {
+				Log.d(LOG, "track = " + track.getURI());
+				this.track = track;
+			}
+			playRequest();
+		}
 		else if (action.equals(ACTION_PAUSE)) pauseRequest();
 		else if (action.equals(ACTION_NEXT)) nextSongRequest();
 		else if (action.equals(ACTION_STOP)) stopRequest();
@@ -366,7 +382,7 @@ public class MusicService extends Service implements OnCompletionListener,
 		relaxResources(false); // release everything except MediaPlayer
 
 		try {
-			Track playingItem = null;
+			Track playingItem = this.track;
 			if (manualUrl != null) {
 				// set the source of the media player to a manual URL or path
 				createMediaPlayerIfNeeded();
