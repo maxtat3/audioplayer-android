@@ -61,6 +61,7 @@ public class FileInfoActivity extends Activity {
 		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
 		TextView tvArtist = (TextView) findViewById(R.id.tv_info_artist);
+		TextView tvAlbum = (TextView) findViewById(R.id.tv_info_album);
 		TextView tvFileSize = (TextView) findViewById(R.id.tv_info_file_size);
 		TextView tvDuration = (TextView) findViewById(R.id.tv_info_duration);
 		TextView tvBitrate = (TextView) findViewById(R.id.tv_info_bitrate);
@@ -83,6 +84,8 @@ public class FileInfoActivity extends Activity {
 			tvInfoTitle.setText(Html.fromHtml("<b>Title: </b>" + checkMetaData(track.getTitle())));
 
 			tvArtist.setText(Html.fromHtml("<b>Artist: </b>" + checkMetaData(track.getArtist())));
+
+			tvAlbum.setText(Html.fromHtml("<b>Album: </b>" + checkMetaData(track.getAlbum())));
 
 			tvFileSize.setText(Html.fromHtml("<b>Size: </b>" + track.getFileSize() + " MB"));
 
