@@ -130,11 +130,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-		// create the Audio Focus Helper, if the Audio Focus feature is available (SDK 8 or above)
-		if (android.os.Build.VERSION.SDK_INT >= 8)
-			audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
-		else
-			audioFocus = AudioFocus.FOCUSED; // no focus feature, so we always "have" audio focus
+		audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
 	}
 
 	private Track track;
