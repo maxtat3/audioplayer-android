@@ -27,7 +27,7 @@ import java.util.List;
  * Main activity: shows media player buttons. This activity shows the media player buttons and
  * lets the user click them. No media handling is done here -- everything is done by passing
  * Intents to our {@link MusicService}.
- * */
+ */
 public class MainActivity extends Activity implements
 	View.OnClickListener,
 	AdapterView.OnItemClickListener,
@@ -82,6 +82,12 @@ public class MainActivity extends Activity implements
 	private ArrayAdapter<Track> adapter;
 
 	/**
+	 * Selected audio track position when user clicked in playlist item.
+	 * Default selected position is 0.
+	 */
+	private int selTrackPos = 0;
+
+	/**
 	 * Tracks storage displaying in playlist
 	 */
 	private List<Track> tracks = new ArrayList<Track>();
@@ -125,7 +131,7 @@ public class MainActivity extends Activity implements
 	public void onClick(View view) {
 		if (view == btnPlay) {
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(0));
+			bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(selTrackPos));
 			Intent intent = new Intent(MusicService.ACTION_PLAY);
 			intent.putExtras(bundle);
 			startService(intent);
@@ -191,7 +197,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Log.d(LOG, "position = " + position);
+		selTrackPos = position;
 	}
 
 	@Override
