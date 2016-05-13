@@ -150,6 +150,12 @@ public class MusicService extends Service implements OnCompletionListener,
 
 		if (action.equals(ACTION_TOGGLE_PLAYBACK)) togglePlaybackRequest();
 		else if (action.equals(ACTION_PLAY)){
+
+			if (state == State.PLAYING || state == State.PAUSED) {
+				tryToGetAudioFocus();
+				playNextSong(null);
+			}
+
 			Track track = null;
 			Bundle bundle = intent.getExtras();
 			if (bundle != null)
