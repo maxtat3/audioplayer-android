@@ -16,7 +16,6 @@ import edu.sintez.audioplayer.app.retriever.MusicRetriever;
 import edu.sintez.audioplayer.app.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.service.MusicService;
-import edu.sintez.audioplayer.app.utils.FileChooser;
 import edu.sintez.audioplayer.app.model.FileItem;
 
 import java.util.ArrayList;
@@ -170,7 +169,7 @@ public class MainActivity extends Activity implements
 		else if (view == btnOpenFromURL)
 			showUrlDialog();
 		else if (view == btnOpenPlaylist) {
-			startActivityForResult(new Intent(this, FileChooser.class), RQ_FILE_CHOOSER);
+			startActivityForResult(new Intent(this, FileChooserActivity.class), RQ_FILE_CHOOSER);
 		} else if (view == btnGetAllMusFromDevice) {
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
@@ -245,7 +244,7 @@ public class MainActivity extends Activity implements
 		if (intent == null) return;
 
 		if (requestCode == RQ_FILE_CHOOSER) {
-			ArrayList<FileItem> selFilesPaths = intent.getParcelableArrayListExtra(FileChooser.SELECTED_FILES_LIST_KEY);
+			ArrayList<FileItem> selFilesPaths = intent.getParcelableArrayListExtra(FileChooserActivity.SELECTED_FILES_LIST_KEY);
 			MetaDataRetriever mdr = new MetaDataRetriever();
 			for (FileItem selFile : selFilesPaths) {
 				Track track = new Track();

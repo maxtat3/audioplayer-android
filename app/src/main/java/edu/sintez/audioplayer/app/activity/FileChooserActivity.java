@@ -1,17 +1,15 @@
-package edu.sintez.audioplayer.app.utils;
+package edu.sintez.audioplayer.app.activity;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
-import edu.sintez.audioplayer.app.activity.FileInfoActivity;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.app.adapter.FileArrayAdapter;
 import edu.sintez.audioplayer.app.model.FileItem;
@@ -25,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class FileChooser extends ListActivity {
+public class FileChooserActivity extends ListActivity {
 
-	private static final String LOG = FileChooser.class.getName();
-	public static final String SELECTED_FILES_LIST_KEY = FileChooser.class.getName() + "." + "selected_files_list_key";
+	private static final String LOG = FileChooserActivity.class.getName();
+	public static final String SELECTED_FILES_LIST_KEY = FileChooserActivity.class.getName() + "." + "selected_files_list_key";
 	/**
 	 * Key which FileInfoActivity receive audio track. In this audio track
 	 * filled fields: uri, name and size only. So track do not contained audio
@@ -37,7 +35,7 @@ public class FileChooser extends ListActivity {
 	 * @see FileInfoActivity
 	 * @see Track
 	 */
-	public static final String FILE_CHOOSER_INFO_FILE_KEY = FileChooser.class.getName() + "." + "file_info";
+	public static final String FILE_CHOOSER_INFO_FILE_KEY = FileChooserActivity.class.getName() + "." + "file_info";
 
 	private Button btnCancel;
 	private Button btnOk;

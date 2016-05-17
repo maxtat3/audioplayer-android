@@ -21,7 +21,7 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name=".app.utils.FileChooser"/>
+		<activity android:name=".app.activity.FileChooserActivity"/>
 		<activity
 			android:name=".app.activity.FileInfoActivity"
 			android:theme="@android:style/Theme.Holo.Dialog"

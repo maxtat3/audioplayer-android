@@ -16,7 +16,6 @@ import android.widget.TextView;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.retriever.MetaDataRetriever;
-import edu.sintez.audioplayer.app.utils.FileChooser;
 
 /**
  * Activity meta data tag information from user selected audio track
@@ -48,8 +47,8 @@ public class FileInfoActivity extends Activity {
 		Track track = null;
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
-			if (bundle.containsKey(FileChooser.FILE_CHOOSER_INFO_FILE_KEY)) {
-				track = bundle.getParcelable(FileChooser.FILE_CHOOSER_INFO_FILE_KEY);
+			if (bundle.containsKey(FileChooserActivity.FILE_CHOOSER_INFO_FILE_KEY)) {
+				track = bundle.getParcelable(FileChooserActivity.FILE_CHOOSER_INFO_FILE_KEY);
 				MetaDataRetriever mdr = new MetaDataRetriever();
 				mdr.setsMetaData(track);
 			} else if (bundle.containsKey(MainActivity.PLAYLIST_INFO_FILE_KEY)) {
