@@ -153,18 +153,18 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onClick(View view) {
 		if (view == btnPlay) {
-			Bundle bundle = new Bundle();
-			bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(selTrackPos));
-			Intent i = new Intent(MusicService.ACTION_PLAY);
-			i.putExtras(bundle);
-			startService(i);
+			playTrack();
+
 		} else if (view == btnPause)
 			startService(new Intent(MusicService.ACTION_PAUSE));
-		else if (view == btnNextSong)
-			startService(new Intent(MusicService.ACTION_NEXT));
-		else if (view == btnPrevSong)
-			startService(new Intent(MusicService.ACTION_PREV));
-		else if (view == btnStop)
+
+		else if (view == btnNextSong) {
+			playNextTrack();
+
+		} else if (view == btnPrevSong) {
+			playPrevTrack();
+
+		} else if (view == btnStop)
 			startService(new Intent(MusicService.ACTION_STOP));
 		else if (view == btnOpenFromURL)
 			showUrlDialog();
@@ -174,6 +174,34 @@ public class MainActivity extends Activity implements
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
 		}
+	}
+
+	/**
+	 * Start playing selected audio track. Selected audio track pointed
+	 * {@link #selTrackPos} counter.
+	 */
+	private void playTrack() {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(selTrackPos));
+		Intent i = new Intent(MusicService.ACTION_PLAY);
+		i.putExtras(bundle);
+		startService(i);
+	}
+
+	/**
+	 * Start playing next audio track.
+	 */
+	private void playNextTrack() {
+		if (tracks.size() > ++selTrackPos) playTrack();
+		else --selTrackPos;
+	}
+
+	/**
+	 * Start playing previous audio track.
+	 */
+	private void playPrevTrack() {
+		if (--selTrackPos > 0) playTrack();
+		else selTrackPos = 0;
 	}
 
 	/**

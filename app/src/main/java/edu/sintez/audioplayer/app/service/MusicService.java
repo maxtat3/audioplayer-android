@@ -46,8 +46,6 @@ public class MusicService extends Service implements OnCompletionListener,
     public static final String ACTION_PLAY = "edu.sintez.audioplayer.app.action.PLAY";
     public static final String ACTION_PAUSE = "edu.sintez.audioplayer.app.action.PAUSE";
     public static final String ACTION_STOP = "edu.sintez.audioplayer.app.action.STOP";
-    public static final String ACTION_NEXT = "edu.sintez.audioplayer.app.action.SKIP";
-    public static final String ACTION_PREV = "edu.sintez.audioplayer.app.action.REWIND";
     public static final String ACTION_URL = "edu.sintez.audioplayer.app.action.URL";
 
 	public static final String TRACK_TIME_KEY = MusicService.class.getName() + "." + "TrackTime";
@@ -154,27 +152,20 @@ public class MusicService extends Service implements OnCompletionListener,
 		if (action.equals(ACTION_TOGGLE_PLAYBACK)) togglePlaybackRequest();
 		else if (action.equals(ACTION_PLAY)){
 
+			Bundle bundle = intent.getExtras();
+			if (bundle != null && bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY)) {
+				track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
+			}
+
 			if (state == State.PLAYING || state == State.PAUSED) {
 				tryToGetAudioFocus();
 				playNextSong(null);
 			}
 
-			Track track = null;
-			Bundle bundle = intent.getExtras();
-			if (bundle != null)
-				if (bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY))
-					track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
-
-			if (track != null) {
-				if (isDebug) Log.d(LOG, "track URI = " + track.getURI());
-				this.track = track;
-			}
 			playRequest();
 		}
 		else if (action.equals(ACTION_PAUSE)) pauseRequest();
-		else if (action.equals(ACTION_NEXT)) nextSongRequest();
 		else if (action.equals(ACTION_STOP)) stopRequest();
-		else if (action.equals(ACTION_PREV)) previousSongRequest();
 		else if (action.equals(ACTION_URL)) playFromURLRequest(intent);
 
 		return START_NOT_STICKY; // Means we started the service, but don't want it to
@@ -216,26 +207,6 @@ public class MusicService extends Service implements OnCompletionListener,
             mp.pause();
             relaxResources(false); // while paused, we always retain the MediaPlayer
             // do not give up audio focus
-        }
-    }
-
-	/**
-     * Previous song
-     */
-    private void previousSongRequest() {
-        if (isDebug) Log.d(LOG, "previousSongRequest");
-        if (state == State.PLAYING || state == State.PAUSED)
-            mp.seekTo(0);
-    }
-
-	/**
-     * Next song
-     */
-    private void nextSongRequest() {
-        if (isDebug) Log.d(LOG, "nextSongRequest");
-        if (state == State.PLAYING || state == State.PAUSED) {
-            tryToGetAudioFocus();
-            playNextSong(null);
         }
     }
 
