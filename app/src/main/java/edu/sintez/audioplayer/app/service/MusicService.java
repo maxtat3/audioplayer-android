@@ -127,7 +127,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 	@Override
 	public void onCreate() {
-		Log.d(LOG, "Creating service");
+		if (isDebug) Log.d(LOG, "Creating service");
 
 		// Create the Wifi lock (this does not acquire the lock, this just creates it)
 		wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
@@ -246,7 +246,8 @@ public class MusicService extends Service implements OnCompletionListener,
 	 */
 	private void createMediaPlayerIfNeeded() {
 		if (mp == null) {
-			Log.d(LOG, "createMediaPlayerIfNeeded - mp is null !");
+			if (isDebug) Log.d(LOG, "createMediaPlayerIfNeeded - mp is null !");
+
 			mp = new MediaPlayer();
 
 			// Make sure the media player will acquire a wake-lock while playing. If we don't do
@@ -261,7 +262,7 @@ public class MusicService extends Service implements OnCompletionListener,
 			mp.setOnCompletionListener(this); // end playback listener
 			mp.setOnErrorListener(this);
 		} else {
-			Log.d(LOG, "createMediaPlayerIfNeeded - mp is not null");
+			if (isDebug) Log.d(LOG, "createMediaPlayerIfNeeded - mp is NOT null");
 			mp.reset();
 		}
 	}
@@ -273,7 +274,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * @param releaseMediaPlayer Indicates whether the Media Player should also be released or not
 	 */
 	private void relaxResources(boolean releaseMediaPlayer) {
-		Log.d(LOG, "relaxResources");
+		if (isDebug) Log.d(LOG, "relaxResources");
 		// stop being a foreground service
 		stopForeground(true);
 
