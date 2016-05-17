@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 import edu.sintez.audioplayer.app.activity.FileInfoActivity;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.app.adapter.FileArrayAdapter;
@@ -72,8 +73,12 @@ public class FileChooser extends ListActivity {
 		btnOk.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_OK, new Intent().putParcelableArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
-				finish();
+				if (!selFiles.isEmpty()) {
+					setResult(RESULT_OK, new Intent().putParcelableArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
+					finish();
+				} else {
+					Toast.makeText(getApplicationContext(), "No files are selected !", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 
