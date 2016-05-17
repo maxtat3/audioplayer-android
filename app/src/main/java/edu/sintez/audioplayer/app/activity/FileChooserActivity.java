@@ -37,10 +37,6 @@ public class FileChooserActivity extends ListActivity {
 	 */
 	public static final String FILE_CHOOSER_INFO_FILE_KEY = FileChooserActivity.class.getName() + "." + "file_info";
 
-	private Button btnCancel;
-	private Button btnOk;
-	private Button btnSelectAll;
-
 	private File currDir;
 	private FileArrayAdapter adapter;
 
@@ -57,9 +53,9 @@ public class FileChooserActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_file_chooser);
 
-		btnCancel = (Button) findViewById(R.id.btn_fch_cancel);
-		btnOk = (Button) findViewById(R.id.btn_fch_ok);
-		btnSelectAll = (Button) findViewById(R.id.btn_fch_select_all);
+		Button btnCancel = (Button) findViewById(R.id.btn_fch_cancel);
+		Button btnOk = (Button) findViewById(R.id.btn_fch_ok);
+		Button btnSelectAll = (Button) findViewById(R.id.btn_fch_select_all);
 
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
