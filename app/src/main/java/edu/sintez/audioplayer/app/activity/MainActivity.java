@@ -200,7 +200,7 @@ public class MainActivity extends Activity implements
 	 * Start playing previous audio track.
 	 */
 	private void playPrevTrack() {
-		if (--selTrackPos > 0) playTrack();
+		if (--selTrackPos >= 0) playTrack();
 		else selTrackPos = 0;
 	}
 
