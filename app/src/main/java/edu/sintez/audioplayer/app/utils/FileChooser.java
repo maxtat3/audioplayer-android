@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import edu.sintez.audioplayer.app.activity.FileInfoActivity;
@@ -38,6 +38,10 @@ public class FileChooser extends ListActivity {
 	 */
 	public static final String FILE_CHOOSER_INFO_FILE_KEY = FileChooser.class.getName() + "." + "file_info";
 
+	private Button btnCancel;
+	private Button btnOk;
+	private Button btnSelectAll;
+
 	private File currDir;
 	private FileArrayAdapter adapter;
 
@@ -52,28 +56,36 @@ public class FileChooser extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		currDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-		fill(currDir);
-	}
+		setContentView(R.layout.activity_file_chooser);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_files_sel, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+		btnCancel = (Button) findViewById(R.id.btn_fch_cancel);
+		btnOk = (Button) findViewById(R.id.btn_fch_ok);
+		btnSelectAll = (Button) findViewById(R.id.btn_fch_select_all);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.mi_ok:
+		btnCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		btnOk.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				setResult(RESULT_OK, new Intent().putParcelableArrayListExtra(SELECTED_FILES_LIST_KEY, selFiles));
 				finish();
-				break;
-			case R.id.mi_cancel:
-				finish();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
+			}
+		});
+
+		btnSelectAll.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
+		currDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+		fill(currDir);
 	}
 
 	/**
