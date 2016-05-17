@@ -2,11 +2,10 @@ package edu.sintez.audioplayer.app.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
@@ -69,6 +68,22 @@ public class MainActivity extends Activity implements
 	 */
 	private MusicRetriever musRetriever;
 
+	/**
+	 * Though this receiver {@link MusicService} update current playing time
+	 * and general playing time.
+	 */
+	private BroadcastReceiver trackTimeReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent i) {
+			if (i.getAction().equals(MusicService.TRACK_TIME_KEY)) {
+				int curr = i.getIntExtra(MusicService.PLAY_TIME_CURRENT, 0);
+				int all = i.getIntExtra(MusicService.PLAY_TIME_ALL, 0);
+				tvCurrentTrackTime.setText(FileInfoActivity.getTimeText(curr));
+				tvAllTrackTime.setText(FileInfoActivity.getTimeText(all));
+			}
+		}
+	};
+
 	private Button btnPlay;
 	private Button btnPause;
 	private Button btnNextSong;
@@ -77,6 +92,9 @@ public class MainActivity extends Activity implements
 	private Button btnOpenFromURL;
 	private Button btnOpenPlaylist;
 	private Button btnGetAllMusFromDevice;
+
+	private TextView tvCurrentTrackTime;
+	private TextView tvAllTrackTime;
 
 	private ListView lvPlaylist;
 	private ArrayAdapter<Track> adapter;
@@ -125,6 +143,12 @@ public class MainActivity extends Activity implements
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
 		lvPlaylist.setOnItemLongClickListener(this);
+
+		tvCurrentTrackTime = (TextView) findViewById(R.id.current_track_time);
+		tvAllTrackTime = (TextView) findViewById(R.id.all_track_time);
+
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+			trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
 	}
 
 	@Override

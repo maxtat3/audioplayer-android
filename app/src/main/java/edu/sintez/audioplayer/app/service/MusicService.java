@@ -16,6 +16,7 @@ import android.net.wifi.WifiManager.WifiLock;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 import edu.sintez.audioplayer.app.activity.MainActivity;
@@ -25,6 +26,8 @@ import edu.sintez.audioplayer.app.audiofocus.MusicFocusable;
 import edu.sintez.audioplayer.app.model.Track;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Service that handles audio track playback. Audio track pass from {@link MainActivity}.
@@ -46,6 +49,10 @@ public class MusicService extends Service implements OnCompletionListener,
     public static final String ACTION_NEXT = "edu.sintez.audioplayer.app.action.SKIP";
     public static final String ACTION_PREV = "edu.sintez.audioplayer.app.action.REWIND";
     public static final String ACTION_URL = "edu.sintez.audioplayer.app.action.URL";
+
+	public static final String TRACK_TIME_KEY = MusicService.class.getName() + "." + "TrackTime";
+	public static final String PLAY_TIME_CURRENT = MusicService.class.getName() + "." + "CurrentTrackPlayingTime";
+	public static final String PLAY_TIME_ALL = MusicService.class.getName() + "." + "AllTrackPlayTime";
 
 	/**
 	 * Indicates the state our service:
@@ -399,6 +406,8 @@ public class MusicService extends Service implements OnCompletionListener,
 			mp.setVolume(1.0f, 1.0f); // can be loud playing
 
 		if (!mp.isPlaying()) mp.start();
+
+		updatePlayingTime();
 	}
 
 	/**
@@ -539,4 +548,39 @@ public class MusicService extends Service implements OnCompletionListener,
     public IBinder onBind(Intent arg0) {
         return null;
     }
+
+	/**
+	 * Updating current and general time playing track.
+	 * In this at 1 second interval get time position from media player.
+	 *
+	 * @see MediaPlayer
+	 */
+	private void updatePlayingTime() {
+		final Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (mp != null && mp.isPlaying()) {
+					sendTime(mp.getCurrentPosition(), mp.getDuration());
+				} else {
+					timer.cancel();
+					timer.purge();
+				}
+			}
+		}, 0, 1000);
+	}
+
+	/**
+	 * When audio track is playing, sending information to UI about current playing time
+	 * and general playing time track.
+	 *
+	 * @param currentTime current position playing time in ms
+	 * @param allTime general playing time track in ms
+	 */
+	private void sendTime(int currentTime, int allTime) {
+		Intent i = new Intent(TRACK_TIME_KEY);
+		i.putExtra(PLAY_TIME_CURRENT, currentTime);
+		i.putExtra(PLAY_TIME_ALL, allTime);
+		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+	}
 }

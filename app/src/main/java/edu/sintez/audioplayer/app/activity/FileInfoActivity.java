@@ -150,7 +150,7 @@ public class FileInfoActivity extends Activity {
 	 * @param millis time in milliseconds
 	 * @return time in text representation
 	 */
-	private String getTimeText(long millis) {
+	public static String getTimeText(long millis) {
 		StringBuilder buf = new StringBuilder();
 
 		int hours = (int) (millis / (1000 * 60 * 60));
