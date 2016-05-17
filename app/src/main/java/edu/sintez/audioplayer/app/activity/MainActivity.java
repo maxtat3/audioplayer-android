@@ -156,9 +156,9 @@ public class MainActivity extends Activity implements
 		if (view == btnPlay) {
 			Bundle bundle = new Bundle();
 			bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(selTrackPos));
-			Intent intent = new Intent(MusicService.ACTION_PLAY);
-			intent.putExtras(bundle);
-			startService(intent);
+			Intent i = new Intent(MusicService.ACTION_PLAY);
+			i.putExtras(bundle);
+			startService(i);
 		} else if (view == btnPause)
 			startService(new Intent(MusicService.ACTION_PAUSE));
 		else if (view == btnNextSong)
