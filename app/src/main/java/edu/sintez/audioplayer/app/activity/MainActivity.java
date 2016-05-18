@@ -173,8 +173,11 @@ public class MainActivity extends Activity implements
 		tvCurrentTrackTime = (TextView) findViewById(R.id.current_track_time);
 		tvAllTrackTime = (TextView) findViewById(R.id.all_track_time);
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-			trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
+		// register receivers from intent filter
+		LocalBroadcastManager.getInstance(this)
+			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
+		LocalBroadcastManager.getInstance(this)
+			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.GET_NEXT_TRACK_KEY));
 
 		sBarProgress = (SeekBar) findViewById(R.id.sbar_track_progress);
 		sBarProgress.setOnSeekBarChangeListener(this);
@@ -388,6 +391,8 @@ public class MainActivity extends Activity implements
 
 				updateDisplayTime();
 				updateSeekBar();
+			} else if (i.getAction().equals(MusicService.GET_NEXT_TRACK_KEY)) {
+				playNextTrack();
 			}
 		}
 	};

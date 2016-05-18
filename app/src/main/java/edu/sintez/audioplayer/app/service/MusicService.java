@@ -52,6 +52,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	public static final String TRACK_TIME_KEY = MusicService.class.getName() + "." + "TrackTime";
 	public static final String PLAY_TIME_CURRENT = MusicService.class.getName() + "." + "CurrentTrackPlayingTime";
 	public static final String PLAY_TIME_ALL = MusicService.class.getName() + "." + "AllTrackPlayTime";
+	public static final String GET_NEXT_TRACK_KEY = MusicService.class.getName() + "." + "GetNextTrack";
 
 	/**
 	 * Indicates the state our service:
@@ -436,12 +437,12 @@ public class MusicService extends Service implements OnCompletionListener,
 
     /**
      * Called when media player is done playing current song.
+     * When media player finished playing the current track, so go ahead and start the next.
      */
     @Override
     public void onCompletion(MediaPlayer player) {
         if (isDebug) Log.d(LOG, "onCompletion");
-        // The media player finished playing the current song, so we go ahead and start the next.
-        playNextSong(null);
+	    requestToGetNextTrack();
     }
 
     /**
@@ -561,6 +562,14 @@ public class MusicService extends Service implements OnCompletionListener,
 		Intent i = new Intent(TRACK_TIME_KEY);
 		i.putExtra(PLAY_TIME_CURRENT, currentTime);
 		i.putExtra(PLAY_TIME_ALL, allTime);
+		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+	}
+
+	/**
+	 * Request to getting play next audio track in playlist
+	 */
+	private void requestToGetNextTrack() {
+		Intent i = new Intent(GET_NEXT_TRACK_KEY);
 		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
 	}
 }
