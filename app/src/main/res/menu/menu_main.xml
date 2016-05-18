@@ -1,8 +1,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	  xmlns:tools="http://schemas.android.com/tools"
-	  tools:context=".MainActivity">
-	<item android:id="@+id/action_settings"
-		  android:title="item1"
-		  android:orderInCategory="100"
-		  android:showAsAction="never"/>
+	  tools:context=".MainActivity"
+	>
+
+	<item
+		android:id="@+id/item_sorting_tracks"
+		android:title="Sorting"
+		android:showAsAction="ifRoom|withText"
+		android:icon="@mipmap/ic_launcher"
+		>
+		<menu xmlns:android="http://schemas.android.com/apk/res/android">
+			<group android:checkableBehavior="single">
+				<item
+					android:id="@+id/menu_sort_by_title"
+					android:title="By title"
+					android:titleCondensed="0"
+					/>
+				<item
+					android:id="@+id/menu_sort_by_artist"
+					android:title="By artist"
+					android:titleCondensed="1"
+					/>
+				<item
+					android:id="@+id/menu_sort_by_album"
+					android:title="By album"
+					android:titleCondensed="2"
+					/>
+				<item
+					android:id="@+id/menu_sort_by_duration"
+					android:title="By duration"
+					android:titleCondensed="3"
+					/>
+			</group>
+		</menu>
+	</item>
+
 </menu>

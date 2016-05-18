@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import edu.sintez.audioplayer.R;
@@ -17,8 +19,10 @@ import edu.sintez.audioplayer.app.retriever.PrepareMusicRetrieverTask;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.service.MusicService;
 import edu.sintez.audioplayer.app.model.FileItem;
+import edu.sintez.audioplayer.app.utils.PlayListComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -209,6 +213,46 @@ public class MainActivity extends Activity implements
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+
+		MenuItem miSortByTitle = menu.findItem(R.id.menu_sort_by_title);
+		MenuItem miSortByAuthor = menu.findItem(R.id.menu_sort_by_artist);
+		MenuItem miSortbyAlbum = menu.findItem(R.id.menu_sort_by_album);
+		MenuItem miSortbyDur = menu.findItem(R.id.menu_sort_by_duration);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (tracks.isEmpty()) {
+			Toast.makeText(this, "Playlist is empty, nothing to sort", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+
+		switch (item.getItemId()) {
+			case R.id.menu_sort_by_title:
+				Collections.sort(tracks, PlayListComparator.getCompByTitle());
+				break;
+
+			case R.id.menu_sort_by_artist:
+				Collections.sort(tracks, PlayListComparator.getCompByArtist());
+				break;
+
+			case R.id.menu_sort_by_album:
+				Collections.sort(tracks, PlayListComparator.getCompByAlbum());
+				break;
+			case R.id.menu_sort_by_duration:
+				Collections.sort(tracks, PlayListComparator.getCompByDuration());
+				break;
+
+		}
+		adapter.notifyDataSetChanged();
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
