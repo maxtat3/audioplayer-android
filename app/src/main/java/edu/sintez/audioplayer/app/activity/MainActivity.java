@@ -189,18 +189,23 @@ public class MainActivity extends Activity implements
 		sBarProgress = (SeekBar) findViewById(R.id.sbar_track_progress);
 		sBarProgress.setOnSeekBarChangeListener(this);
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setCustomView(R.layout.pattern_actionbar_et);
-		EditText etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
-		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
-				Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
-				return false;
-			}
-		});
-		etSearch.addTextChangedListener(new SearchListener());
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+		ActionBar actionBar;
+		EditText etSearch;
+		if (getActionBar() != null) {
+			actionBar = getActionBar();
+			actionBar.setCustomView(R.layout.pattern_actionbar_et);
+			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
+
+			etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
+					Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
+					return false;
+				}
+			});
+			etSearch.addTextChangedListener(new SearchListener());
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+		}
 	}
 
 	@Override
