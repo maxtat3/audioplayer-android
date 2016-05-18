@@ -56,8 +56,8 @@ public class FileInfoActivity extends Activity {
 			}
 		}
 
-		ImageView thumbnail = (ImageView) findViewById(R.id.iv_thumbnail);
-		TextView tvFullFileName = (TextView) findViewById(R.id.tv_full_file_name);
+		ImageView thumbnail = (ImageView) findViewById(R.id.iv_info_thumbnail);
+		TextView tvFullFileName = (TextView) findViewById(R.id.tv_info_full_file_name);
 		TextView tvInfoTitle = (TextView) findViewById(R.id.tv_info_title);
 		TextView tvArtist = (TextView) findViewById(R.id.tv_info_artist);
 		TextView tvAlbum = (TextView) findViewById(R.id.tv_info_album);
