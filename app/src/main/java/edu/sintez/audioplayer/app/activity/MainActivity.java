@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -349,7 +350,7 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 			case KeyEvent.KEYCODE_HEADSETHOOK:
