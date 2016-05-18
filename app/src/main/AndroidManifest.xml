@@ -34,6 +34,7 @@
 				<action android:name="edu.sintez.audioplayer.app.action.TOGGLE_PLAYBACK" />
 				<action android:name="edu.sintez.audioplayer.app.action.PLAY" />
 				<action android:name="edu.sintez.audioplayer.app.action.PAUSE" />
+				<action android:name="edu.sintez.audioplayer.app.action.JUMP_TO" />
 				<action android:name="edu.sintez.audioplayer.app.action.SKIP" />
 				<action android:name="edu.sintez.audioplayer.app.action.REWIND" />
 				<action android:name="edu.sintez.audioplayer.app.action.STOP" />

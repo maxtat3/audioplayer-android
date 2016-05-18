@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements
 	View.OnClickListener,
 	AdapterView.OnItemClickListener,
 	AdapterView.OnItemLongClickListener,
-	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
+	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener, SeekBar.OnSeekBarChangeListener {
 
 	private static final String LOG = MainActivity.class.getName();
 
@@ -63,22 +63,35 @@ public class MainActivity extends Activity implements
 	public static final String SERVICE_PLAYING_TRACK_KEY = MainActivity.class.getName() + "." + "service_playing_track";
 
 	/**
+	 * Key which MusicService receive new position in ms time to jump inside during playing audio track.
+	 */
+	public static final String SERVICE_JUMP_TO_POS_KEY = MainActivity.class.getName() + "." + "service_jump_to_pos";
+
+	/**
+	 * Maximum position in seek bar (progress bar line).
+	 * This is default value for {@link SeekBar} view.
+	 * This max position value must be changed called {@link SeekBar#setMax(int)} method.
+	 */
+	private static final int SEEK_BAR_MAX_POS = 100;
+
+	/**
 	 * Handles for scanning for media and providing titles and URIs as we need.
 	 */
 	private MusicRetriever musRetriever;
 
 	/**
 	 * Though this receiver {@link MusicService} update current playing time
-	 * and general playing time.
+	 * and total playing time track.
 	 */
 	private BroadcastReceiver trackTimeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent i) {
 			if (i.getAction().equals(MusicService.TRACK_TIME_KEY)) {
-				int curr = i.getIntExtra(MusicService.PLAY_TIME_CURRENT, 0);
-				int all = i.getIntExtra(MusicService.PLAY_TIME_ALL, 0);
-				tvCurrentTrackTime.setText(FileInfoActivity.getTimeText(curr));
-				tvAllTrackTime.setText(FileInfoActivity.getTimeText(all));
+				currentTrackTime = i.getIntExtra(MusicService.PLAY_TIME_CURRENT, 0);
+				totalTrackTime = i.getIntExtra(MusicService.PLAY_TIME_ALL, 0);
+
+				updateDisplayTime();
+				updateSeekBar();
 			}
 		}
 	};
@@ -95,6 +108,11 @@ public class MainActivity extends Activity implements
 	private TextView tvCurrentTrackTime;
 	private TextView tvAllTrackTime;
 
+	/**
+	 * Determine progress track line.
+	 */
+	private SeekBar sBarProgress;
+
 	private ListView lvPlaylist;
 	private ArrayAdapter<Track> adapter;
 
@@ -103,6 +121,25 @@ public class MainActivity extends Activity implements
 	 * Default selected position is 0.
 	 */
 	private int selTrackPos = 0;
+
+	/**
+	 * Total playing time current audio track in ms.
+	 * This time is set when audio track start playing.
+	 */
+	private int totalTrackTime = 0;
+
+	/**
+	 * Dynamic updatable playing audio track time.
+	 * This time is set when audio track is playing and update every 1 sec.
+	 */
+	private int currentTrackTime = 0;
+
+	/**
+	 * Position of {@link SeekBar} in units for jumping in side audio track.
+	 * Value is written here when user drag {@link SeekBar} progress bar line.
+	 * This new value allow jumped to random playing audio track position.
+	 */
+	private int sBarProgressPos;
 
 	/**
 	 * Tracks storage displaying in playlist
@@ -148,6 +185,9 @@ public class MainActivity extends Activity implements
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 			trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
+
+		sBarProgress = (SeekBar) findViewById(R.id.sbar_track_progress);
+		sBarProgress.setOnSeekBarChangeListener(this);
 	}
 
 	@Override
@@ -164,9 +204,11 @@ public class MainActivity extends Activity implements
 		} else if (view == btnPrevSong) {
 			playPrevTrack();
 
-		} else if (view == btnStop)
+		} else if (view == btnStop) {
 			startService(new Intent(MusicService.ACTION_STOP));
-		else if (view == btnOpenFromURL)
+			sBarProgress.setProgress(0);
+
+		} else if (view == btnOpenFromURL)
 			showUrlDialog();
 		else if (view == btnOpenPlaylist) {
 			startActivityForResult(new Intent(this, FileChooserActivity.class), RQ_FILE_CHOOSER);
@@ -259,6 +301,64 @@ public class MainActivity extends Activity implements
 		infoIntent.putExtras(bundle);
 		startActivity(infoIntent);
 		return true;
+	}
+
+	// seek bar change listeners callback methods
+	// in this methods we is handle progress jumping in inside playing track
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		sBarProgressPos = progress;
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		Intent i = new Intent(MusicService.ACTION_JUMP_TO);
+		i.putExtra(SERVICE_JUMP_TO_POS_KEY, convertSeekBarPosToMs(sBarProgressPos));
+		startService(i);
+	}
+
+	/**
+	 * Update displaying current and total track time in play process.
+	 */
+	private void updateDisplayTime() {
+		tvCurrentTrackTime.setText(FileInfoActivity.getTimeText(currentTrackTime));
+		tvAllTrackTime.setText(FileInfoActivity.getTimeText(totalTrackTime));
+	}
+
+	/**
+	 * Update progress bar in play process.
+	 */
+	private void updateSeekBar() {
+		sBarProgress.setProgress(convertMsToSeekBarPos(currentTrackTime));
+	}
+
+	/**
+	 * Converting {@link SeekBar} position to ms time when user change position in progress line.
+	 *
+	 * @param pos new progress position
+	 * @return progress represents as ms
+	 * @see SeekBar
+	 * @see #totalTrackTime
+	 */
+	private int convertSeekBarPosToMs(int pos) {
+		return (pos * totalTrackTime) / SEEK_BAR_MAX_POS;
+	}
+
+	/**
+	 * Converting ms time to position for {@link SeekBar}.
+	 * This method must be called for automatic update {@link SeekBar} in playing process.
+	 *
+	 * @param timeMs time in ms
+	 * @return progress represents as positions unit for {@link SeekBar}
+	 * @see SeekBar
+	 * @see #totalTrackTime
+	 */
+	private int convertMsToSeekBarPos(int timeMs) {
+		return (timeMs * SEEK_BAR_MAX_POS) / totalTrackTime;
 	}
 
 	@Override

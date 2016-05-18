@@ -89,6 +89,12 @@
 		android:layout_height="wrap_content"
 		/>
 
+	<SeekBar
+		android:id="@+id/sbar_track_progress"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		/>
+
 	<ListView
 			android:id="@+id/lv_playlist"
 			android:layout_width="match_parent"

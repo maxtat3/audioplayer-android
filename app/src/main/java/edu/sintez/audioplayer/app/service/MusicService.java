@@ -45,6 +45,7 @@ public class MusicService extends Service implements OnCompletionListener,
     public static final String ACTION_TOGGLE_PLAYBACK = "edu.sintez.audioplayer.app.action.TOGGLE_PLAYBACK";
     public static final String ACTION_PLAY = "edu.sintez.audioplayer.app.action.PLAY";
     public static final String ACTION_PAUSE = "edu.sintez.audioplayer.app.action.PAUSE";
+    public static final String ACTION_JUMP_TO = "edu.sintez.audioplayer.app.action.JUMP_TO";
     public static final String ACTION_STOP = "edu.sintez.audioplayer.app.action.STOP";
     public static final String ACTION_URL = "edu.sintez.audioplayer.app.action.URL";
 
@@ -165,7 +166,14 @@ public class MusicService extends Service implements OnCompletionListener,
 			playRequest();
 		}
 		else if (action.equals(ACTION_PAUSE)) pauseRequest();
-		else if (action.equals(ACTION_STOP)) stopRequest();
+		else if (action.equals(ACTION_JUMP_TO)) {
+
+			int jumpTo = intent.getIntExtra(MainActivity.SERVICE_JUMP_TO_POS_KEY, 0);
+			if (state == State.PLAYING || state == State.PAUSED) {
+				mp.seekTo(jumpTo);
+			}
+
+		} else if (action.equals(ACTION_STOP)) stopRequest();
 		else if (action.equals(ACTION_URL)) playFromURLRequest(intent);
 
 		return START_NOT_STICKY; // Means we started the service, but don't want it to
