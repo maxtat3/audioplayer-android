@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements
 	/**
 	 * Request code for file chooser
 	 */
-	public static final int RQ_FILE_CHOOSER = 1;
+	public static final int FILE_CHOOSER_RQ = 1;
 
 	/**
 	 * The URL we suggest as default when adding by URL. This is just so that the user doesn't
@@ -74,28 +74,6 @@ public class MainActivity extends Activity implements
 	 */
 	private static final int SEEK_BAR_MAX_POS = 100;
 
-	/**
-	 * Handles for scanning for media and providing titles and URIs as we need.
-	 */
-	private MusicRetriever musRetriever;
-
-	/**
-	 * Though this receiver {@link MusicService} update current playing time
-	 * and total playing time track.
-	 */
-	private BroadcastReceiver trackTimeReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent i) {
-			if (i.getAction().equals(MusicService.TRACK_TIME_KEY)) {
-				currentTrackTime = i.getIntExtra(MusicService.PLAY_TIME_CURRENT, 0);
-				totalTrackTime = i.getIntExtra(MusicService.PLAY_TIME_ALL, 0);
-
-				updateDisplayTime();
-				updateSeekBar();
-			}
-		}
-	};
-
 	private Button btnPlay;
 	private Button btnPause;
 	private Button btnNextSong;
@@ -113,8 +91,25 @@ public class MainActivity extends Activity implements
 	 */
 	private SeekBar sBarProgress;
 
+	/**
+	 * Playlist audio tracks
+	 */
 	private ListView lvPlaylist;
+
+	/**
+	 * Handles for scanning for media and providing titles and URIs as we need.
+	 */
+	private MusicRetriever musRetriever;
+
+	/**
+	 * Adapter for {@link #lvPlaylist} .
+	 */
 	private ArrayAdapter<Track> adapter;
+
+	/**
+	 * Tracks storage displaying in playlist
+	 */
+	private List<Track> tracks = new ArrayList<Track>();
 
 	/**
 	 * Selected audio track position when user clicked in playlist item.
@@ -140,11 +135,6 @@ public class MainActivity extends Activity implements
 	 * This new value allow jumped to random playing audio track position.
 	 */
 	private int sBarProgressPos;
-
-	/**
-	 * Tracks storage displaying in playlist
-	 */
-	private List<Track> tracks = new ArrayList<Track>();
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -211,7 +201,7 @@ public class MainActivity extends Activity implements
 		} else if (view == btnOpenFromURL)
 			showUrlDialog();
 		else if (view == btnOpenPlaylist) {
-			startActivityForResult(new Intent(this, FileChooserActivity.class), RQ_FILE_CHOOSER);
+			startActivityForResult(new Intent(this, FileChooserActivity.class), FILE_CHOOSER_RQ);
 		} else if (view == btnGetAllMusFromDevice) {
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
@@ -371,7 +361,7 @@ public class MainActivity extends Activity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (intent == null) return;
 
-		if (requestCode == RQ_FILE_CHOOSER) {
+		if (requestCode == FILE_CHOOSER_RQ) {
 			ArrayList<FileItem> selFilesPaths = intent.getParcelableArrayListExtra(FileChooserActivity.SELECTED_FILES_LIST_KEY);
 			MetaDataRetriever mdr = new MetaDataRetriever();
 			for (FileItem selFile : selFilesPaths) {
@@ -384,4 +374,21 @@ public class MainActivity extends Activity implements
 			}
 		}
 	}
+
+	/**
+	 * Though this receiver {@link MusicService} update current playing time
+	 * and total playing time track.
+	 */
+	private BroadcastReceiver trackTimeReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent i) {
+			if (i.getAction().equals(MusicService.TRACK_TIME_KEY)) {
+				currentTrackTime = i.getIntExtra(MusicService.PLAY_TIME_CURRENT, 0);
+				totalTrackTime = i.getIntExtra(MusicService.PLAY_TIME_ALL, 0);
+
+				updateDisplayTime();
+				updateSeekBar();
+			}
+		}
+	};
 }
