@@ -1,31 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+	>
 
-	<TextView
-		android:id="@+id/tv_artist"
+	<LinearLayout
+		android:id="@+id/ll_image"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		/>
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+		android:gravity="center"
+		>
+		<ImageView
+			android:id="@+id/iv_play_item_image"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:src="@drawable/ic_launcher"
+			/>
+	</LinearLayout>
+
 
 	<TextView
+		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/tv_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/ll_image"
 		/>
 
 	<TextView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/tv_artist"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/ll_image"
+		android:layout_below="@id/tv_title"
+		/>
+
+	<TextView
+		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/tv_album"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/ll_image"
+		android:layout_below="@id/tv_artist"
 		/>
 
-	<TextView
-		android:id="@+id/tv_duration"
-		android:layout_width="wrap_content"
+
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		/>
+		android:layout_below="@id/tv_album"
+		android:layout_toRightOf="@id/ll_image"
+		android:orientation="horizontal"
+		>
 
-</LinearLayout>
+		<TextView
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/tv_duration"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0.3"
+			android:layout_marginLeft="16sp"
+			/>
+
+		<TextView
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/tv_file_size"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0.3"
+			android:layout_marginLeft="16sp"
+			/>
+
+		<TextView
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/tv_audio_format"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0.3"
+			android:layout_marginLeft="16sp"
+			/>
+
+	</LinearLayout>
+
+
+</RelativeLayout>
