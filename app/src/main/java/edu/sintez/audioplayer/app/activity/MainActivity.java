@@ -249,8 +249,8 @@ public class MainActivity extends Activity implements
 			case R.id.menu_sort_by_duration:
 				Collections.sort(tracks, PlayListComparator.getCompByDuration());
 				break;
-
 		}
+		item.setChecked(true);
 		adapter.notifyDataSetChanged();
 		return super.onOptionsItemSelected(item);
 	}
