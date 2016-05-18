@@ -228,7 +228,10 @@ public class MainActivity extends Activity implements
 	 */
 	private void playNextTrack() {
 		if (tracks.size() > ++selTrackPos) playTrack();
-		else --selTrackPos;
+		else {
+			--selTrackPos;
+			showNoMoreTracksMsg();
+		}
 	}
 
 	/**
@@ -236,7 +239,17 @@ public class MainActivity extends Activity implements
 	 */
 	private void playPrevTrack() {
 		if (--selTrackPos >= 0) playTrack();
-		else selTrackPos = 0;
+		else {
+			selTrackPos = 0;
+			showNoMoreTracksMsg();
+		}
+	}
+
+	/**
+	 * When no available audio tracks in playlist, must be showed this massage.
+	 */
+	private void showNoMoreTracksMsg() {
+		Toast.makeText(this, "There are no more audio tracks !", Toast.LENGTH_LONG).show();
 	}
 
 	/**
