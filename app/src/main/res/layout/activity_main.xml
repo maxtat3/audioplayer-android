@@ -65,14 +65,14 @@
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
-				android:text="pl"
+				android:text="@string/btn_open_file_chooser"
 				/>
 
 		<Button android:id="@+id/btn_get_all_music_from_device"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
 				android:layout_margin="@dimen/btn_layout_margin"
-				android:text="all"
+				android:text="@string/btn_extract_all_music"
 				/>
 
 	</LinearLayout>

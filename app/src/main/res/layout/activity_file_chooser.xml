@@ -22,7 +22,7 @@
 			android:id="@+id/btn_fch_cancel"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:text="Cancel"
+			android:text="@string/btn_cancel"
 			android:layout_weight="0.3"
 			/>
 
@@ -30,7 +30,7 @@
 			android:id="@+id/btn_fch_ok"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:text="Ok"
+			android:text="@string/btn_ok"
 			android:layout_weight="0.3"
 			/>
 
@@ -38,7 +38,7 @@
 			android:id="@+id/btn_fch_select_all"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:text="Sel all"
+			android:text="@string/btn_select_all_files"
 			android:layout_weight="0.3"
 			/>
 

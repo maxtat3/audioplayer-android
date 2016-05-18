@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">audioplayer</string>
+	<string name="menu_title_sorting">Sorting</string>
+	<string name="menu_sorting_item_by_title">By title</string>
+	<string name="menu_sorting_item_by_artist">By artist</string>
+	<string name="menu_sorting_item_by_album">By album</string>
+	<string name="menu_sorting_item_by_duration">By duration</string>
+	<string name="btn_cancel">Cancel</string>
+	<string name="btn_ok">Ok</string>
+	<string name="btn_select_all_files">Sel all</string>
+	<string name="btn_open_file_chooser">pl</string>
+	<string name="btn_extract_all_music">all</string>
 </resources>

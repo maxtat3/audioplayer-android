@@ -5,7 +5,7 @@
 
 	<item
 		android:id="@+id/item_sorting_tracks"
-		android:title="Sorting"
+		android:title="@string/menu_title_sorting"
 		android:showAsAction="ifRoom|withText"
 		android:icon="@mipmap/ic_menu_filter"
 		>
@@ -13,22 +13,22 @@
 			<group android:checkableBehavior="single">
 				<item
 					android:id="@+id/menu_sort_by_title"
-					android:title="By title"
+					android:title="@string/menu_sorting_item_by_title"
 					android:titleCondensed="0"
 					/>
 				<item
 					android:id="@+id/menu_sort_by_artist"
-					android:title="By artist"
+					android:title="@string/menu_sorting_item_by_artist"
 					android:titleCondensed="1"
 					/>
 				<item
 					android:id="@+id/menu_sort_by_album"
-					android:title="By album"
+					android:title="@string/menu_sorting_item_by_album"
 					android:titleCondensed="2"
 					/>
 				<item
 					android:id="@+id/menu_sort_by_duration"
-					android:title="By duration"
+					android:title="@string/menu_sorting_item_by_duration"
 					android:titleCondensed="3"
 					/>
 			</group>
