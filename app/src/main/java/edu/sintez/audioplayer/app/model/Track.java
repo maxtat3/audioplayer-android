@@ -135,4 +135,9 @@ public class Track implements Parcelable{
 		p.writeLong(duration);
 		p.writeInt(bitrate);
 	}
+
+	@Override
+	public String toString() {
+		return title;
+	}
 }

@@ -1,11 +1,14 @@
 package edu.sintez.audioplayer.app.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -185,6 +188,19 @@ public class MainActivity extends Activity implements
 
 		sBarProgress = (SeekBar) findViewById(R.id.sbar_track_progress);
 		sBarProgress.setOnSeekBarChangeListener(this);
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setCustomView(R.layout.pattern_actionbar_et);
+		EditText etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
+		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
+				Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
+				return false;
+			}
+		});
+		etSearch.addTextChangedListener(new SearchListener());
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 	}
 
 	@Override
@@ -453,4 +469,22 @@ public class MainActivity extends Activity implements
 			}
 		}
 	};
+
+	/**
+	 * Filtration at {@link Track#title} field when entered symbols in search edit text.
+	 */
+	private class SearchListener implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			adapter.getFilter().filter(s);
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+	}
 }
