@@ -49,12 +49,6 @@ public class MainActivity extends Activity implements
 	public static final int FILE_CHOOSER_RQ = 1;
 
 	/**
-	 * The URL we suggest as default when adding by URL. This is just so that the user doesn't
-	 * have to find an URL to test this sample.
-	 */
-	private static final String SUGGESTED_URL = "http://www.vorbis.com/music/Epoq-Lepidoptera.ogg";
-
-	/**
 	 * Key which FileInfoActivity receive audio track. In this audio track
 	 * all fields filled. So track contained full file and meta information.
 	 *
@@ -88,7 +82,6 @@ public class MainActivity extends Activity implements
 	private Button btnNextSong;
 	private Button btnPrevSong;
 	private Button btnStop;
-	private Button btnOpenFromURL;
 	private Button btnOpenPlaylist;
 	private Button btnGetAllMusFromDevice;
 
@@ -160,7 +153,6 @@ public class MainActivity extends Activity implements
 		btnNextSong = (Button) findViewById(R.id.btn_next_song);
 		btnPrevSong = (Button) findViewById(R.id.btn_prev_song);
 		btnStop = (Button) findViewById(R.id.btn_stop);
-		btnOpenFromURL = (Button) findViewById(R.id.btn_open_from_url);
 		btnOpenPlaylist = (Button) findViewById(R.id.btn_open_playlist);
 		btnGetAllMusFromDevice = (Button) findViewById(R.id.btn_get_all_music_from_device);
 
@@ -169,7 +161,6 @@ public class MainActivity extends Activity implements
 		btnNextSong.setOnClickListener(this);
 		btnPrevSong.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
-		btnOpenFromURL.setOnClickListener(this);
 		btnOpenPlaylist.setOnClickListener(this);
 		btnGetAllMusFromDevice.setOnClickListener(this);
 
@@ -229,9 +220,6 @@ public class MainActivity extends Activity implements
 		} else if (view == btnStop) {
 			startService(new Intent(MusicService.ACTION_STOP));
 			sBarProgress.setProgress(0);
-
-		} else if (view == btnOpenFromURL) {
-			showUrlDialog();
 
 		} else if (view == btnOpenPlaylist) {
 			startActivityForResult(new Intent(this, FileChooserActivity.class), FILE_CHOOSER_RQ);
@@ -315,37 +303,6 @@ public class MainActivity extends Activity implements
 	 */
 	private void showNoMoreTracksMsg() {
 		Toast.makeText(this, "There are no more audio tracks !", Toast.LENGTH_LONG).show();
-	}
-
-	/**
-	 * Shows an alert dialog where the user can input a URL. After showing the dialog, if the user
-	 * confirms, sends the appropriate intent to the {@link MusicService} to cause that URL to be
-	 * played.
-	 */
-	void showUrlDialog() {
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-		alertBuilder.setTitle("Manual Input");
-		alertBuilder.setMessage("Enter a URL (must be http://)");
-		final EditText input = new EditText(this);
-		alertBuilder.setView(input);
-
-		input.setText(SUGGESTED_URL);
-
-		alertBuilder.setPositiveButton("Play!", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dlg, int whichButton) {
-				// Send an intent with the URL of the song to play. This is expected by
-				// MusicService.
-				Intent i = new Intent(MusicService.ACTION_URL);
-				Uri uri = Uri.parse(input.getText().toString());
-				i.setData(uri);
-				startService(i);
-			}
-		});
-		alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dlg, int whichButton) {}
-		});
-
-		alertBuilder.show();
 	}
 
 	/**

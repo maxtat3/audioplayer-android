@@ -49,10 +49,6 @@
 				<action android:name="edu.sintez.audioplayer.app.action.REWIND" />
 				<action android:name="edu.sintez.audioplayer.app.action.STOP" />
 			</intent-filter>
-			<intent-filter>
-				<action android:name="edu.sintez.audioplayer.app.action.URL" />
-				<data android:scheme="http" />
-			</intent-filter>
 		</service>
 
 	</application>

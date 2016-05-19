@@ -4,15 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.WifiLock;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -47,7 +45,6 @@ public class MusicService extends Service implements OnCompletionListener,
     public static final String ACTION_PAUSE = "edu.sintez.audioplayer.app.action.PAUSE";
     public static final String ACTION_JUMP_TO = "edu.sintez.audioplayer.app.action.JUMP_TO";
     public static final String ACTION_STOP = "edu.sintez.audioplayer.app.action.STOP";
-    public static final String ACTION_URL = "edu.sintez.audioplayer.app.action.URL";
 
 	public static final String TRACK_TIME_KEY = MusicService.class.getName() + "." + "TrackTime";
 	public static final String PLAY_TIME_CURRENT = MusicService.class.getName() + "." + "CurrentTrackPlayingTime";
@@ -66,12 +63,6 @@ public class MusicService extends Service implements OnCompletionListener,
 		PAUSED          // playback paused (media player ready !)
 	}
 	private State state = State.STOPPED;
-
-	/**
-	 * Whether the song we are playing is streaming from the network
-	 * true - play from local storage, otherwise from URL
-	 */
-	private boolean isStreaming = false;
 
 	/**
 	 * Do we have audio focus ?
@@ -97,12 +88,6 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * @see MediaPlayer
 	 */
     public static final float DUCK_VOLUME = 0.3f;
-
-	/**
-	 * Wifi lock that we hold when streaming files from the internet,
-	 * in order to prevent the device from shutting off the Wifi radio
-	 */
-	private WifiLock wifiLock;
 
 	/**
 	 * Main audio player object.
@@ -131,10 +116,6 @@ public class MusicService extends Service implements OnCompletionListener,
 	public void onCreate() {
 		if (isDebug) Log.d(LOG, "Creating service");
 
-		// Create the Wifi lock (this does not acquire the lock, this just creates it)
-		wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-			.createWifiLock(WifiManager.WIFI_MODE_FULL, "wifilock");
-
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
@@ -161,7 +142,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 			if (state == State.PLAYING || state == State.PAUSED) {
 				tryToGetAudioFocus();
-				playNextSong(null);
+				playNextSong();
 			}
 
 			playRequest();
@@ -175,7 +156,6 @@ public class MusicService extends Service implements OnCompletionListener,
 			}
 
 		} else if (action.equals(ACTION_STOP)) stopRequest();
-		else if (action.equals(ACTION_URL)) playFromURLRequest(intent);
 
 		return START_NOT_STICKY; // Means we started the service, but don't want it to
 		// restart in case it's killed.
@@ -197,7 +177,7 @@ public class MusicService extends Service implements OnCompletionListener,
         // actually play the song
         if (state == State.STOPPED) {
             // If we're stopped, just go ahead to the next song and start playing
-            playNextSong(null);
+            playNextSong();
         }
         else if (state == State.PAUSED) {
             // If we're paused, just continue playback and restore the 'foreground service' state.
@@ -239,15 +219,6 @@ public class MusicService extends Service implements OnCompletionListener,
             stopSelf();
         }
     }
-
-	private void playFromURLRequest(Intent intent) {
-		if (isDebug) Log.d(LOG, "playFromURLRequest - request play from URL");
-		if (state == State.PLAYING || state == State.PAUSED || state == State.STOPPED) {
-			Log.d(LOG, "PLAYING from URL/path: " + intent.getData().toString());
-			tryToGetAudioFocus();
-			playNextSong(intent.getData().toString());
-		}
-	}
 
 	/**
 	 * Makes sure the media player exists and has been reset. This will create the media player
@@ -293,9 +264,6 @@ public class MusicService extends Service implements OnCompletionListener,
 			mp.release();
 			mp = null;
 		}
-
-		// we can also release the Wifi lock, if we're holding it
-		if (wifiLock.isHeld()) wifiLock.release();
 	}
 
 	/**
@@ -303,42 +271,30 @@ public class MusicService extends Service implements OnCompletionListener,
 	 * local device storage. This track received from MainActivity from intent. If manualUrl is non-null,
 	 * then it specifies the URL or path to the song that will be played next.
 	 */
-	private void playNextSong(String manualUrl) {
+	private void playNextSong() {
 		if (isDebug) Log.d(LOG, "playNextSong");
 		state = State.STOPPED;
 		relaxResources(false); // release everything except MediaPlayer
 
 		try {
 			Track playingItem = this.track;
-			if (manualUrl != null) {
-				// set the source of the media player to a manual URL or path
-				createMediaPlayerIfNeeded();
-				mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				mp.setDataSource(manualUrl);
-				isStreaming = manualUrl.startsWith("http:") || manualUrl.startsWith("https:");
 
-				playingItem = new Track(null, null, 0.0, null, manualUrl, null, 0, 0);
+			if (isDebug) Log.d(LOG, playingItem == null ? "playingItem is null ! " : "playingItem is not null." );
+			if (playingItem == null) {
+				Toast.makeText(
+					this,
+					"No available music to play. Place some music on your external storage "
+						+ "device (e.g. your SD card) and try again.",
+					Toast.LENGTH_LONG
+				).show();
+				stopRequest(true); // stop everything!
+				return;
 			}
-			else {
-				isStreaming = false; // playing a locally available song
 
-				if (isDebug) Log.d(LOG, playingItem == null ? "playingItem is null ! " : "playingItem is not null." );
-				if (playingItem == null) {
-					Toast.makeText(
-						this,
-						"No available music to play. Place some music on your external storage "
-							+ "device (e.g. your SD card) and try again.",
-						Toast.LENGTH_LONG
-					).show();
-					stopRequest(true); // stop everything!
-					return;
-				}
-
-				// set the source of the media player a a content URI
-				createMediaPlayerIfNeeded();
-				mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				mp.setDataSource(getApplicationContext(), playingItem.getURI());
-			}
+			// set the source of the media player a a content URI
+			createMediaPlayerIfNeeded();
+			mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			mp.setDataSource(getApplicationContext(), playingItem.getURI());
 
 			songTitle = playingItem.getTitle();
 
@@ -351,12 +307,6 @@ public class MusicService extends Service implements OnCompletionListener,
 			//
 			// Until the media player is prepared, we *cannot* call start() on it!
 			mp.prepareAsync();
-
-			// If we are streaming from the internet, we want to hold a Wifi lock, which prevents
-			// the Wifi radio from going to sleep while the song is playing. If, on the other hand,
-			// we are *not* streaming, we want to release the lock if we were holding it before.
-			if (isStreaming) wifiLock.acquire();
-			else if (wifiLock.isHeld()) wifiLock.release();
 		}
 		catch (IOException ex) {
 			if (isDebug) Log.e("MusicService", "IOException playing next song: " + ex.getMessage());
