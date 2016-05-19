@@ -130,7 +130,7 @@ public class FileInfoActivity extends Activity {
 	 * @return absolute path uri to file
 	 * @see android.content.ContentResolver
 	 */
-	public String getAbsPathFromURI(Context context, Uri contentUri) {
+	public static String getAbsPathFromURI(Context context, Uri contentUri) {
 		Cursor cursor = null;
 		try {
 			String[] projection = {MediaStore.Images.Media.DATA};

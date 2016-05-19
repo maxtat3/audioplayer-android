@@ -25,6 +25,7 @@ import edu.sintez.audioplayer.app.service.MusicService;
 import edu.sintez.audioplayer.app.model.FileItem;
 import edu.sintez.audioplayer.app.utils.PlayListComparator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -207,6 +208,8 @@ public class MainActivity extends Activity implements
 			etSearch.addTextChangedListener(new SearchListener());
 			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		}
+
+		receivedAudioFromIntent();
 	}
 
 	@Override
@@ -347,6 +350,31 @@ public class MainActivity extends Activity implements
 		});
 
 		alertBuilder.show();
+	}
+
+	/**
+	 * Open audio file data from intent.
+	 * When user choose this app to open music file, this app from intent received
+	 * audio file uri, extracted file and meta information, add to playlist and start playing.
+	 */
+	private void receivedAudioFromIntent() {
+		if (getIntent().getAction().equals(Intent.ACTION_VIEW)) {
+			Uri data = getIntent().getData();
+			if (data != null) {
+				String absPath = FileInfoActivity.getAbsPathFromURI(this, data);
+				MetaDataRetriever mdr = new MetaDataRetriever();
+				File f = new File(absPath);
+				Track track = new Track();
+				track.setUri(Uri.parse(absPath));
+				track.setFileName(f.getName());
+				track.setFileSize(FileChooserActivity.roundDouble(f.length()/1024/1024));
+				mdr.setsMetaData(track);
+
+				tracks.add(track);
+				selTrackPos = tracks.size() - 1;
+				playTrack();
+			}
+		}
 	}
 
 	@Override
