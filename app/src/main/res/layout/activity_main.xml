@@ -95,6 +95,10 @@
 		android:id="@+id/sbar_track_progress"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
+		android:maxHeight="9dp"
+		android:minHeight="9dp"
+		android:progressDrawable="@drawable/sbar_progress"
+		android:thumb="@drawable/sbar_thumb"
 		/>
 
 	<ListView

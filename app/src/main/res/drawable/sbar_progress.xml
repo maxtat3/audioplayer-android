@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item android:id="@android:id/background">
+		<nine-patch
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:dither="true"
+			android:src="@drawable/sbar_progress_line_whitepatch">
+		</nine-patch>
+	</item>
+	<item
+		android:id="@android:id/progress"
+		android:drawable="@drawable/sbar_past_progress">
+	</item>
+</layer-list>

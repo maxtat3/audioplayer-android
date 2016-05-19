@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item>
+		<clip >
+			<bitmap
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:antialias="true"
+				android:dither="false"
+				android:filter="false"
+				android:gravity="left"
+				android:src="@drawable/sbar_past_progress_line_green">
+			</bitmap>
+		</clip>
+	</item>
+</layer-list>
