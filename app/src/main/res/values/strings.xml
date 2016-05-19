@@ -11,4 +11,6 @@
 	<string name="btn_select_all_files">Sel all</string>
 	<string name="btn_open_file_chooser">pl</string>
 	<string name="btn_extract_all_music">all</string>
+	<string name="time_not_played_pattern">--:--:--</string>
+	<string name="time_not_played_delimiter">/</string>
 </resources>
