@@ -3,4 +3,5 @@
 	<dimen name="btn_layout_width">36dp</dimen>
 	<dimen name="btn_layout_height">36dp</dimen>
 	<dimen name="btn_layout_margin">12dp</dimen>
+	<dimen name="playlist_item_text_size">16sp</dimen>
 </resources>
