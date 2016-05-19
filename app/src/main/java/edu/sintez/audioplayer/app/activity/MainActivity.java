@@ -2,7 +2,6 @@ package edu.sintez.audioplayer.app.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,7 +81,7 @@ public class MainActivity extends Activity implements
 	private Button btnNextSong;
 	private Button btnPrevSong;
 	private Button btnStop;
-	private Button btnOpenPlaylist;
+	private Button btnOpenFileChooser;
 	private Button btnGetAllMusFromDevice;
 
 	private TextView tvCurrentTrackTime;
@@ -153,7 +152,7 @@ public class MainActivity extends Activity implements
 		btnNextSong = (Button) findViewById(R.id.btn_next_song);
 		btnPrevSong = (Button) findViewById(R.id.btn_prev_song);
 		btnStop = (Button) findViewById(R.id.btn_stop);
-		btnOpenPlaylist = (Button) findViewById(R.id.btn_open_playlist);
+		btnOpenFileChooser = (Button) findViewById(R.id.btn_open_file_chooser);
 		btnGetAllMusFromDevice = (Button) findViewById(R.id.btn_get_all_music_from_device);
 
 		btnPlay.setOnClickListener(this);
@@ -161,7 +160,7 @@ public class MainActivity extends Activity implements
 		btnNextSong.setOnClickListener(this);
 		btnPrevSong.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
-		btnOpenPlaylist.setOnClickListener(this);
+		btnOpenFileChooser.setOnClickListener(this);
 		btnGetAllMusFromDevice.setOnClickListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
@@ -221,7 +220,7 @@ public class MainActivity extends Activity implements
 			startService(new Intent(MusicService.ACTION_STOP));
 			sBarProgress.setProgress(0);
 
-		} else if (view == btnOpenPlaylist) {
+		} else if (view == btnOpenFileChooser) {
 			startActivityForResult(new Intent(this, FileChooserActivity.class), FILE_CHOOSER_RQ);
 
 		} else if (view == btnGetAllMusFromDevice) {

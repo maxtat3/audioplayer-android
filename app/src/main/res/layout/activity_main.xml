@@ -15,7 +15,7 @@
 				  android:background="@android:color/holo_green_light"
 				  android:layout_margin="10dp">
 
-		<Button android:id="@+id/btn_open_playlist"
+		<Button android:id="@+id/btn_open_file_chooser"
 				android:background="@drawable/btn_open_file_chooser"
 				android:layout_width="@dimen/btn_layout_width"
 				android:layout_height="@dimen/btn_layout_height"
