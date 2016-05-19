@@ -147,27 +147,35 @@ public class MusicService extends Service implements OnCompletionListener,
 
 	private void togglePlaybackRequest() {
 		if (state == State.PAUSED || state == State.STOPPED) {
-			prepareToPlay();
+			playRequest(null);
 		} else {
 			pauseRequest();
 		}
 	}
 
 	/**
-	 * Getting audio data and call {@link #prepareToPlay()} method.
+	 * Prepare to play audio track.
 	 *
 	 * @param intent contained audio track data
 	 */
 	private void playRequest(Intent intent) {
-		Bundle bundle = intent.getExtras();
-		if (bundle != null && bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY)) {
-			track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
-		}
-		if (state == State.PLAYING || state == State.PAUSED) {
-			tryToGetAudioFocus();
+		if (isDebug) Log.d(LOG, "playRequest");
+
+		tryToGetAudioFocus();
+
+		if (state == State.STOPPED || state == State.PLAYING) {
+			Bundle bundle = intent.getExtras();
+			if (bundle != null && bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY)) {
+				track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
+			}
 			playNextSong();
+
+		} else if (state == State.PAUSED) {
+			// If paused, just continue playback and restore the 'foreground service' state.
+			state = State.PLAYING;
+			setUpAsForeground(songTitle + " (playing)");
+			configAndStartMediaPlayer();
 		}
-		prepareToPlay();
 	}
 
 	private void pauseRequest() {
@@ -209,24 +217,6 @@ public class MusicService extends Service implements OnCompletionListener,
 			stopSelf();
 		}
 	}
-
-    private void prepareToPlay() {
-        if (isDebug) Log.d(LOG, "playRequest");
-
-        tryToGetAudioFocus();
-
-        // actually play the song
-        if (state == State.STOPPED) {
-            // If we're stopped, just go ahead to the next song and start playing
-            playNextSong();
-        }
-        else if (state == State.PAUSED) {
-            // If we're paused, just continue playback and restore the 'foreground service' state.
-            state = State.PLAYING;
-            setUpAsForeground(songTitle + " (playing)");
-            configAndStartMediaPlayer();
-        }
-    }
 
 	/**
 	 * Makes sure the media player exists and has been reset. This will create the media player
