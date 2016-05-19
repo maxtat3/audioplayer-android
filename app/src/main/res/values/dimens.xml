@@ -2,5 +2,5 @@
 <resources>
 	<dimen name="btn_layout_width">36dp</dimen>
 	<dimen name="btn_layout_height">36dp</dimen>
-	<dimen name="btn_layout_margin">5dp</dimen>
+	<dimen name="btn_layout_margin">16dp</dimen>
 </resources>
