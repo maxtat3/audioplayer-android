@@ -133,43 +133,81 @@ public class MusicService extends Service implements OnCompletionListener,
 		String action = intent.getAction();
 
 		if (action.equals(ACTION_TOGGLE_PLAYBACK)) togglePlaybackRequest();
-		else if (action.equals(ACTION_PLAY)){
-
-			Bundle bundle = intent.getExtras();
-			if (bundle != null && bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY)) {
-				track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
-			}
-
-			if (state == State.PLAYING || state == State.PAUSED) {
-				tryToGetAudioFocus();
-				playNextSong();
-			}
-
-			playRequest();
-		}
+		else if (action.equals(ACTION_PLAY)) playRequest(intent);
 		else if (action.equals(ACTION_PAUSE)) pauseRequest();
-		else if (action.equals(ACTION_JUMP_TO)) {
-
-			int jumpTo = intent.getIntExtra(MainActivity.SERVICE_JUMP_TO_POS_KEY, 0);
-			if (state == State.PLAYING || state == State.PAUSED) {
-				mp.seekTo(jumpTo);
-			}
-
-		} else if (action.equals(ACTION_STOP)) stopRequest();
+		else if (action.equals(ACTION_JUMP_TO)) jumpInsideTrackRequest(intent);
+		else if (action.equals(ACTION_STOP)) stopRequest();
 
 		return START_NOT_STICKY; // Means we started the service, but don't want it to
 		// restart in case it's killed.
 	}
 
-    private void togglePlaybackRequest() {
-        if (state == State.PAUSED || state == State.STOPPED) {
-            playRequest();
-        } else {
-            pauseRequest();
-        }
-    }
+	private void togglePlaybackRequest() {
+		if (state == State.PAUSED || state == State.STOPPED) {
+			prepareToPlay();
+		} else {
+			pauseRequest();
+		}
+	}
 
-    private void playRequest() {
+	/**
+	 * Getting audio data and call {@link #prepareToPlay()} method.
+	 *
+	 * @param intent contained audio track data
+	 */
+	private void playRequest(Intent intent) {
+		Bundle bundle = intent.getExtras();
+		if (bundle != null && bundle.containsKey(MainActivity.SERVICE_PLAYING_TRACK_KEY)) {
+			track = bundle.getParcelable(MainActivity.SERVICE_PLAYING_TRACK_KEY);
+		}
+		if (state == State.PLAYING || state == State.PAUSED) {
+			tryToGetAudioFocus();
+			playNextSong();
+		}
+		prepareToPlay();
+	}
+
+	private void pauseRequest() {
+		if (isDebug) Log.d(LOG, "pauseRequest");
+
+		if (state == State.PLAYING) {
+			// Pause media player and cancel the 'foreground service' state.
+			state = State.PAUSED;
+			mp.pause();
+			relaxResources(false); // while paused, we always retain the MediaPlayer
+			// do not give up audio focus
+		}
+	}
+
+	private void jumpInsideTrackRequest(Intent intent) {
+		int jumpTo = intent.getIntExtra(MainActivity.SERVICE_JUMP_TO_POS_KEY, 0);
+		if (state == State.PLAYING || state == State.PAUSED) {
+			mp.seekTo(jumpTo);
+		}
+	}
+
+	/**
+	 * Stop playing audio track
+	 */
+	private void stopRequest() {
+		stopRequest(false);
+	}
+
+	private void stopRequest(boolean force) {
+		if (isDebug) Log.d(LOG, "stopRequest, force = " + force);
+		if (state == State.PLAYING || state == State.PAUSED || force) {
+			state = State.STOPPED;
+
+			// let go of all resources...
+			relaxResources(true);
+			giveUpAudioFocus();
+
+			// service is no longer necessary. Will be started again if needed.
+			stopSelf();
+		}
+	}
+
+    private void prepareToPlay() {
         if (isDebug) Log.d(LOG, "playRequest");
 
         tryToGetAudioFocus();
@@ -184,39 +222,6 @@ public class MusicService extends Service implements OnCompletionListener,
             state = State.PLAYING;
             setUpAsForeground(songTitle + " (playing)");
             configAndStartMediaPlayer();
-        }
-    }
-
-    private void pauseRequest() {
-        if (isDebug) Log.d(LOG, "pauseRequest");
-
-        if (state == State.PLAYING) {
-            // Pause media player and cancel the 'foreground service' state.
-            state = State.PAUSED;
-            mp.pause();
-            relaxResources(false); // while paused, we always retain the MediaPlayer
-            // do not give up audio focus
-        }
-    }
-
-	/**
-     * Stop song
-     */
-    private void stopRequest() {
-        stopRequest(false);
-    }
-
-    private void stopRequest(boolean force) {
-        if (isDebug) Log.d(LOG, "stopRequest, force = " + force);
-        if (state == State.PLAYING || state == State.PAUSED || force) {
-            state = State.STOPPED;
-
-            // let go of all resources...
-            relaxResources(true);
-            giveUpAudioFocus();
-
-            // service is no longer necessary. Will be started again if needed.
-            stopSelf();
         }
     }
 
