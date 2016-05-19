@@ -6,31 +6,6 @@
 			  android:gravity="top"
 			  android:background="#212121">
 
-
-
-	<LinearLayout android:orientation="horizontal"
-				  android:layout_width="wrap_content"
-				  android:layout_height="wrap_content"
-				  android:gravity="center"
-				  android:background="@android:color/holo_green_light"
-				  android:layout_margin="10dp">
-
-		<Button android:id="@+id/btn_open_file_chooser"
-				android:background="@drawable/btn_open_file_chooser"
-				android:layout_width="@dimen/btn_layout_width"
-				android:layout_height="@dimen/btn_layout_height"
-				android:layout_margin="@dimen/btn_layout_margin"
-				/>
-
-		<Button android:id="@+id/btn_get_all_music_from_device"
-				android:background="@drawable/btn_get_all_music"
-				android:layout_width="@dimen/btn_layout_width"
-				android:layout_height="@dimen/btn_layout_height"
-				android:layout_margin="@dimen/btn_layout_margin"
-				/>
-
-	</LinearLayout>
-
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -62,7 +37,28 @@
 
 	</LinearLayout>
 
+	<LinearLayout android:orientation="horizontal"
+				  android:layout_width="wrap_content"
+				  android:layout_height="wrap_content"
+				  android:gravity="center"
+				  android:background="@android:color/holo_green_light"
+				  android:layout_margin="10dp">
 
+		<Button android:id="@+id/btn_open_file_chooser"
+				android:background="@drawable/btn_open_file_chooser"
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
+		<Button android:id="@+id/btn_get_all_music_from_device"
+				android:background="@drawable/btn_get_all_music"
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+				/>
+
+	</LinearLayout>
 
 	<SeekBar
 		android:id="@+id/sbar_track_progress"
