@@ -82,6 +82,13 @@
 			android:textOff=""
 			/>
 
+		<Button android:id="@+id/btn_clear_playlist"
+				android:background="@drawable/btn_clear_playlist"
+				android:layout_width="@dimen/btn_layout_width"
+				android:layout_height="@dimen/btn_layout_height"
+				android:layout_margin="@dimen/btn_layout_margin"
+			/>
+
 	</LinearLayout>
 
 	<SeekBar
