@@ -59,7 +59,7 @@
 				/>
 
 		<ToggleButton
-			android:id="@+id/btn_repeat"
+			android:id="@+id/tbtn_repeat"
 			android:background="@drawable/tbtn_repeat"
 			android:layout_width="@dimen/btn_layout_width"
 			android:layout_height="@dimen/btn_layout_height"
@@ -71,7 +71,7 @@
 			/>
 
 		<ToggleButton
-			android:id="@+id/btn_shuffle"
+			android:id="@+id/tbtn_shuffle"
 			android:background="@drawable/tbtn_shuffle"
 			android:layout_width="@dimen/btn_layout_width"
 			android:layout_height="@dimen/btn_layout_height"
