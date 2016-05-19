@@ -95,6 +95,11 @@ public class MusicService extends Service implements OnCompletionListener,
 	private MediaPlayer mp = null;
 
 	/**
+	 *
+	 */
+	private Track track;
+
+	/**
 	 * Title of the song we are currently playing using for notification
 	 */
 	private String songTitle = "";
@@ -115,13 +120,11 @@ public class MusicService extends Service implements OnCompletionListener,
 	@Override
 	public void onCreate() {
 		if (isDebug) Log.d(LOG, "Creating service");
-
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
 		audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
 	}
 
-	private Track track;
+
 
 	/**
 	 * Called when we receive an Intent. When we receive an intent sent to us via startService(),
@@ -282,10 +285,8 @@ public class MusicService extends Service implements OnCompletionListener,
 		relaxResources(false); // release everything except MediaPlayer
 
 		try {
-			Track playingItem = this.track;
-
-			if (isDebug) Log.d(LOG, playingItem == null ? "playingItem is null ! " : "playingItem is not null." );
-			if (playingItem == null) {
+			if (isDebug) Log.d(LOG, track == null ? "playingItem is null ! " : "playingItem is not null." );
+			if (track == null) {
 				Toast.makeText(
 					this,
 					"No available music to play. Place some music on your external storage "
@@ -299,9 +300,9 @@ public class MusicService extends Service implements OnCompletionListener,
 			// set the source of the media player a a content URI
 			createMediaPlayerIfNeeded();
 			mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mp.setDataSource(getApplicationContext(), playingItem.getURI());
+			mp.setDataSource(getApplicationContext(), track.getURI());
 
-			songTitle = playingItem.getTitle();
+			songTitle = track.getTitle();
 
 			state = State.PREPARING;
 			setUpAsForeground(songTitle + " (loading)");
