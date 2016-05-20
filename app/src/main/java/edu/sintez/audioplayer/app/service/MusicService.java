@@ -354,7 +354,7 @@ public class MusicService extends Service implements OnCompletionListener,
 
 		// Build the notification object.
 		mNotificationBuilder = new Notification.Builder(getApplicationContext())
-			.setSmallIcon(R.drawable.ic_stat_playing)
+			.setSmallIcon(R.mipmap.ic_start_playing)
 			.setTicker(text)
 			.setWhen(System.currentTimeMillis())
 			.setContentTitle("Music player")
