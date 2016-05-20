@@ -3,11 +3,10 @@
 			  android:orientation="horizontal"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
-			  android:gravity="top"
 			  android:background="#212121">
 
 	<!-- Left column -->
-	<LinearLayout
+	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
@@ -16,8 +15,10 @@
 
 		<!-- current / total time -->
 		<LinearLayout
+			android:id="@+id/ll_current_and_total_time"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
 			android:orientation="horizontal"
 			>
 
@@ -55,15 +56,20 @@
 			android:minHeight="9dp"
 			android:progressDrawable="@drawable/sbar_progress"
 			android:thumb="@drawable/sbar_thumb"
+			android:layout_below="@id/ll_current_and_total_time"
 			/>
 
 		<!-- utils directions buttons group -->
-		<LinearLayout android:orientation="horizontal"
-					  android:layout_width="match_parent"
-					  android:layout_height="wrap_content"
-					  android:gravity="center"
-					  android:background="@android:color/holo_green_light"
-					  android:layout_margin="10dp">
+		<LinearLayout
+			android:id="@+id/ll_utils_direct_group"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:background="@android:color/holo_green_light"
+			android:layout_margin="10dp"
+			android:layout_above="@+id/ll_playback_direct_group"
+			>
 
 			<Button android:id="@+id/btn_open_file_chooser"
 					android:background="@drawable/btn_open_file_chooser"
@@ -113,12 +119,15 @@
 		</LinearLayout>
 
 		<!-- playback directions buttons group -->
-		<LinearLayout android:orientation="horizontal"
-					  android:layout_width="match_parent"
-					  android:layout_height="wrap_content"
-					  android:background="@android:color/holo_green_light"
-					  android:layout_margin="10dp"
-					  android:gravity="center"
+		<LinearLayout
+			android:id="@+id/ll_playback_direct_group"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:background="@android:color/holo_green_light"
+			android:layout_margin="10dp"
+			android:layout_alignParentBottom="true"
 			>
 
 			<Button android:id="@+id/btn_prev_song"
@@ -158,7 +167,7 @@
 
 		</LinearLayout>
 
-	</LinearLayout>
+	</RelativeLayout>
 
 
 
