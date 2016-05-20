@@ -185,7 +185,7 @@ public class MainActivity extends Activity implements
 		EditText etSearch;
 		if (getActionBar() != null) {
 			actionBar = getActionBar();
-			actionBar.setCustomView(R.layout.pattern_actionbar_et);
+			actionBar.setCustomView(R.layout.pattern_actionbar_search);
 			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
 
 			etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
