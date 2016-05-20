@@ -82,6 +82,9 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 				case FLAC:
 					viewHolder.ivFileFormat.setImageResource(R.drawable.ic_flac);
 					break;
+				case M4A:
+					viewHolder.ivFileFormat.setImageResource(R.drawable.ic_stat_playing);
+					break;
 			}
 		}
 

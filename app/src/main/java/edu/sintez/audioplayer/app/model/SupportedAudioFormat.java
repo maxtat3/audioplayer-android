@@ -11,6 +11,7 @@ public enum SupportedAudioFormat implements Parcelable{
 
 	MP3("mp3"),
 	FLAC("flac"),
+	M4A("m4a"),
 	NOT_DEFINED("");
 
 	private String ext;
