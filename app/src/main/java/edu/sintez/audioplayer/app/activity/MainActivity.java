@@ -27,7 +27,6 @@ import edu.sintez.audioplayer.app.utils.PlayListComparator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Main activity: shows media player buttons. This activity shows the media player buttons and
@@ -76,6 +75,29 @@ public class MainActivity extends Activity implements
 	 */
 	private static final int SEEK_BAR_MAX_POS = 100;
 
+	/**
+	 * Key which allow saving and restoring data.
+	 * For example when this activity create a new.
+	 *
+	 * @see {@link #onSaveInstanceState(Bundle)}
+	 * @see {@link #onRestoreInstanceState(Bundle)}
+	 */
+	public static final String SAVED_BUNDLE_KEY = MainActivity.class.getName() + "." + "save";
+
+	/**
+	 * Saving playlist.
+	 *
+	 * @see #tracks
+	 */
+	public static final String SAVED_TRACKS_LIST_KEY = MainActivity.class.getName() + "." + "tracks";
+
+	/**
+	 * Saving user selected position in playlist.
+	 *
+	 * @see #selTrackPos
+	 */
+	public static final String SAVED_SEL_TRACK_POS_KEY = MainActivity.class.getName() + "." + "selTrackPos";
+
 	private Button btnPlay;
 	private Button btnPause;
 	private Button btnNextSong;
@@ -110,8 +132,10 @@ public class MainActivity extends Activity implements
 
 	/**
 	 * Tracks storage displaying in playlist
+	 * Type this variable set is {@link ArrayList} because this collection must be
+	 * put to {@link Bundle} object to save and restore when this Activity recreate.
 	 */
-	private List<Track> tracks = new ArrayList<Track>();
+	private ArrayList<Track> tracks = new ArrayList<Track>();
 
 	/**
 	 * Selected audio track position when user clicked in playlist item.
@@ -181,6 +205,44 @@ public class MainActivity extends Activity implements
 		registerReceivers();
 		createSearchInActionBar();
 		receivedAudioFromIntent();
+	}
+
+	@Override
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBundle(SAVED_BUNDLE_KEY, savingData());
+	}
+
+	@Override
+	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		Bundle bundle = savedInstanceState.getBundle(SAVED_BUNDLE_KEY);
+		restoreData(bundle);
+	}
+
+	/**
+	 * Saving data when called {@link #onSaveInstanceState(Bundle)} method.
+	 *
+	 * @return Bundle with data for saving
+	 */
+	private Bundle savingData() {
+		Bundle bundle = new Bundle();
+		bundle.putParcelableArrayList(SAVED_TRACKS_LIST_KEY, tracks);
+		bundle.putInt(SAVED_SEL_TRACK_POS_KEY, selTrackPos);
+		return bundle;
+	}
+
+	/**
+	 * Restore data when called {@link #onRestoreInstanceState(Bundle)} method.
+	 *
+	 * @param bundle with data for restoring
+	 */
+	private void restoreData(Bundle bundle) {
+		if (bundle != null) {
+			tracks = bundle.getParcelableArrayList(SAVED_TRACKS_LIST_KEY);
+			selTrackPos = bundle.getInt(SAVED_SEL_TRACK_POS_KEY, 0);
+			adapter.addAll(tracks);
+		}
 	}
 
 	@Override
