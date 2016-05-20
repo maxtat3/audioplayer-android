@@ -83,6 +83,7 @@ public class MainActivity extends Activity implements
 	private Button btnStop;
 	private Button btnOpenFileChooser;
 	private Button btnGetAllMusFromDevice;
+	private Button btnClearPlaylist;
 
 	private TextView tvCurrentTrackTime;
 	private TextView tvAllTrackTime;
@@ -154,6 +155,7 @@ public class MainActivity extends Activity implements
 		btnStop = (Button) findViewById(R.id.btn_stop);
 		btnOpenFileChooser = (Button) findViewById(R.id.btn_open_file_chooser);
 		btnGetAllMusFromDevice = (Button) findViewById(R.id.btn_get_all_music_from_device);
+		btnClearPlaylist = (Button) findViewById(R.id.btn_clear_playlist);
 
 		btnPlay.setOnClickListener(this);
 		btnPause.setOnClickListener(this);
@@ -162,6 +164,7 @@ public class MainActivity extends Activity implements
 		btnStop.setOnClickListener(this);
 		btnOpenFileChooser.setOnClickListener(this);
 		btnGetAllMusFromDevice.setOnClickListener(this);
+		btnClearPlaylist.setOnClickListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
 		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
@@ -204,6 +207,12 @@ public class MainActivity extends Activity implements
 		} else if (view == btnGetAllMusFromDevice) {
 			musRetriever = new MusicRetriever(getContentResolver());
 			(new PrepareMusicRetrieverTask(musRetriever, this)).execute();
+
+		} else if (view == btnClearPlaylist) {
+			if (!tracks.isEmpty()){
+				tracks.clear();
+				adapter.clear();
+			}
 		}
 	}
 
