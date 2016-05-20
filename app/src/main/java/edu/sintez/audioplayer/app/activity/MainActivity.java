@@ -408,6 +408,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		selTrackPos = position;
+		playTrack();
 	}
 
 	@Override
