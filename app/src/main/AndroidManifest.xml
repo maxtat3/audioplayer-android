@@ -37,6 +37,7 @@
 		<activity
 			android:name=".app.activity.FileInfoActivity"
 			android:theme="@android:style/Theme.Holo.Dialog"
+			android:label="@string/activity_file_info_label"
 			/>
 
 		<service
