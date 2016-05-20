@@ -69,7 +69,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		if (position == 0
 			&& (item.getType() == FileType.DIR
 			|| item.getType() == FileType.PARENT_DIR)) {
-			viewHolder.ivFileFormat.setImageResource(R.drawable.ic_back);
+			viewHolder.ivFileFormat.setImageResource(R.mipmap.ic_back);
 
 		} else if (item.getType() == FileType.DIR) {
 			viewHolder.ivFileFormat.setImageResource(R.mipmap.ic_folder);
