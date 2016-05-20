@@ -246,6 +246,11 @@ public class MainActivity extends Activity implements
 	 * {@link #selTrackPos} counter.
 	 */
 	private void playTrack() {
+		if (tracks.isEmpty()){
+			Toast.makeText(this, "Playlist is empty", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(SERVICE_PLAYING_TRACK_KEY, tracks.get(selTrackPos));
 		Intent i = new Intent(MusicService.ACTION_PLAY);
