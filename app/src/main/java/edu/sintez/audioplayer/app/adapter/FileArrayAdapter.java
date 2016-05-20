@@ -77,13 +77,13 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
 		} else {
 			switch (item.getFormat()) {
 				case MP3:
-					viewHolder.ivFileFormat.setImageResource(R.drawable.ic_mp3);
+					viewHolder.ivFileFormat.setImageResource(R.mipmap.ic_mp3);
 					break;
 				case FLAC:
-					viewHolder.ivFileFormat.setImageResource(R.drawable.ic_flac);
+					viewHolder.ivFileFormat.setImageResource(R.mipmap.ic_flac);
 					break;
 				case M4A:
-					viewHolder.ivFileFormat.setImageResource(R.drawable.ic_stat_playing);
+					viewHolder.ivFileFormat.setImageResource(R.mipmap.ic_m4a);
 					break;
 			}
 		}
