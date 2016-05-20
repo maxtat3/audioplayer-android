@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements
 	public static final String SERVICE_JUMP_TO_POS_KEY = MainActivity.class.getName() + "." + "service_jump_to_pos";
 
 	/**
-	 * Maximum position in seek bar (progress bar line).
+	 * Maximum position in seek bar (steps in progress bar line).
 	 * This is default value for {@link SeekBar} view.
 	 * This max position value must be changed called {@link SeekBar#setMax(int)} method.
 	 */
@@ -172,33 +172,11 @@ public class MainActivity extends Activity implements
 		tvCurrentTrackTime = (TextView) findViewById(R.id.current_track_time);
 		tvAllTrackTime = (TextView) findViewById(R.id.all_track_time);
 
-		// register receivers from intent filter
-		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
-		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.GET_NEXT_TRACK_KEY));
-
 		sBarProgress = (SeekBar) findViewById(R.id.sbar_track_progress);
 		sBarProgress.setOnSeekBarChangeListener(this);
 
-		ActionBar actionBar;
-		EditText etSearch;
-		if (getActionBar() != null) {
-			actionBar = getActionBar();
-			actionBar.setCustomView(R.layout.pattern_actionbar_search);
-			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
-
-			etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
-					Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
-					return false;
-				}
-			});
-			etSearch.addTextChangedListener(new SearchListener());
-			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
-		}
-
+		registerReceivers();
+		createSearchInActionBar();
 		receivedAudioFromIntent();
 	}
 
@@ -326,6 +304,39 @@ public class MainActivity extends Activity implements
 				selTrackPos = tracks.size() - 1;
 				playTrack();
 			}
+		}
+	}
+
+	/**
+	 * Register receivers for this app from intent filters.
+	 */
+	private void registerReceivers() {
+		LocalBroadcastManager.getInstance(this)
+			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
+		LocalBroadcastManager.getInstance(this)
+			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.GET_NEXT_TRACK_KEY));
+	}
+
+	/**
+	 * For search audio tracks (fom title now) creating search view in Actionbar.
+	 */
+	private void createSearchInActionBar() {
+		ActionBar actionBar;
+		EditText etSearch;
+		if (getActionBar() != null) {
+			actionBar = getActionBar();
+			actionBar.setCustomView(R.layout.pattern_actionbar_search);
+			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
+
+			etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
+					Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
+					return false;
+				}
+			});
+			etSearch.addTextChangedListener(new SearchListener());
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		}
 	}
 
