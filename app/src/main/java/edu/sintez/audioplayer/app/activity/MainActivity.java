@@ -203,7 +203,7 @@ public class MainActivity extends Activity implements
 		sBarProgress.setOnSeekBarChangeListener(this);
 
 		registerReceivers();
-		createSearchInActionBar();
+//		createSearchInActionBar();
 		receivedAudioFromIntent();
 	}
 
