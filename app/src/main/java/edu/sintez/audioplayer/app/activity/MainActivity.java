@@ -364,7 +364,12 @@ public class MainActivity extends Activity implements
 	 * audio file uri, extracted file and meta information, add to playlist and start playing.
 	 */
 	private void receivedAudioFromIntent() {
-		if (getIntent().getAction().equals(Intent.ACTION_VIEW)) {
+		if (getIntent().getAction() == null) return;
+
+		String action = getIntent().getAction();
+		if (action.equals(Intent.ACTION_MAIN)) return;
+
+		if (action.equals(Intent.ACTION_VIEW)) {
 			Uri data = getIntent().getData();
 			if (data != null) {
 				String absPath = FileInfoActivity.getAbsPathFromURI(this, data);
