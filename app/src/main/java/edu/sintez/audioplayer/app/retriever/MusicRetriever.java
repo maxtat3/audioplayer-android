@@ -115,10 +115,6 @@ public class MusicRetriever {
         if (isDebug) Log.d(LOG, "Done querying media. MusicRetriever is ready.");
     }
 
-    public ContentResolver getContentResolver() {
-        return contentRes;
-    }
-
     public List<Track> getAllAudioTracks() {
         return tracks;
     }
