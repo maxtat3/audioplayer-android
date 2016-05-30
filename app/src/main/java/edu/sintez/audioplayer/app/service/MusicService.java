@@ -95,7 +95,7 @@ public class MusicService extends Service implements OnCompletionListener,
 	private MediaPlayer mp = null;
 
 	/**
-	 *
+	 * POJO class presented playing audio track.
 	 */
 	private Track track;
 
@@ -123,8 +123,6 @@ public class MusicService extends Service implements OnCompletionListener,
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		audioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
 	}
-
-
 
 	/**
 	 * Called when we receive an Intent. When we receive an intent sent to us via startService(),

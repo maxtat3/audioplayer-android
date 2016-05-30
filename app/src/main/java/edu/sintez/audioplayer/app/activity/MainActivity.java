@@ -29,9 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Main activity: shows media player buttons. This activity shows the media player buttons and
- * lets the user click them. No media handling is done here -- everything is done by passing
- * Intents to our {@link MusicService}.
+ * Shows player main direction elements. This activity shows: buttons, playlist, txt information elements, progress bar.
+ * Handling audio tracks by passing from Intents to {@link MusicService}.
  */
 public class MainActivity extends Activity implements
 	View.OnClickListener,
@@ -42,7 +41,7 @@ public class MainActivity extends Activity implements
 	private static final String LOG = MainActivity.class.getName();
 
 	/**
-	 * Request code for file chooser
+	 * Request code for file chooser.
 	 */
 	public static final int FILE_CHOOSER_RQ = 1;
 
@@ -76,8 +75,7 @@ public class MainActivity extends Activity implements
 	private static final int SEEK_BAR_MAX_POS = 100;
 
 	/**
-	 * Key which allow saving and restoring data.
-	 * For example when this activity create a new.
+	 * Key which allow saving and restoring data. When this activity create a new.
 	 *
 	 * @see {@link #onSaveInstanceState(Bundle)}
 	 * @see {@link #onRestoreInstanceState(Bundle)}
@@ -85,14 +83,14 @@ public class MainActivity extends Activity implements
 	public static final String SAVED_BUNDLE_KEY = MainActivity.class.getName() + "." + "save";
 
 	/**
-	 * Saving playlist.
+	 * Saving playlist key (for example when rotate display process).
 	 *
 	 * @see #tracks
 	 */
 	public static final String SAVED_TRACKS_LIST_KEY = MainActivity.class.getName() + "." + "tracks";
 
 	/**
-	 * Saving user selected position in playlist.
+	 * Saving user selected position in playlist (for example when rotate display process).
 	 *
 	 * @see #selTrackPos
 	 */
@@ -116,7 +114,7 @@ public class MainActivity extends Activity implements
 	private SeekBar sBarProgress;
 
 	/**
-	 * Playlist audio tracks
+	 * Playlist audio tracks.
 	 */
 	private ListView lvPlaylist;
 
@@ -126,13 +124,14 @@ public class MainActivity extends Activity implements
 	private MusicRetriever musRetriever;
 
 	/**
-	 * Adapter for {@link #lvPlaylist} .
+	 * Adapter for {@link #lvPlaylist}.
 	 */
 	private ArrayAdapter<Track> adapter;
 
 	/**
-	 * Tracks storage displaying in playlist
-	 * Type this variable set is {@link ArrayList} because this collection must be
+	 * This a tracks playlist.
+	 * Tracks storage for displaying in {@link #lvPlaylist}.
+	 * Note. Type this variable set is {@link ArrayList} because this collection must be
 	 * put to {@link Bundle} object to save and restore when this Activity recreate.
 	 */
 	private ArrayList<Track> tracks = new ArrayList<Track>();

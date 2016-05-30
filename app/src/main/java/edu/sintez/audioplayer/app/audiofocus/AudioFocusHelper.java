@@ -42,7 +42,7 @@ public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener
 
     /**
      * Requests audio focus. Returns whether request was successful or not.
-     * */
+     */
     public boolean requestFocus() {
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
             am.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
