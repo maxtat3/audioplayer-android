@@ -21,6 +21,7 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.activity.FileChooserActivity;
 
@@ -65,11 +66,11 @@ public class MusicRetriever {
         );
 
         if (cur == null) {
-	        // 1 arg - Failed to retrieve music: cursor is null.
+	        Log.d(LOG, "Failed to retrieve music: cursor is null !");
 	        return;
         }
 	    if (!cur.moveToFirst()) {
-            // 2 arg - Nothing to query. There is no music on the device.
+		    Log.d(LOG, "There are no music on the device.");
             return;
         }
 
