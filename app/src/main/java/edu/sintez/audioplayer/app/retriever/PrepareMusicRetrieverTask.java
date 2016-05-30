@@ -21,21 +21,22 @@ import android.os.AsyncTask;
 /**
  * Asynchronous task that prepares a MusicRetriever. This asynchronous task essentially calls
  * {@link MusicRetriever#prepare()} on a {@link MusicRetriever}, which may take some time to
- * run. Upon finishing, it notifies the indicated {@MusicRetrieverPreparedListener}.
+ * run. Upon finishing, it notifies the indicated {@link MusicRetrieverPreparedListener}.
  */
 public class PrepareMusicRetrieverTask extends AsyncTask<Void, Void, Void> {
     private static final String LOG = PrepareMusicRetrieverTask.class.getName();
-    MusicRetriever mRetriever;
-    MusicRetrieverPreparedListener mrpl;
+
+    private MusicRetriever retriever;
+    private MusicRetrieverPreparedListener mrpl;
 
     public PrepareMusicRetrieverTask(MusicRetriever retriever, MusicRetrieverPreparedListener listener) {
-        mRetriever = retriever;
+        this.retriever = retriever;
         mrpl = listener;
     }
 
     @Override
     protected Void doInBackground(Void... arg0) {
-        mRetriever.prepare();
+        retriever.prepare();
         return null;
     }
 
