@@ -191,7 +191,14 @@ public class MainActivity extends Activity implements
 		btnClearPlaylist.setOnClickListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
-		adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
+		if (savedInstanceState == null) {
+			adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
+		} else {
+			Bundle bundle = savedInstanceState.getBundle(SAVED_BUNDLE_KEY);
+			restoreData(bundle);
+			adapter = new PlaylistAdapter(this, R.layout.pattern_playlist_item, tracks);
+			lvPlaylist.setSelection(selTrackPos);
+		}
 		lvPlaylist.setAdapter(adapter);
 		lvPlaylist.setOnItemClickListener(this);
 		lvPlaylist.setOnItemLongClickListener(this);
@@ -211,13 +218,6 @@ public class MainActivity extends Activity implements
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBundle(SAVED_BUNDLE_KEY, savingData());
-	}
-
-	@Override
-	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		Bundle bundle = savedInstanceState.getBundle(SAVED_BUNDLE_KEY);
-		restoreData(bundle);
 	}
 
 	/**
@@ -241,7 +241,6 @@ public class MainActivity extends Activity implements
 		if (bundle != null) {
 			tracks = bundle.getParcelableArrayList(SAVED_TRACKS_LIST_KEY);
 			selTrackPos = bundle.getInt(SAVED_SEL_TRACK_POS_KEY, 0);
-			adapter.addAll(tracks);
 		}
 	}
 
@@ -509,6 +508,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onMusicRetrieverPrepared() {
 		adapter.addAll(musRetriever.getAllAudioTracks());
+		adapter.notifyDataSetChanged();
 		// after add items to adapter in tracks collection size equal to this added item elements
 	}
 
