@@ -185,7 +185,6 @@
 			android:layout_height="wrap_content"
 			android:choiceMode="singleChoice"
 			android:listSelector="@android:color/holo_green_light"
-			android:layout_weight="1"
 			/>
 
 	</LinearLayout>
