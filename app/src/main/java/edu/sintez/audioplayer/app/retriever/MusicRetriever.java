@@ -39,16 +39,18 @@ public class MusicRetriever {
     private static final String LOG = MusicRetriever.class.getName();
     private boolean isDebug = false;
 
-    ContentResolver mContentResolver;
+    private ContentResolver contentRes;
 
-    // the items (songs) we have queried
-    List<Track> tracks = new ArrayList<Track>();
+	/**
+	 * The tracks (songs) we have queried
+	 */
+    private List<Track> tracks = new ArrayList<Track>();
 
     Random mRandom = new Random();
 
 
     public MusicRetriever(ContentResolver cr) {
-        mContentResolver = cr;
+        contentRes = cr;
     }
 
     /**
@@ -62,7 +64,7 @@ public class MusicRetriever {
 
         // Perform a query on the content resolver. The URI we're passing specifies that we
         // want to query for all audio media on external storage (e.g. SD card)
-        Cursor cur = mContentResolver.query(
+        Cursor cur = contentRes.query(
 		        uri,
 		        null,
                 MediaStore.Audio.Media.IS_MUSIC + " = 1",
@@ -117,7 +119,7 @@ public class MusicRetriever {
     }
 
     public ContentResolver getContentResolver() {
-        return mContentResolver;
+        return contentRes;
     }
 
     /** Returns a random Track. If there are no items available, returns null. */
