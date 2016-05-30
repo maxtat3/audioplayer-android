@@ -30,22 +30,28 @@ import edu.sintez.audioplayer.app.service.MusicService;
  */
 public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener {
     private static final String LOG = AudioFocusHelper.class.getName();
-    AudioManager am;
-    MusicFocusable focusable;
+
+    private AudioManager am;
+    private MusicFocusable focusable;
+
 
     public AudioFocusHelper(Context ctx, MusicFocusable focusable) {
         am = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         this.focusable = focusable;
     }
 
-    /** Requests audio focus. Returns whether request was successful or not. */
+    /**
+     * Requests audio focus. Returns whether request was successful or not.
+     * */
     public boolean requestFocus() {
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
             am.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
     // abandon - сообщаем ОС, что аудио-фокус более не нужен .
-    /** Abandons audio focus. Returns whether request was successful or not. */
+    /**
+     * Abandons audio focus. Returns whether request was successful or not.
+     */
     public boolean abandonFocus() {
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.abandonAudioFocus(this);
     }
