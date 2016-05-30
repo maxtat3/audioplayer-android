@@ -407,15 +407,8 @@ public class MainActivity extends Activity implements
 			actionBar.setCustomView(R.layout.pattern_actionbar_search);
 			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
 
-			etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
-					Toast.makeText(MainActivity.this, "Searching", Toast.LENGTH_LONG).show();
-					return false;
-				}
-			});
 			etSearch.addTextChangedListener(new SearchListener());
-			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		}
 	}
 
@@ -558,7 +551,7 @@ public class MainActivity extends Activity implements
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			adapter.getFilter().filter(s);
+			if (!s.toString().equals("")) adapter.getFilter().filter(s);
 		}
 
 		@Override
