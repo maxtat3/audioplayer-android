@@ -46,9 +46,6 @@ public class MusicRetriever {
 	 */
     private List<Track> tracks = new ArrayList<Track>();
 
-    Random mRandom = new Random();
-
-
     public MusicRetriever(ContentResolver cr) {
         contentRes = cr;
     }
@@ -120,14 +117,6 @@ public class MusicRetriever {
 
     public ContentResolver getContentResolver() {
         return contentRes;
-    }
-
-    /** Returns a random Track. If there are no items available, returns null. */
-    public Track getRandomItem() {
-        if (tracks.size() <= 0) return null;
-        int number = mRandom.nextInt(tracks.size());
-        if(isDebug) Log.d(LOG, "number of returner random song = " + number);
-        return tracks.get(number);
     }
 
     public List<Track> getAllAudioTracks() {
