@@ -21,13 +21,11 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.activity.FileChooserActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Retrieves and organizes media to play. Before being used, you must call {@link #prepare()},
@@ -37,7 +35,6 @@ import java.util.Random;
  */
 public class MusicRetriever {
     private static final String LOG = MusicRetriever.class.getName();
-    private boolean isDebug = false;
 
     private ContentResolver contentRes;
 
@@ -56,8 +53,6 @@ public class MusicRetriever {
      */
     public void prepare() {
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        if (isDebug) Log.d(LOG, "Querying media...");
-        if (isDebug) Log.d(LOG, "URI: " + uri.toString());
 
         // Perform a query on the content resolver. The URI we're passing specifies that we
         // want to query for all audio media on external storage (e.g. SD card)
@@ -68,22 +63,16 @@ public class MusicRetriever {
 		        null,
 		        null
         );
-        if (isDebug) Log.d(LOG, "Query finished. " + (cur == null ? "Returned NULL." : "Returned a cursor."));
 
         if (cur == null) {
-            // Query failed...
-            if (isDebug) Log.d(LOG, "Failed to retrieve music: cursor is null :-(");
-            return;
+	        // 1 arg - Failed to retrieve music: cursor is null.
+	        return;
         }
-        if (!cur.moveToFirst()) {
-            // Nothing to query. There is no music on the device. How boring.
-            if (isDebug) Log.e(LOG, "Failed to move cursor to first row (no query results).");
+	    if (!cur.moveToFirst()) {
+            // 2 arg - Nothing to query. There is no music on the device.
             return;
         }
 
-        if (isDebug) Log.d(LOG, "Listing...");
-
-        // retrieve the indices of the columns where the ID, title, etc. of the song are
 	    int filNameColumn = cur.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
 	    int fileSizeColumn = cur.getColumnIndex(MediaStore.MediaColumns.SIZE);
 	    int artistColumn = cur.getColumnIndex(MediaStore.Audio.Media.ARTIST);
@@ -92,12 +81,7 @@ public class MusicRetriever {
         int durationColumn = cur.getColumnIndex(MediaStore.Audio.Media.DURATION);
         int idColumn = cur.getColumnIndex(MediaStore.Audio.Media._ID);
 
-        if (isDebug) Log.d(LOG, "Title column index: " + String.valueOf(titleColumn));
-        if (isDebug) Log.d(LOG, "ID column index: " + String.valueOf(titleColumn));
-
-        // add each song to tracks
         do {
-            if (isDebug) Log.d(LOG, "ID: " + cur.getString(idColumn) + " Title: " + cur.getString(titleColumn));
 	        tracks.add(new Track(
 		        ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
 		        cur.getString(filNameColumn),
@@ -110,9 +94,6 @@ public class MusicRetriever {
 	        ));
         } while (cur.moveToNext());
         cur.close();
-
-        if (isDebug) Log.d(LOG, "mus items list size = " + tracks.size());
-        if (isDebug) Log.d(LOG, "Done querying media. MusicRetriever is ready.");
     }
 
     public List<Track> getAllAudioTracks() {
