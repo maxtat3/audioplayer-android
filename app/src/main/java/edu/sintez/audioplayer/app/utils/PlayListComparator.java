@@ -68,6 +68,7 @@ public class PlayListComparator {
 	private static class ComparatorByTitle implements Comparator<Track>{
 		@Override
 		public int compare(Track lhs, Track rhs) {
+			if (lhs.getTitle() == null || rhs.getTitle() == null) return 0;
 			return lhs.getTitle().compareTo(rhs.getTitle());
 		}
 	}
@@ -75,6 +76,7 @@ public class PlayListComparator {
 	private static class ComparatorByArtist implements Comparator<Track>{
 		@Override
 		public int compare(Track lhs, Track rhs) {
+			if (lhs.getArtist() == null || rhs.getArtist() == null) return 0;
 			return lhs.getArtist().compareTo(rhs.getArtist());
 		}
 	}
@@ -82,6 +84,7 @@ public class PlayListComparator {
 	private static class ComparatorByAlbum implements Comparator<Track>{
 		@Override
 		public int compare(Track lhs, Track rhs) {
+			if (lhs.getAlbum() == null || rhs.getAlbum() == null) return 0;
 			return lhs.getAlbum().compareTo(rhs.getAlbum());
 		}
 	}
