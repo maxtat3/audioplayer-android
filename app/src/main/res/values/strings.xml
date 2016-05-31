@@ -13,6 +13,6 @@
 	<string name="btn_extract_all_music">all</string>
 	<string name="time_not_played_pattern">--:--:--</string>
 	<string name="time_not_played_delimiter">/</string>
-	<string name="search_hint">Search</string>
+	<string name="filter_hint">Filter</string>
 	<string name="activity_file_info_label">Information</string>
 </resources>

@@ -401,13 +401,13 @@ public class MainActivity extends Activity implements
 	 */
 	private void createSearchInActionBar() {
 		ActionBar actionBar;
-		EditText etSearch;
+		EditText etFilter;
 		if (getActionBar() != null) {
 			actionBar = getActionBar();
-			actionBar.setCustomView(R.layout.pattern_actionbar_search);
-			etSearch = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab);
+			actionBar.setCustomView(R.layout.pattern_actionbar_filter);
+			etFilter = (EditText) actionBar.getCustomView().findViewById(R.id.et_ab_filter);
 
-			etSearch.addTextChangedListener(new SearchListener());
+			etFilter.addTextChangedListener(new FilterListener());
 			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		}
 	}
@@ -544,7 +544,7 @@ public class MainActivity extends Activity implements
 	/**
 	 * Filtration at {@link Track#title} field when entered symbols in search edit text.
 	 */
-	private class SearchListener implements TextWatcher {
+	private class FilterListener implements TextWatcher {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		}

@@ -7,10 +7,10 @@
 	>
 <EditText
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/et_ab"
+	android:id="@+id/et_ab_filter"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:inputType="textFilter"
-	android:hint="@string/search_hint"
+	android:hint="@string/filter_hint"
 />
 </LinearLayout>
