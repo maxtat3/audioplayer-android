@@ -16,6 +16,7 @@ import edu.sintez.audioplayer.app.model.FileItem;
 import edu.sintez.audioplayer.app.model.FileType;
 import edu.sintez.audioplayer.app.model.SupportedAudioFormat;
 import edu.sintez.audioplayer.app.model.Track;
+import edu.sintez.audioplayer.app.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class FileChooserActivity extends ListActivity {
 							FileType.FILE,
 							ff.getName(),
 							ff.getAbsolutePath(),
-							roundDouble(ff.length()/1024.0/1024.0),
+							Utilities.roundDouble(ff.length()/1024.0/1024.0),
 							detectedFormat
 						));
 					}
@@ -163,23 +164,6 @@ public class FileChooserActivity extends ListActivity {
 			}
 		}
 		return SupportedAudioFormat.NOT_DEFINED;
-	}
-
-	/**
-	 * Rounding double number of error rounding machine to 2 sings after decimal point.
-	 *
-	 * @param dig number
-	 * @return rounded number
-	 */
-	public static double roundDouble(double dig) {
-		final int SINGS = 100; //if this num = 1000 -> rounded num = x.xxx
-		int iVal = (int) ( dig * SINGS );
-		double dVal = dig * SINGS;
-		if ( dVal - iVal >= 0.5 ) {
-			iVal += 1;
-		}
-		dVal = (double) iVal;
-		return dVal/SINGS;
 	}
 
 	@Override
@@ -250,7 +234,7 @@ public class FileChooserActivity extends ListActivity {
 				FileType.FILE,
 				f.getName(),
 				f.getAbsolutePath(),
-				roundDouble(f.length() / 1024.0 / 1024.0),
+				Utilities.roundDouble(f.length() / 1024.0 / 1024.0),
 				detectedFormat
 			);
 		}

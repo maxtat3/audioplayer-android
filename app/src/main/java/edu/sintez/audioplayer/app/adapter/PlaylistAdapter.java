@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.sintez.audioplayer.R;
-import edu.sintez.audioplayer.app.activity.FileInfoActivity;
 import edu.sintez.audioplayer.app.model.Track;
+import edu.sintez.audioplayer.app.utils.Utilities;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class PlaylistAdapter extends ArrayAdapter<Track> {
 		vh.title.setText(track.getTitle());
 		vh.artist.setText(track.getArtist());
 		vh.album.setText(track.getAlbum());
-		vh.duration.setText( String.valueOf(FileInfoActivity.getTimeText(track.getDuration())) );
+		vh.duration.setText( String.valueOf(Utilities.getTimeText(track.getDuration())) );
 		vh.fileSize.setText(String.valueOf(track.getFileSize()) + " MB");
 		vh.audioFormat.setText(getFileExt(track.getFileName()));
 

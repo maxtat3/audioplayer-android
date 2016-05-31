@@ -1,14 +1,10 @@
 package edu.sintez.audioplayer.app.activity;
 
 import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +12,7 @@ import android.widget.TextView;
 import edu.sintez.audioplayer.R;
 import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.retriever.MetaDataRetriever;
+import edu.sintez.audioplayer.app.utils.Utilities;
 
 /**
  * Activity meta data tag information from user selected audio track
@@ -68,7 +65,7 @@ public class FileInfoActivity extends Activity {
 		if (track != null) {
 			Bitmap bitmap;
 			if (track.getURI().toString().toLowerCase().matches(".*\\bcontent://\\b.*"))
-				bitmap = getAlbumThumbnail(getAbsPathFromURI(this, track.getURI())); //from content resolver
+				bitmap = getAlbumThumbnail(Utilities.getAbsPathFromURI(this, track.getURI())); //from content resolver
 			else
 				bitmap = getAlbumThumbnail(track.getURI().toString());   //from playlist
 
@@ -88,7 +85,7 @@ public class FileInfoActivity extends Activity {
 
 			tvFileSize.setText(Html.fromHtml("<b>Size: </b>" + track.getFileSize() + " MB"));
 
-			tvDuration.setText(Html.fromHtml("<b>Duration: </b>" + checkMetaData(getTimeText(track.getDuration()))));
+			tvDuration.setText(Html.fromHtml("<b>Duration: </b>" + checkMetaData(Utilities.getTimeText(track.getDuration()))));
 
 			tvBitrate.setText(Html.fromHtml("<b>Bitrate: </b>" + checkMetaData(String.valueOf(track.getBitrate()/1000)) + " kbps" ));
 		}
@@ -122,47 +119,4 @@ public class FileInfoActivity extends Activity {
 		return null;
 	}
 
-	/**
-	 * Converted Uri path from ContentResolver format to absolute Uri path.
-	 *
-	 * @param context application context
-	 * @param contentUri returned ContentResolver Uri
-	 * @return absolute path uri to file
-	 * @see android.content.ContentResolver
-	 */
-	public static String getAbsPathFromURI(Context context, Uri contentUri) {
-		Cursor cursor = null;
-		try {
-			String[] projection = {MediaStore.Images.Media.DATA};
-			cursor = context.getContentResolver().query(contentUri, projection, null, null, null);
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			return cursor.getString(column_index);
-		} finally {
-			if (cursor != null) cursor.close();
-		}
-	}
-
-	/**
-	 * Converted time in milliseconds to format HH:MM:SS and returned time in text representation
-	 *
-	 * @param millis time in milliseconds
-	 * @return time in text representation
-	 */
-	public static String getTimeText(long millis) {
-		StringBuilder buf = new StringBuilder();
-
-		int hours = (int) (millis / (1000 * 60 * 60));
-		int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
-		int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
-
-		buf
-			.append(String.format("%02d", hours))
-			.append(":")
-			.append(String.format("%02d", minutes))
-			.append(":")
-			.append(String.format("%02d", seconds));
-
-		return buf.toString();
-	}
 }

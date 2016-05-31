@@ -23,7 +23,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import edu.sintez.audioplayer.app.model.Track;
-import edu.sintez.audioplayer.app.activity.FileChooserActivity;
+import edu.sintez.audioplayer.app.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class MusicRetriever {
 	        tracks.add(new Track(
 		        ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cur.getLong(idColumn)),
 		        cur.getString(filNameColumn),
-		        FileChooserActivity.roundDouble(cur.getDouble(fileSizeColumn)/1024.0/1024.0),
+		        Utilities.roundDouble(cur.getDouble(fileSizeColumn)/1024.0/1024.0),
 		        cur.getString(artistColumn),
 		        cur.getString(titleColumn),
 		        cur.getString(albumColumn),

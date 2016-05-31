@@ -23,6 +23,7 @@ import edu.sintez.audioplayer.app.model.Track;
 import edu.sintez.audioplayer.app.service.MusicService;
 import edu.sintez.audioplayer.app.model.FileItem;
 import edu.sintez.audioplayer.app.utils.PlayListComparator;
+import edu.sintez.audioplayer.app.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -370,13 +371,13 @@ public class MainActivity extends Activity implements
 		if (action.equals(Intent.ACTION_VIEW)) {
 			Uri data = getIntent().getData();
 			if (data != null) {
-				String absPath = FileInfoActivity.getAbsPathFromURI(this, data);
+				String absPath = Utilities.getAbsPathFromURI(this, data);
 				MetaDataRetriever mdr = new MetaDataRetriever();
 				File f = new File(absPath);
 				Track track = new Track();
 				track.setUri(Uri.parse(absPath));
 				track.setFileName(f.getName());
-				track.setFileSize(FileChooserActivity.roundDouble(f.length()/1024/1024));
+				track.setFileSize(Utilities.roundDouble(f.length()/1024/1024));
 				mdr.setsMetaData(track);
 
 				tracks.add(track);
@@ -416,8 +417,8 @@ public class MainActivity extends Activity implements
 	 * Update displaying current and total track time in play process.
 	 */
 	private void updateDisplayTime() {
-		tvCurrentTrackTime.setText(FileInfoActivity.getTimeText(currentTrackTime));
-		tvAllTrackTime.setText(FileInfoActivity.getTimeText(totalTrackTime));
+		tvCurrentTrackTime.setText(Utilities.getTimeText(currentTrackTime));
+		tvAllTrackTime.setText(Utilities.getTimeText(totalTrackTime));
 	}
 
 	/**
