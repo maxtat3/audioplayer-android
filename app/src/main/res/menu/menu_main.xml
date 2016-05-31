@@ -7,7 +7,7 @@
 		android:id="@+id/item_sorting_tracks"
 		android:title="@string/menu_title_sorting"
 		android:showAsAction="ifRoom|withText"
-		android:icon="@mipmap/ic_menu_filter"
+		android:icon="@mipmap/ic_menu_sorting"
 		>
 		<menu xmlns:android="http://schemas.android.com/apk/res/android">
 			<group android:checkableBehavior="single">
