@@ -205,14 +205,70 @@ public class FileChooserActivity extends ListActivity {
 			CheckBox chbItem = (CheckBox) view;
 			FileItem item = (FileItem) chbItem.getTag();
 
-			if (chbItem.isChecked()) {
-				selFiles.add(item);
-
-			} else if (selFiles.contains(item)) {
-				selFiles.remove(item);
-			}
-
+			if (chbItem.isChecked())  fileActions(item, FileAction.ADD);
+			else fileActions(item, FileAction.REMOVE);
 		}
+	}
+
+	private void fileActions(FileItem item, FileAction action) {
+		boolean isDir = item.getType() == FileType.DIR;
+		switch (action) {
+			case ADD:
+				if (isDir) extractFilesOnDir(item, action);
+				else selFiles.add(item);
+				break;
+
+			case REMOVE:
+				if (isDir) extractFilesOnDir(item, action);
+				selFiles.remove(item);
+				break;
+		}
+	}
+
+	private void extractFilesOnDir(FileItem item, FileAction action) {
+		File[] filesInDir = new File(item.getPath()).listFiles();
+		for (File f : filesInDir) {
+			if (!f.isDirectory()) {
+
+				if (action == FileAction.ADD) {
+					FileItem fi = createFileItem(f);
+					if (fi != null) selFiles.add(fi);
+				} else if (action == FileAction.REMOVE) {
+					selFiles.remove(extractFileItemFromPath(f.getAbsolutePath()));
+				}
+
+			}
+		}
+
+	}
+
+	private FileItem createFileItem(File f) {
+		FileItem fi = null;
+		SupportedAudioFormat detectedFormat = checkFileFormat(f.getName());
+		if (detectedFormat != SupportedAudioFormat.NOT_DEFINED) {
+			fi = new FileItem(
+				FileType.FILE,
+				f.getName(),
+				f.getAbsolutePath(),
+				roundDouble(f.length() / 1024.0 / 1024.0),
+				detectedFormat
+			);
+		}
+		return fi;
+	}
+
+	private FileItem extractFileItemFromPath(String absPath) {
+		for (FileItem selFile : selFiles) {
+			if (selFile.getPath().equals(absPath)) {
+				return selFile;
+			}
+		}
+		return null;
+	}
+
+	private enum FileAction {
+		ADD,
+		REMOVE
 	}
 
 	/**
