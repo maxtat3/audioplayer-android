@@ -477,9 +477,9 @@ public class MainActivity extends Activity implements
 	 */
 	private void registerReceivers() {
 		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
+			.registerReceiver(nextTrackAndTimeReceiver, new IntentFilter(MusicService.TRACK_TIME_KEY));
 		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(trackTimeReceiver, new IntentFilter(MusicService.GET_NEXT_TRACK_KEY));
+			.registerReceiver(nextTrackAndTimeReceiver, new IntentFilter(MusicService.GET_NEXT_TRACK_KEY));
 	}
 
 	/**
@@ -610,10 +610,10 @@ public class MainActivity extends Activity implements
 	}
 
 	/**
-	 * Though this receiver {@link MusicService} update current playing time
-	 * and total playing time track.
+	 * Though this receiver {@link MusicService} update current playing time,
+	 * total playing time track and when playing track in done call playing next tracks.
 	 */
-	private BroadcastReceiver trackTimeReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver nextTrackAndTimeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent i) {
 			if (i.getAction().equals(MusicService.TRACK_TIME_KEY)) {
