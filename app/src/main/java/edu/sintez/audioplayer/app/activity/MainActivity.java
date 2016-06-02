@@ -26,8 +26,7 @@ import edu.sintez.audioplayer.app.utils.PlayListComparator;
 import edu.sintez.audioplayer.app.utils.Utilities;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Shows player main direction elements. This activity shows: buttons, playlist, txt information elements, progress bar.
@@ -37,7 +36,9 @@ public class MainActivity extends Activity implements
 	View.OnClickListener,
 	AdapterView.OnItemClickListener,
 	AdapterView.OnItemLongClickListener,
-	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener, SeekBar.OnSeekBarChangeListener {
+	PrepareMusicRetrieverTask.MusicRetrieverPreparedListener,
+	SeekBar.OnSeekBarChangeListener,
+	CompoundButton.OnCheckedChangeListener{
 
 	private static final String LOG = MainActivity.class.getName();
 
@@ -105,6 +106,7 @@ public class MainActivity extends Activity implements
 	private Button btnOpenFileChooser;
 	private Button btnGetAllMusFromDevice;
 	private Button btnClearPlaylist;
+	private ToggleButton tBtnShuffle;
 
 	private TextView tvCurrentTrackTime;
 	private TextView tvAllTrackTime;
@@ -163,6 +165,13 @@ public class MainActivity extends Activity implements
 	private int sBarProgressPos;
 
 	/**
+	 * Flag indicates shuffle playing. This means randomly playback tracks in playlist.
+	 * When toggle button {@link #tBtnShuffle} is turn on (pressed) this flag set <tt>true</tt>
+	 * otherwise set <tt>false</tt> .
+	 */
+	private boolean isShuffle = false;
+
+	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
 	 * start the background service ({@link MusicService}) that will handle the actual media
 	 * playback.
@@ -180,6 +189,7 @@ public class MainActivity extends Activity implements
 		btnOpenFileChooser = (Button) findViewById(R.id.btn_open_file_chooser);
 		btnGetAllMusFromDevice = (Button) findViewById(R.id.btn_get_all_music_from_device);
 		btnClearPlaylist = (Button) findViewById(R.id.btn_clear_playlist);
+		tBtnShuffle = (ToggleButton) findViewById(R.id.tbtn_shuffle);
 
 		btnPlay.setOnClickListener(this);
 		btnPause.setOnClickListener(this);
@@ -189,6 +199,7 @@ public class MainActivity extends Activity implements
 		btnOpenFileChooser.setOnClickListener(this);
 		btnGetAllMusFromDevice.setOnClickListener(this);
 		btnClearPlaylist.setOnClickListener(this);
+		tBtnShuffle.setOnCheckedChangeListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
 		if (savedInstanceState == null) {
@@ -247,6 +258,9 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onClick(View view) {
 		if (view == btnPlay) {
+			if (isShuffle && randPositionsIt.hasNext()) { //for start from rand pos if press btn play
+				selTrackPos = randPositionsIt.next();
+			}
 			playTrack();
 
 		} else if (view == btnPause)
@@ -273,6 +287,18 @@ public class MainActivity extends Activity implements
 			if (!tracks.isEmpty()){
 				tracks.clear();
 				adapter.clear();
+			}
+		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (buttonView == tBtnShuffle) {
+			if (isChecked) {
+				isShuffle = true;
+				turnOnShuffle();
+			} else {
+				isShuffle = false;
 			}
 		}
 	}
@@ -332,10 +358,23 @@ public class MainActivity extends Activity implements
 	 * Start playing next audio track.
 	 */
 	private void playNextTrack() {
-		if (tracks.size() > ++selTrackPos) playTrack();
-		else {
-			--selTrackPos;
-			showNoMoreTracksMsg();
+		if (isShuffle) {
+			if (randPositionsIt.hasNext()) {
+				selTrackPos = randPositionsIt.next();
+				playTrack();
+			} else {
+				// reset list iterator to begin pos.
+				randPositionsIt = randPositions.listIterator();
+				showNoMoreTracksMsg();
+			}
+
+		} else {
+			if (tracks.size() > ++selTrackPos) {
+				playTrack();
+			} else {
+				--selTrackPos;
+				showNoMoreTracksMsg();
+			}
 		}
 	}
 
@@ -343,11 +382,57 @@ public class MainActivity extends Activity implements
 	 * Start playing previous audio track.
 	 */
 	private void playPrevTrack() {
-		if (--selTrackPos >= 0) playTrack();
-		else {
-			selTrackPos = 0;
-			showNoMoreTracksMsg();
+		if (isShuffle) {
+			if (randPositionsIt.hasPrevious()) {
+				selTrackPos = randPositionsIt.previous();
+				playTrack();
+			} else {
+				randPositionsIt = randPositions.listIterator();
+				showNoMoreTracksMsg();
+			}
+
+		} else {
+			if (--selTrackPos >= 0) {
+				playTrack();
+			} else {
+				selTrackPos = 0;
+				showNoMoreTracksMsg();
+			}
 		}
+
+	}
+
+	/**
+	 * Storage for randomise {@link #tracks} positions to playlist.
+	 * Used when shuffle is active only.
+	 *
+	 * @see #tBtnShuffle
+	 * @see #turnOnShuffle()
+	 */
+	private List<Integer> randPositions = new ArrayList<Integer>();
+
+	/**
+	 * List iterator for navigation in {@link #randPositions} list.
+	 */
+	private ListIterator<Integer> randPositionsIt;
+
+	/**
+	 * Turn on shuffle (randomise) playback.
+	 */
+	private void turnOnShuffle(){
+		int randPos;
+		int rightBound = tracks.size() - 1;
+
+		if (!randPositions.isEmpty()) randPositions.clear();
+
+		for (int i = 0; i <= rightBound; i++) {
+			randPos = Utilities.randGen(0, rightBound);
+			if (randPos != Utilities.NO_AVAILABLE_RAND_NUMS) {
+				randPositions.add(randPos);
+			}
+		}
+		randPositionsIt = randPositions.listIterator();
+		Utilities.resetRandGen();
 	}
 
 	/**
@@ -520,6 +605,7 @@ public class MainActivity extends Activity implements
 				mdr.setsMetaData(track);
 				adapter.add(track);
 			}
+			if (isShuffle) turnOnShuffle();
 		}
 	}
 

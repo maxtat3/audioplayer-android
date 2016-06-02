@@ -5,11 +5,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Collection utilitarians methods used are general in this app.
  */
 public class Utilities {
 
+	private static final String LOG = Utilities.class.getName();
 
 	/**
 	 * Rounding double number of error rounding machine to 2 sings after decimal point.
@@ -70,5 +74,69 @@ public class Utilities {
 			.append(String.format("%02d", seconds));
 
 		return buf.toString();
+	}
+
+	/**
+	 * Storage for come generated numbers in range [min, max] .
+	 */
+	private static List<Integer> existRands = new ArrayList<Integer>();
+
+	/**
+	 * Counter how to many numbers must be generating.
+	 */
+	private static int rndNumbersGen;
+
+	/**
+	 * This const signals if all numbers are generated in defined [min, max] range.
+	 */
+	public static final int NO_AVAILABLE_RAND_NUMS = -1;
+
+	/**
+	 * Generating random numbers without repeating in determined range
+	 * by formula: Min + (int)(Math.random() * ((Max - Min) + 1)) .
+	 * <a href="http://allmycircuitz.blogspot.com/2013/09/java.html">Full algorithm description.</a>
+	 *
+	 * @param min left bound number (min number is included to range)
+	 * @param max right bound number (max number is included to range)
+	 * @return random number in [min, max] range. -1 code means that all rands are generated.
+	 */
+	public static int randGen(int min, int max){
+		// generating random number
+		int rand;
+		// flag equals generated number and number which is already exist in storage {@link #existRands}
+		boolean isEqual;
+
+		if (existRands.isEmpty()){
+			rndNumbersGen = max - min;
+			rand = min + (int)(Math.random() * ((max - min) + 1));
+			existRands.add(rand);
+		} else {
+			if (rndNumbersGen == 0){
+				existRands.clear();
+				return NO_AVAILABLE_RAND_NUMS;
+			}
+			do {
+				isEqual = false;
+				rand = min + (int)(Math.random() * ((max - min) + 1));
+				for (Integer existRand : existRands) {
+					if (rand == existRand) {
+						isEqual = true;
+						break;
+					}
+				}
+			} while (isEqual);
+
+			rndNumbersGen--;
+			existRands.add(rand);
+		}
+
+		return rand;
+	}
+
+	/**
+	 * Reset already exist generated numbers in storage list {@link #existRands}.
+	 */
+	public static void resetRandGen() {
+		existRands.clear();
 	}
 }
