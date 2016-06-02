@@ -263,10 +263,10 @@ public class MainActivity extends Activity implements
 			}
 			playTrack();
 
-		} else if (view == btnPause)
+		} else if (view == btnPause) {
 			startService(new Intent(MusicService.ACTION_PAUSE));
 
-		else if (view == btnNextSong) {
+		} else if (view == btnNextSong) {
 			playNextTrack();
 
 		} else if (view == btnPrevSong) {
