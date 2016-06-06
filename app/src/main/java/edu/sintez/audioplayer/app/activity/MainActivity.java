@@ -107,6 +107,7 @@ public class MainActivity extends Activity implements
 	private Button btnGetAllMusFromDevice;
 	private Button btnClearPlaylist;
 	private ToggleButton tBtnShuffle;
+	private ToggleButton tBtnRepeat;
 
 	private TextView tvCurrentTrackTime;
 	private TextView tvAllTrackTime;
@@ -167,9 +168,17 @@ public class MainActivity extends Activity implements
 	/**
 	 * Flag indicates shuffle playing. This means randomly playback tracks in playlist.
 	 * When toggle button {@link #tBtnShuffle} is turn on (pressed) this flag set <tt>true</tt>
-	 * otherwise set <tt>false</tt> .
+	 * otherwise set <tt>false</tt>. By default <tt>false<tt/> it means shuffle is turn off.
 	 */
 	private boolean isShuffle = false;
+
+	/**
+	 * Flag indicates repeat playlist playing. This means repeat playback tracks in playlist
+	 * when they reach the end of tracks in playlist.
+	 * If toggle button {@link #tBtnRepeat} is turn on (pressed) this flag set <tt>true</tt>
+	 * otherwise set <tt>false</tt>. By default <tt>false<tt/> it means repeat playback is turn off.
+	 */
+	private boolean isRepeat = false;
 
 	/**
 	 * Called when the activity is first created. Here, we simply set the event listeners and
@@ -190,6 +199,7 @@ public class MainActivity extends Activity implements
 		btnGetAllMusFromDevice = (Button) findViewById(R.id.btn_get_all_music_from_device);
 		btnClearPlaylist = (Button) findViewById(R.id.btn_clear_playlist);
 		tBtnShuffle = (ToggleButton) findViewById(R.id.tbtn_shuffle);
+		tBtnRepeat = (ToggleButton) findViewById(R.id.tbtn_repeat);
 
 		btnPlay.setOnClickListener(this);
 		btnPause.setOnClickListener(this);
@@ -200,6 +210,7 @@ public class MainActivity extends Activity implements
 		btnGetAllMusFromDevice.setOnClickListener(this);
 		btnClearPlaylist.setOnClickListener(this);
 		tBtnShuffle.setOnCheckedChangeListener(this);
+		tBtnRepeat.setOnCheckedChangeListener(this);
 
 		lvPlaylist = (ListView) findViewById(R.id.lv_playlist);
 		if (savedInstanceState == null) {
@@ -300,6 +311,12 @@ public class MainActivity extends Activity implements
 			} else {
 				isShuffle = false;
 			}
+		} else if (buttonView == tBtnRepeat) {
+			if (isChecked) {
+				isRepeat = true;
+			} else {
+				isRepeat = false;
+			}
 		}
 	}
 
@@ -372,8 +389,14 @@ public class MainActivity extends Activity implements
 			if (tracks.size() > ++selTrackPos) {
 				playTrack();
 			} else {
-				--selTrackPos;
-				showNoMoreTracksMsg();
+				if (isRepeat) {
+					selTrackPos = 0;
+					playTrack();
+				} else {
+					--selTrackPos;
+					showNoMoreTracksMsg();
+				}
+
 			}
 		}
 	}
