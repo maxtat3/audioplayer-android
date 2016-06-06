@@ -332,11 +332,7 @@ public class MainActivity extends Activity implements
 				isShuffle = false;
 			}
 		} else if (buttonView == tBtnRepeat) {
-			if (isChecked) {
-				isRepeat = true;
-			} else {
-				isRepeat = false;
-			}
+			isRepeat = isChecked;
 		}
 	}
 
