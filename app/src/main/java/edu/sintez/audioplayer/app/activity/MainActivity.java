@@ -98,6 +98,18 @@ public class MainActivity extends Activity implements
 	 */
 	public static final String SAVED_SEL_TRACK_POS_KEY = MainActivity.class.getName() + "." + "selTrackPos";
 
+	/**
+	 * Saving random positions to playlist key (for example when rotate display process).
+	 *
+	 * @see #randPositions
+	 */
+	public static final String SAVED_RAND_POSITIONS_LIST_KEY = MainActivity.class.getName() + "." + "rand_positions_list";
+
+	/**
+	 * Saving {@link #isShuffle} variable state key (for example when rotate display process).
+	 */
+	public static final String SAVED_IS_SHUFFLE_FLAG_KEY = MainActivity.class.getName() + "." + "is_shuffle";
+
 	private Button btnPlay;
 	private Button btnPause;
 	private Button btnNextSong;
@@ -251,6 +263,8 @@ public class MainActivity extends Activity implements
 		Bundle bundle = new Bundle();
 		bundle.putParcelableArrayList(SAVED_TRACKS_LIST_KEY, tracks);
 		bundle.putInt(SAVED_SEL_TRACK_POS_KEY, selTrackPos);
+		bundle.putIntegerArrayList(SAVED_RAND_POSITIONS_LIST_KEY, randPositions);
+		bundle.putBoolean(SAVED_IS_SHUFFLE_FLAG_KEY, isShuffle);
 		return bundle;
 	}
 
@@ -263,6 +277,9 @@ public class MainActivity extends Activity implements
 		if (bundle != null) {
 			tracks = bundle.getParcelableArrayList(SAVED_TRACKS_LIST_KEY);
 			selTrackPos = bundle.getInt(SAVED_SEL_TRACK_POS_KEY, 0);
+			randPositions = bundle.getIntegerArrayList(SAVED_RAND_POSITIONS_LIST_KEY);
+			randPositionsIt = randPositions != null ? randPositions.listIterator() : null;
+			isShuffle = bundle.getBoolean(SAVED_IS_SHUFFLE_FLAG_KEY, false);
 		}
 	}
 
@@ -306,8 +323,11 @@ public class MainActivity extends Activity implements
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (buttonView == tBtnShuffle) {
 			if (isChecked) {
+				// Turn on shuffle (random) playing only if #isShuffle variable == false.
+				// This variable saved and restore when activity recreate.
+				// Those this check is necessary if this activity recreate (rotate display for example).
+				if (!isShuffle) turnOnShuffle();
 				isShuffle = true;
-				turnOnShuffle();
 			} else {
 				isShuffle = false;
 			}
@@ -432,7 +452,7 @@ public class MainActivity extends Activity implements
 	 * @see #tBtnShuffle
 	 * @see #turnOnShuffle()
 	 */
-	private List<Integer> randPositions = new ArrayList<Integer>();
+	private ArrayList<Integer> randPositions = new ArrayList<Integer>();
 
 	/**
 	 * List iterator for navigation in {@link #randPositions} list.
