@@ -153,6 +153,20 @@ public class MainActivity extends Activity implements
 	private ArrayList<Track> tracks = new ArrayList<Track>();
 
 	/**
+	 * Storage for randomise {@link #tracks} positions to playlist.
+	 * Used when shuffle is active only.
+	 *
+	 * @see #tBtnShuffle
+	 * @see #turnOnShuffle()
+	 */
+	private ArrayList<Integer> randPositions = new ArrayList<Integer>();
+
+	/**
+	 * List iterator for navigation in {@link #randPositions} list.
+	 */
+	private ListIterator<Integer> randPositionsIt;
+
+	/**
 	 * Selected audio track position when user clicked in playlist item.
 	 * Default selected position is 0.
 	 */
@@ -440,20 +454,6 @@ public class MainActivity extends Activity implements
 		}
 
 	}
-
-	/**
-	 * Storage for randomise {@link #tracks} positions to playlist.
-	 * Used when shuffle is active only.
-	 *
-	 * @see #tBtnShuffle
-	 * @see #turnOnShuffle()
-	 */
-	private ArrayList<Integer> randPositions = new ArrayList<Integer>();
-
-	/**
-	 * List iterator for navigation in {@link #randPositions} list.
-	 */
-	private ListIterator<Integer> randPositionsIt;
 
 	/**
 	 * Turn on shuffle (randomise) playback.
